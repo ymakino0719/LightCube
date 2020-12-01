@@ -16,16 +16,10 @@ public class CubeInformation : MonoBehaviour
 
     private Collider[] colList;
     private bool openingSequence = true;
-    private GameObject stage;
     private EdgeInformation edge;
 
-    private float searchDis_vertex = 1.0f; // 頂点の原点位置からの探索範囲、ステージの大きさに依存する！Debug_Countの値を確認して都度調整
-    private float searchDis_edge = 0.5f; // 辺の原点位置からの探索範囲、ステージの大きさに依存する！Debug_Countの値を確認して都度調整
-
-    void Awake()
-    {
-        stage = GameObject.Find("Stage01");
-    }
+    private float searchDis_vertex = 2.0f; // 頂点の原点位置からの探索範囲、ステージの大きさに依存する！Debug_Countの値を確認して都度調整
+    private float searchDis_edge = 2.0f; // 辺の原点位置からの探索範囲、ステージの大きさに依存する！Debug_Countの値を確認して都度調整
 
     // Update is called once per frame
     void Update()
@@ -45,8 +39,8 @@ public class CubeInformation : MonoBehaviour
 
     void ObjectClassification()
     {
-        // Stageの子オブジェクトの全ての頂点・辺・面のリスト化
-        foreach (Transform child in stage.transform)
+        // HitBoxの子オブジェクトの全ての頂点・辺・面のリスト化
+        foreach (Transform child in this.transform)
         {
             if (child.gameObject.CompareTag("Vertex"))
             {
@@ -85,10 +79,20 @@ public class CubeInformation : MonoBehaviour
             {
                 if (colList[j].gameObject.CompareTag("Edge"))
                 {
+                    edge = colList[j].gameObject.GetComponent<EdgeInformation>();
+                    // EdgeInformationに辺に接する２頂点のtransform情報を与える
+                    if (edge.vertex[0] == Vector3.zero)
+                    {
+                        edge.vertex[0] = vertexList[i].transform.position;
+                    }
+                    else
+                    {
+                        edge.vertex[1] = vertexList[i].transform.position;
+                    }
+
+                    int num = edge.EdgeNum; // 辺の識別番号 edgeNum を取得する
                     // 辺に接する頂点のリスト化
-                    edge = colList[j].gameObject.GetComponent<EdgeInformation>(); // 辺の識別番号 edgeNum を取得する
-                    int num = edge.EdgeNum;
-                    vertexList_FromEdge[num].Add(vertexList[i].gameObject); // 頂点のgameObject = vertexList[i].gameObject
+                    vertexList_FromEdge[num].Add(vertexList[i].gameObject); // ◆今のところデバッグ用としてのみの使用◆頂点のgameObject = vertexList[i].gameObject
                 }
             }
         }
@@ -99,13 +103,24 @@ public class CubeInformation : MonoBehaviour
         for (int i = 0; i < edgeList.Count; i++)
         {
             colList = Physics.OverlapSphere(edgeList[i].transform.position, searchDis_edge); // 各辺の原点位置を中心にオブジェクト探索
+            edge = edgeList[i].GetComponent<EdgeInformation>();
 
             for (int j = 0; j < colList.Length; j++)
             {
                 if (colList[j].gameObject.CompareTag("Face"))
                 {
+                    // EdgeInformationに辺に接する２面のtransform情報を与える
+                    if (edge.face[0] == Vector3.zero)
+                    {
+                        edge.face[0] = colList[j].gameObject.transform.position;
+                    }
+                    else
+                    {
+                        edge.face[1] = colList[j].gameObject.transform.position;
+                    }
+
                     // 辺に接する面のリスト化
-                    faceList_FromEdge[i].Add(colList[j].gameObject); // 辺の識別番号 = i、面のgameObject = colList[j].gameObject
+                    faceList_FromEdge[i].Add(colList[j].gameObject); // ◆今のところデバッグ用としてのみの使用◆辺の識別番号 = i、面のgameObject = colList[j].gameObject
                 }
             }
         }
@@ -115,7 +130,7 @@ public class CubeInformation : MonoBehaviour
     {
         for (int i = 0; i < vertexList_FromEdge.Count; i++)
         {
-            Debug.Log("edgeに接するvertexの数 = " + vertexList_FromEdge[i].Count);
+            // Debug.Log("edgeに接するvertexの数 = " + vertexList_FromEdge[i].Count);
             if (vertexList_FromEdge[i].Count != 2)
             {
                 Debug.Log("エラー！辺に接する頂点の数が２ではありません！");
@@ -124,7 +139,7 @@ public class CubeInformation : MonoBehaviour
 
         for (int i = 0; i < faceList_FromEdge.Count; i++)
         {
-            Debug.Log("edgeに接するfaceの数 = " + faceList_FromEdge[i].Count);
+            // Debug.Log("edgeに接するfaceの数 = " + faceList_FromEdge[i].Count);
             if (faceList_FromEdge[i].Count != 2)
             {
                 Debug.Log("エラー！辺に接する面の数が２ではありません！");

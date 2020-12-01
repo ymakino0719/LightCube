@@ -23,7 +23,8 @@ public class CameraControll : MonoBehaviour
     {
         // カメラの移動
         transform.position = camPos.transform.position;
-        // カメラの回転: playerの方を向く
-        transform.LookAt(player.transform);
+        // カメラの視点: playerの方を向く（playerの頭が上になるように）
+        Quaternion rotation = Quaternion.LookRotation(player.transform.position - camPos.transform.position, camPos.transform.up);
+        transform.rotation = rotation;
     }
 }
