@@ -17,9 +17,9 @@ public class PlayerController : MonoBehaviour
 	// ジャンプ中かどうか
 	bool jump = false;
 	// ジャンプの高さ
-	float jumpH = 3.0f;
+	float jumpH = 2.0f;
 	// 移動スピード
-	float moveS = 0.5f;
+	float moveS = 0.8f;
 	// 移動上限速度
 	float moveLimitS = 2.0f;
 	//float walkAnimationSpeed = 0.01f;
@@ -109,86 +109,40 @@ public class PlayerController : MonoBehaviour
 	*/
 	void MoveCharacter(float hor, float ver, bool jump)
 	{
-		///////////////////////////////////////////////
-		//////// ↓(i) AddForceを加える場合↓ /////////
-		///////////////////////////////////////////////
+		///////////////////////
+		//////// move /////////
+		///////////////////////
 
 
 		// プレイヤーのリギッドボディのローカル速度locVelを取得
 		Vector3 locVel = transform.InverseTransformDirection(rBody.velocity);
 
 		// locVel.z：カメラから見てプレイヤーの左右
-		if (Mathf.Abs(locVel.z) < moveLimitS && Mathf.Abs(hor) > float.Epsilon)
+		if ((hor > float.Epsilon && locVel.z < moveLimitS) || (hor < float.Epsilon && locVel.z > -moveLimitS))
 		{
 			// locVel.z：プレイヤーの左右移動
 			rBody.AddForce(transform.forward * hor * moveS);
 		}
 
 		// locVel.x：カメラから見てプレイヤーの奥行
-		if (Mathf.Abs(locVel.x) < moveLimitS && Mathf.Abs(ver) > float.Epsilon)
+		if ((ver > float.Epsilon && locVel.x < moveLimitS) || (ver < float.Epsilon && locVel.x > -moveLimitS))
 		{
 			// locVel.x：プレイヤーの奥行移動
-			rBody.AddForce(transform.right * hor * moveS);
+			rBody.AddForce(-transform.right * ver * moveS);
 		}
 
-		///////////////////////////////////////////////
+		//Debug.Log("ver: " + ver);
+		//Debug.Log("locVel.z: " + locVel.z);
 
-
-		///////////////////////////////////////////////
-		//////// ↓(ii) velocityを変える場合↓ ////////
-		///////////////////////////////////////////////
-
-		/*
-		// プレイヤーのリギッドボディのローカル速度locVelを取得
-		Vector3 locVel = transform.InverseTransformDirection(rBody.velocity);
-
-		// locVel.z：カメラから見てプレイヤーの左右
-		if (Mathf.Abs(locVel.z) < moveLimitS && Mathf.Abs(hor) > float.Epsilon)
-		{
-			// locVel.z：プレイヤーの左右移動
-			locVel.z += hor * moveS;			
-		}
-
-		// locVel.x：カメラから見てプレイヤーの奥行
-		if (Mathf.Abs(locVel.x) < moveLimitS && Mathf.Abs(ver) > float.Epsilon)
-		{
-			// locVel.x：プレイヤーの奥行移動
-			locVel.x -= ver * moveS;
-		}
-
-		// rBodyの速度を更新
-		rBody.velocity = transform.TransformDirection(locVel);
-		*/
-
-		///////////////////////////////////////////////
+		///////////////////////
+		//////// jump /////////
+		///////////////////////
 
 		if (isGround && jump)
 		{
 			rBody.velocity += transform.up * jumpH;
 		}
 	}
-
-	/*
-	void TurnDirection(Vector3 move)
-	{
-		if (move.sqrMagnitude > float.Epsilon)
-		{
-			Vector3 scale = transform.localScale;
-			float x = transform.localScale.x;
-
-			if (move.x >= 0)
-			{
-				scale.x = -Mathf.Abs(x);
-			}
-			else
-			{
-				scale.x = Mathf.Abs(x);
-			}
-
-			transform.localScale = scale;
-		}
-	}
-	*/
 
 	public bool IsGround
 	{

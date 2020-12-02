@@ -128,6 +128,8 @@ public class EdgeInformation : MonoBehaviour
 		Vector3 nextPos01 = player.transform.position;
 		// 辺の原点位置を中心とした移動後のPlayerとnextFaceの角度を調べる
 		float angle01 = Vector3.Angle(player.transform.position - edge, nextFace - edge);
+		// 回転軸axis周りに180度回転させたあとのEulerAngleを取得する
+		Vector3 afterR01 = CheckRotation(axis);
 
 		// 次に-angle度で回転させる（一旦移動前の場所に戻すために-2 * angle度としている）
 		player.transform.RotateAround(edge, axis, -2 * angle);
@@ -135,21 +137,50 @@ public class EdgeInformation : MonoBehaviour
 		Vector3 nextPos02 = player.transform.position;
 		// 辺の原点位置を中心とした移動後のPlayerとnextFaceの角度を調べる
 		float angle02 = Vector3.Angle(player.transform.position - edge, nextFace - edge);
+		// 回転軸axisで180度反転させたあとのEulerAngleを取得する
+		Vector3 afterR02 = CheckRotation(axis);
+
+		//Debug.Log("angle01: " + angle01);
+		//Debug.Log("angle02: " + angle02);
 
 		// Playerを初期位置に戻す（angle度で回転させる）
 		player.transform.RotateAround(edge, axis, angle);
+
 		// angle01と02を比較し、より小さい値の方のnextPosをPlayerが移動する座標先として採用する
 		nextPos = (angle01 < angle02) ? nextPos01 : nextPos02;
+		afterR = (angle01 < angle02) ? afterR01 : afterR02;
 
-		// Playerの最終回転角度を取得する（180から引いた回転角度で回転させる）
-		player.transform.RotateAround(edge, axis, 180 - angle);
-		// 180 - angle度で軸回転後のPlayerの回転角度を取得しておく
-		afterR = player.transform.eulerAngles;
-		// Playerを初期位置に戻す
-		player.transform.RotateAround(edge, axis, -(180 - angle));
+		if(angle01 < angle02)
+        {
+			Debug.Log("angle01 < angle02, angle01 = " + angle01 + ", afterR01 = " + afterR01 + ", afterR02 = " + afterR02);
+        }
+		else
+        {
+			Debug.Log("angle01 > angle02, angle02 = " + angle02 + ", afterR01 = " + afterR01 + ", afterR02 = " + afterR02);
+		}
 
-		Debug.Log("beforeR: " + beforeR);
-		Debug.Log("afterR: " + afterR);
+		//Debug.Log("afterR01: " + afterR01);
+		//Debug.Log("afterR02: " + afterR02);
+
+		//Debug.Log("beforeR: " + beforeR);
+		//Debug.Log("afterR: " + afterR);
+	}
+
+	Vector3 CheckRotation(Vector3 axis)
+    {
+		// 現在の回転情報を取得する
+		Quaternion q = player.transform.rotation;
+		// 回転軸axis周りに180度回転させる
+		Quaternion rot = Quaternion.AngleAxis(180, axis);
+		player.transform.rotation = q * rot;
+
+		// プレイヤーのEulerAnglesを取得する
+		Vector3 vec = player.transform.eulerAngles;
+
+		// 元に戻す
+		player.transform.rotation = q;
+
+		return vec;
 	}
 
 	void CheckMiddlePos()
@@ -169,6 +200,9 @@ public class EdgeInformation : MonoBehaviour
 		// beforeRとafterRをQuaternionで定義しておく
 		Quaternion bR = Quaternion.Euler(beforeR);
 		Quaternion aR = Quaternion.Euler(afterR);
+
+		//Debug.Log("afterR: " + afterR);
+		//Debug.Log("aR: " + aR);
 
 		if (toMiddle) 
 		{
