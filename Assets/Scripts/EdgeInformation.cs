@@ -40,7 +40,7 @@ public class EdgeInformation : MonoBehaviour
 	// プレイヤーを移動・回転させるときの時間（0～1）
 	private float time = 0;
 	// プレイヤーを移動・回転させるときの時間の調整パラメータ
-	private float timeCoef = 1.0f;
+	private float timeCoef = 1.5f;
 	//
 	private bool reset = false;
 
@@ -128,8 +128,8 @@ public class EdgeInformation : MonoBehaviour
 		Vector3 nextPos01 = player.transform.position;
 		// 辺の原点位置を中心とした移動後のPlayerとnextFaceの角度を調べる
 		float angle01 = Vector3.Angle(player.transform.position - edge, nextFace - edge);
-		// 回転軸axis周りに180度回転させたあとのEulerAngleを取得する
-		Vector3 afterR01 = CheckRotation(axis);
+		// 更にRotateAroundで180度回転させたあとのEulerAngleを取得する
+		Vector3 afterR01 = CheckRotation(edge, axis);
 
 		// 次に-angle度で回転させる（一旦移動前の場所に戻すために-2 * angle度としている）
 		player.transform.RotateAround(edge, axis, -2 * angle);
@@ -137,8 +137,8 @@ public class EdgeInformation : MonoBehaviour
 		Vector3 nextPos02 = player.transform.position;
 		// 辺の原点位置を中心とした移動後のPlayerとnextFaceの角度を調べる
 		float angle02 = Vector3.Angle(player.transform.position - edge, nextFace - edge);
-		// 回転軸axisで180度反転させたあとのEulerAngleを取得する
-		Vector3 afterR02 = CheckRotation(axis);
+		// 更にRotateAroundで180度回転させたあとのEulerAngleを取得する
+		Vector3 afterR02 = CheckRotation(edge, axis);
 
 		//Debug.Log("angle01: " + angle01);
 		//Debug.Log("angle02: " + angle02);
@@ -166,8 +166,15 @@ public class EdgeInformation : MonoBehaviour
 		//Debug.Log("afterR: " + afterR);
 	}
 
-	Vector3 CheckRotation(Vector3 axis)
+	Vector3 CheckRotation(Vector3 edge, Vector3 axis)
     {
+		// RotateAroundで180度回転させたあとのEulerAngleを取得する
+		player.transform.RotateAround(edge, axis, 180);
+		Vector3 vec = player.transform.eulerAngles;
+		// 元に戻す（-180度回転させる）
+		player.transform.RotateAround(edge, axis, -180);
+
+		/*
 		// 現在の回転情報を取得する
 		Quaternion q = player.transform.rotation;
 		// 回転軸axis周りに180度回転させる
@@ -179,6 +186,7 @@ public class EdgeInformation : MonoBehaviour
 
 		// 元に戻す
 		player.transform.rotation = q;
+		*/
 
 		return vec;
 	}
