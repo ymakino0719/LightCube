@@ -30,6 +30,8 @@ public class EdgeInformation : MonoBehaviour
 	private Vector3 beforeR, afterR;
 	// プレイヤーの回転前の速度情報
 	private Vector3 rVel;
+	// プレイヤーの回転後の速度情報
+	private Vector3 nextVel;
 	// プレイヤーの初期位置
 	private Vector3 currentPos;
 
@@ -40,7 +42,7 @@ public class EdgeInformation : MonoBehaviour
 	// プレイヤーを移動・回転させるときの時間（0～1）
 	private float time = 0;
 	// プレイヤーを移動・回転させるときの時間の調整パラメータ
-	private float timeCoef = 1.5f;
+	private float timeCoef = 2.0f;
 	//
 	private bool reset = false;
 
@@ -49,12 +51,17 @@ public class EdgeInformation : MonoBehaviour
 	private Rigidbody rBody;
 	private PlayerController pC;
 
+	// 探索用の空オブジェクト
+	private GameObject checkRocket;
+
 	void Awake()
 	{
 		cI = GameObject.Find("Information").GetComponent<CubeInformation>();
 		player = GameObject.Find("Player");
 		rBody = player.GetComponent<Rigidbody>();
 		pC = player.GetComponent<PlayerController>();
+
+		checkRocket = GameObject.Find("CheckRocket");
 
 		// 辺の原点位置のtransformを取得
 		edge = transform.position;
@@ -98,7 +105,7 @@ public class EdgeInformation : MonoBehaviour
 			currentPos = player.transform.position;
 
 			CheckCloserFace(); // ２面の内、Playerからより遠い面を調べる（それがPlayerが次に移動する面となる）
-			CheckNextPlayerPos(); // 軸回転を行い、Playerが次に移動する座標nextPosを調べ、取得する
+			CheckNextPlayerPos(rVel); // 軸回転を行い、Playerが次に移動する座標nextPosを調べ、取得する
 			CheckMiddlePos(); // PlayerがnextPosまで移動するときの中間点middlePos（経由するEdgeあたりの座標）を調べる
 
 			moving = true;
@@ -115,7 +122,7 @@ public class EdgeInformation : MonoBehaviour
 		nextFace = (angle01 > angle02) ? face[0] : face[1];
 	}
 
-	void CheckNextPlayerPos()
+	void CheckNextPlayerPos(Vector3 rVel)
 	{
 		// PlayerをRotateAroundさせる（中心：辺の原点、軸：２つの頂点のベクトル、角度：辺を中心とした２面の原点が成す角度
 		Vector3 axis = vertex[0] - vertex[1]; // 回転軸
@@ -150,7 +157,14 @@ public class EdgeInformation : MonoBehaviour
 		nextPos = (angle01 < angle02) ? nextPos01 : nextPos02;
 		afterR = (angle01 < angle02) ? afterR01 : afterR02;
 
-		if(angle01 < angle02)
+		/*
+		Vector3 vel01 = CheckVelocityDirection(edge, axis, angle, rVel);
+		Vector3 vel02 = CheckVelocityDirection(edge, axis, -angle, rVel);
+
+		nextVel = (angle01 < angle02) ? vel01 : vel02;
+		*/
+
+		if (angle01 < angle02)
         {
 			Debug.Log("angle01 < angle02, angle01 = " + angle01 + ", afterR01 = " + afterR01 + ", afterR02 = " + afterR02);
         }
@@ -190,6 +204,20 @@ public class EdgeInformation : MonoBehaviour
 
 		return vec;
 	}
+
+	/*
+	Vector3 CheckVelocityDirection(Vector3 edge, Vector3 axis, float angle, Vector3 rVel)
+	{
+		checkRocket.transform.position = edge + rVel;
+
+		// RotateAroundでangle度回転させたあとのEulerAngleを取得する
+		checkRocket.transform.RotateAround(edge, axis, angle);
+		checkRocket.transform.position -= edge;
+		Vector3 vec = player.transform.eulerAngles;
+
+		return vec;
+	}
+	*/
 
 	void CheckMiddlePos()
     {
@@ -247,10 +275,13 @@ public class EdgeInformation : MonoBehaviour
 	}
 
 	void ResetPlayerVelocity()
-	{	
+	{
+		//rBody.velocity = nextVel;
+		
 		// プレイヤーの速度情報を更新（ベクトルの回転）
 		Vector3 vec = Quaternion.Euler(afterR - beforeR) * rVel;
 		rBody.velocity = vec;
+		
 
 		//Debug.Log("vec: " + vec);
 	}
