@@ -23,21 +23,19 @@ public class PlayerController : MonoBehaviour
 	// 移動上限速度
 	float moveLimitS = 2.0f;
 	//float walkAnimationSpeed = 0.01f;
-	// Playerが動いているかどうかの閾値
-	float judgeMoving = 0.2f;
 
 	// 次に移動する面に移動中かどうか
 	private bool control = true;
 
-	// PlayerのAnimator
-	Animator animator;
+	// Yagikun3DにアタッチされているAnimationControllerの取得
+	AnimationController aC;
 
 	// Start is called before the first frame update
-	void Start()
+	void Awake()
     {
         rBody = GetComponent<Rigidbody>();
-		// Playerの直下の一番上に配置しているYagikun3DにアタッチされているAnimatorを取得する
-		animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
+		// Playerの直下の一番上に配置しているYagikun3DにアタッチされているAnimationControllerを取得する
+		aC = transform.GetChild(0).gameObject.GetComponent<AnimationController>();
     }
 
     // Update is called once per frame
@@ -67,7 +65,9 @@ public class PlayerController : MonoBehaviour
 			bool pick = Input.GetButtonDown("Pick");
 			//if (pick) holding = !holding;
 
-			MoveAnimation(jump, pick);
+			float vel = rBody.velocity.sqrMagnitude;
+			aC.MoveAnimation(jump, pick, isGround, vel);
+			aC.LookForward(hor, ver);
 			MoveCharacter(hor, ver, jump);
 			//TurnDirection(move);
 
@@ -78,72 +78,10 @@ public class PlayerController : MonoBehaviour
 		{
 
         }
+
+		Debug.Log("isGround : " + isGround);
 	}
-	void MoveAnimation(bool jump, bool pick)
-	{
-		if(isGround)
-        {
-			// 着地時且つジャンプ入力があるときjumpingBoolを有効にする
-			if (jump)
-			{
-				animator.SetBool("jumpingBool", true);
-			}
-			else if (pick)
-            {
-				animator.SetBool("PickUpBool", true);
-				//animator.SetBool("jumpingBool", false);
-			}
-			else
-            {
-				//animator.SetBool("jumpingBool", false);
 
-				if (rBody.velocity.sqrMagnitude >= judgeMoving)
-                {
-					animator.SetFloat("movingSpeed", 1);
-				}
-				else
-                {
-					animator.SetFloat("movingSpeed", 0);
-				}
-            }
-		}
-		else
-        {
-
-		}
-
-		/*
-		if (jump)
-		{
-			animator.SetBool("jumpBool", true);
-		}
-		else if (!isGround && !lastGround)
-		{
-			animator.SetBool("jumpBool", false);
-			animator.SetBool("jumpingBool", true);
-		}
-		else if (isGround)
-		{
-			if (!lastGround)
-			{
-				animator.SetBool("jumpingBool", false);
-			}
-			else
-			{
-				float k = Mathf.Abs(rBody.velocity.x) * walkAnimationSpeed;
-
-				if (move.sqrMagnitude > float.Epsilon)
-				{
-					animator.SetFloat("moveSpeed", k);
-				}
-				else
-				{
-					animator.SetFloat("moveSpeed", k);
-				}
-			}
-		}
-		*/
-	}
 	void MoveCharacter(float hor, float ver, bool jump)
 	{
 		///////////////////////
