@@ -19,9 +19,12 @@ public class PlayerController : MonoBehaviour
 	// アイテムを持っているか
 	bool holding = false;
 	// 移動スピード
-	float moveS = 0.8f;
-	// 移動上限速度
-	float moveLimitS = 2.0f;
+	float moveS = 1.5f;
+	// 平面方向（XとZ方向）に対する移動上限速度
+	float moveLimit_XZ = 2.0f;
+	// 上下方向（Y方向）に対する移動上限速度
+	float moveLimit_Y = 3.0f;
+
 	//float walkAnimationSpeed = 0.01f;
 
 	// 次に移動する面に移動中かどうか
@@ -65,8 +68,9 @@ public class PlayerController : MonoBehaviour
 			bool pick = Input.GetButtonDown("Pick");
 			//if (pick) holding = !holding;
 
-			float vel = rBody.velocity.sqrMagnitude;
-			aC.MoveAnimation(jump, pick, isGround, vel);
+			Vector3 vec = rBody.velocity;
+
+			aC.MoveAnimation(jump, pick, ref holding, isGround, lastGround, vec);
 			aC.LookForward(hor, ver);
 			MoveCharacter(hor, ver, jump);
 			//TurnDirection(move);
@@ -88,19 +92,18 @@ public class PlayerController : MonoBehaviour
 		//////// move /////////
 		///////////////////////
 
-
 		// プレイヤーのリギッドボディのローカル速度locVelを取得
 		Vector3 locVel = transform.InverseTransformDirection(rBody.velocity);
 
 		// locVel.z：カメラから見てプレイヤーの左右
-		if ((hor > float.Epsilon && locVel.z < moveLimitS) || (hor < float.Epsilon && locVel.z > -moveLimitS))
+		if ((hor > float.Epsilon && locVel.z < moveLimit_XZ) || (hor < float.Epsilon && locVel.z > -moveLimit_XZ))
 		{
 			// locVel.z：プレイヤーの左右移動
 			rBody.AddForce(transform.forward * hor * moveS);
 		}
 
 		// locVel.x：カメラから見てプレイヤーの奥行
-		if ((ver > float.Epsilon && locVel.x < moveLimitS) || (ver < float.Epsilon && locVel.x > -moveLimitS))
+		if ((ver > float.Epsilon && locVel.x < moveLimit_XZ) || (ver < float.Epsilon && locVel.x > -moveLimit_XZ))
 		{
 			// locVel.x：プレイヤーの奥行移動
 			rBody.AddForce(-transform.right * ver * moveS);
@@ -110,6 +113,19 @@ public class PlayerController : MonoBehaviour
 		//Debug.Log("locVel.z: " + locVel.z);
 
 		///////////////////////
+		////// movelimit //////
+		///////////////////////
+
+		// XとZ軸方向に移動制限をかける
+		if (Mathf.Abs(locVel.x) >= moveLimit_XZ) locVel.x = (locVel.x >= 0) ? moveLimit_XZ : -moveLimit_XZ;
+		if (Mathf.Abs(locVel.z) >= moveLimit_XZ) locVel.z = (locVel.z >= 0) ? moveLimit_XZ : -moveLimit_XZ;
+
+		// Y軸方向は下降中にのみ制限をかける（ジャンプに制限をかけないようにするため）
+		if (locVel.y <= -moveLimit_Y)  locVel.y = -moveLimit_Y;
+
+		rBody.velocity = transform.TransformDirection(locVel);
+
+		///////////////////////
 		//////// jump /////////
 		///////////////////////
 
@@ -117,6 +133,7 @@ public class PlayerController : MonoBehaviour
 		{
 			rBody.velocity += transform.up * jumpH;
 		}
+
 	}
 
 	public bool IsGround

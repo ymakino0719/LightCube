@@ -18,7 +18,7 @@ public class AnimationController : MonoBehaviour
 		animator = GetComponent<Animator>();
 	}
 
-	public void MoveAnimation(bool jump, bool pick, bool isGround, float vel)
+	public void MoveAnimation(bool jump, bool pick, ref bool holding, bool isGround, bool lastGround, Vector3 vec)
 	{
 		if (isGround)
 		{
@@ -29,21 +29,36 @@ public class AnimationController : MonoBehaviour
 			}
 			else if (pick)
 			{
-				animator.SetBool("PickUpBool", true);
-				animator.SetBool("jumpingBool", false);
+				animator.SetTrigger("pickUpTrigger");
+
+				if (!holding)
+                {
+					animator.SetBool("holding", false);
+				}
+				else
+                {
+					animator.SetBool("holding", true);
+				}
+
+				holding = !holding;
 			}
 			else
 			{
-				animator.SetBool("jumpingBool", false);
+				if(!lastGround)
+                {
+					animator.SetBool("jumpingBool", false);
+				}
 
 				//Debug.Log("RunSpeed : " + vel * runAnimSpeed);
 
+				// 縦のY要素は不要のため0を代入
+				vec.y = 0;
+				// RunのAnimationSpeedの上限を1.0fにする
+				float a = (vec.sqrMagnitude * runAnimSpeed <= 1.0f) ? vec.sqrMagnitude * runAnimSpeed : 1.0f;
 
-
-				if (vel * runAnimSpeed >= judgeMoving)
+				if (a >= judgeMoving)
 				{
-					// RunのAnimationSpeedの上限を1.0fにする
-					float a = (vel * runAnimSpeed <= 1.0f) ? vel * runAnimSpeed : 1.0f;
+					
 					animator.SetFloat("movingSpeed", a);
 				}
 				else
