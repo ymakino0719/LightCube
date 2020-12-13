@@ -13,24 +13,31 @@ public class PlayerController : MonoBehaviour
 	// 着地しているかどうか（CheckIsGroundからの判定結果）
 	bool isGround = false;
 	// 1つ前のフレームで着地していたかどうか
-	//bool lastGround = false;
-	// ジャンプ中かどうか
-	bool jump = false;
+	bool lastGround = false;
 	// ジャンプの高さ
-	float jumpH = 2.0f;
+	float jumpH = 6.0f;
+	// アイテムを持っているか
+	bool holding = false;
 	// 移動スピード
 	float moveS = 0.8f;
 	// 移動上限速度
 	float moveLimitS = 2.0f;
 	//float walkAnimationSpeed = 0.01f;
+	// Playerが動いているかどうかの閾値
+	float judgeMoving = 0.2f;
 
 	// 次に移動する面に移動中かどうか
 	private bool control = true;
+
+	// PlayerのAnimator
+	Animator animator;
 
 	// Start is called before the first frame update
 	void Start()
     {
         rBody = GetComponent<Rigidbody>();
+		// Playerの直下の一番上に配置しているYagikun3DにアタッチされているAnimatorを取得する
+		animator = transform.GetChild(0).gameObject.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -43,37 +50,69 @@ public class PlayerController : MonoBehaviour
 
 			// Playerをキー操作で動かす
 
-			////Moving////
+			//// Moving ////
 			float hor = Input.GetAxis("Horizontal");
 			float ver = Input.GetAxis("Vertical");
 
-			////Jumping////
-			jump = Input.GetButtonDown("Jump");
+			//// Jumping ////
+			bool jump = false;
 
-			//MoveAnimation(move, jump);
+			// 着地しているときジャンプを可能にする
+			if (isGround)
+            {
+				jump = Input.GetButtonDown("Jump");
+			}
+
+			//// PickUp & PutDown ////
+			bool pick = Input.GetButtonDown("Pick");
+			//if (pick) holding = !holding;
+
+			MoveAnimation(jump, pick);
 			MoveCharacter(hor, ver, jump);
 			//TurnDirection(move);
 
-			/* ★MoveAnimationのときに使うかも
-			if (isGround)
-			{
-				lastGround = true;
-			}
-			else
-			{
-				lastGround = false;
-			}
-			*/
+			// lastGround（直前に着地していたか）の更新
+			lastGround = (isGround) ? true : false;
 		}
 		else // 次の面に移動処理中のとき（EdgeInformationで処理しているとき）
 		{
 
         }
 	}
-
-	/* ★Animationは後々設定する予定
-	void MoveAnimation(Vector2 move, bool jump)
+	void MoveAnimation(bool jump, bool pick)
 	{
+		if(isGround)
+        {
+			// 着地時且つジャンプ入力があるときjumpingBoolを有効にする
+			if (jump)
+			{
+				animator.SetBool("jumpingBool", true);
+			}
+			else if (pick)
+            {
+				animator.SetBool("PickUpBool", true);
+				//animator.SetBool("jumpingBool", false);
+			}
+			else
+            {
+				//animator.SetBool("jumpingBool", false);
+
+				if (rBody.velocity.sqrMagnitude >= judgeMoving)
+                {
+					animator.SetFloat("movingSpeed", 1);
+				}
+				else
+                {
+					animator.SetFloat("movingSpeed", 0);
+				}
+            }
+		}
+		else
+        {
+
+		}
+
+		/*
 		if (jump)
 		{
 			animator.SetBool("jumpBool", true);
@@ -85,8 +124,6 @@ public class PlayerController : MonoBehaviour
 		}
 		else if (isGround)
 		{
-			animator.SetBool("crouchBool", crouch);
-
 			if (!lastGround)
 			{
 				animator.SetBool("jumpingBool", false);
@@ -105,8 +142,8 @@ public class PlayerController : MonoBehaviour
 				}
 			}
 		}
+		*/
 	}
-	*/
 	void MoveCharacter(float hor, float ver, bool jump)
 	{
 		///////////////////////
