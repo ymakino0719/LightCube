@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour
     // 仮想重力の係数
     float gravity = 0.5f;
 
+	// Yagikun3D
+	GameObject yagikun;
+
 	//Animator animator;
 	// 着地しているかどうか（CheckIsGroundからの判定結果）
 	bool isGround = false;
@@ -25,7 +28,10 @@ public class PlayerController : MonoBehaviour
 	// 上下方向（Y方向）に対する移動上限速度
 	float moveLimit_Y = 3.0f;
 
-	//float walkAnimationSpeed = 0.01f;
+	// 1フレーム前にキャラクターがいた場所
+	Vector3 latestPos;
+	// Playerが動いているかどうかの閾値
+	float judgeMoving = 0.01f;
 
 	// 次に移動する面に移動中かどうか
 	private bool control = true;
@@ -38,11 +44,17 @@ public class PlayerController : MonoBehaviour
     {
         rBody = GetComponent<Rigidbody>();
 		// Playerの直下の一番上に配置しているYagikun3DにアタッチされているAnimationControllerを取得する
-		aC = transform.GetChild(0).gameObject.GetComponent<AnimationController>();
+		yagikun = transform.GetChild(0).gameObject;
+		aC = yagikun.GetComponent<AnimationController>();
+		
     }
+	void Start()
+	{
+		latestPos = transform.position;
+	}
 
-    // Update is called once per frame
-    void Update()
+	// Update is called once per frame
+	void Update()
     {
 		if(control) // 次の面に移動中でないとき（通常時）
         {
@@ -71,7 +83,6 @@ public class PlayerController : MonoBehaviour
 			Vector3 vec = rBody.velocity;
 
 			aC.MoveAnimation(jump, pick, ref holding, isGround, lastGround, vec);
-			aC.LookForward(hor, ver);
 			MoveCharacter(hor, ver, jump);
 			//TurnDirection(move);
 
@@ -134,6 +145,15 @@ public class PlayerController : MonoBehaviour
 			rBody.velocity += transform.up * jumpH;
 		}
 
+		///////////////////////
+		/////// rotate ////////
+		///////////////////////
+
+		if (Mathf.Abs(locVel.x) >= judgeMoving || Mathf.Abs(locVel.z) >= judgeMoving)
+        {
+			Vector3 looking = new Vector3(locVel.x, 0, locVel.z);
+			yagikun.transform.rotation = Quaternion.LookRotation(transform.TransformDirection(looking)); // 向きを変更する
+		}
 	}
 
 	public bool IsGround

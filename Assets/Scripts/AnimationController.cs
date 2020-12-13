@@ -11,6 +11,8 @@ public class AnimationController : MonoBehaviour
 	// AnimationのRunの速さパラメータ
 	float runAnimSpeed = 1.0f;
 
+
+
 	// Start is called before the first frame update
 	void Awake()
 	{
@@ -58,7 +60,6 @@ public class AnimationController : MonoBehaviour
 
 				if (a >= judgeMoving)
 				{
-					
 					animator.SetFloat("movingSpeed", a);
 				}
 				else
@@ -73,14 +74,4 @@ public class AnimationController : MonoBehaviour
 		}
 	}
 
-    public void LookForward(float hor, float ver)
-    {
-		Vector3 diff = new Vector3(-ver, 0, hor);
-
-		// ベクトルの大きさが0.01以上の時に向きを変える処理をする
-		if (diff.sqrMagnitude > 0.01f)
-		{
-			transform.rotation = Quaternion.LookRotation(diff); // 向きを変更する
-		}
-	}
 }
