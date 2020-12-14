@@ -42,7 +42,7 @@ public class EdgeInformation : MonoBehaviour
 	// プレイヤーを移動・回転させるときの時間（0～1）
 	private float time = 0;
 	// プレイヤーを移動・回転させるときの時間の調整パラメータ
-	private float timeCoef = 2.0f;
+	private float timeCoef = 1.0f;
 	//
 	private bool reset = false;
 
@@ -247,10 +247,10 @@ public class EdgeInformation : MonoBehaviour
 		if (toMiddle) 
 		{
 			// ①プレイヤーをcurrentPosからmiddlePosまで移動させる
-			player.transform.position = Vector3.Lerp(currentPos, middlePos, time);
+			player.transform.position = Vector3.Slerp(currentPos, middlePos, time);
 
 			// プレイヤーを回転量の半分だけ回転させる
-			player.transform.rotation = Quaternion.Lerp(bR, aR, time / 2);
+			player.transform.rotation = Quaternion.Slerp(bR, aR, time / 2);
 
 			if(time >= 1)
             {
@@ -262,10 +262,10 @@ public class EdgeInformation : MonoBehaviour
 		else 
 		{
 			// ②プレイヤーをmiddlePosからnextPosまで移動させる
-			player.transform.position = Vector3.Lerp(middlePos, nextPos, time);
+			player.transform.position = Vector3.Slerp(middlePos, nextPos, time);
 
 			// プレイヤーを回転量のもう半分だけ回転させる
-			player.transform.rotation = Quaternion.Lerp(bR, aR, 0.5f + time / 2);
+			player.transform.rotation = Quaternion.Slerp(bR, aR, 0.5f + time / 2);
 
 			if (time >= 1)
 			{
