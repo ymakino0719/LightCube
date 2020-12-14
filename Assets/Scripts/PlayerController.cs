@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     // PlayerのRigidbody
     Rigidbody rBody;
     // 仮想重力の係数
-    float gravity = 0.5f;
+    float gravity = 2.0f;
 
 	// Yagikun3D
 	GameObject yagikun;
@@ -31,7 +31,7 @@ public class PlayerController : MonoBehaviour
 	// 1フレーム前にキャラクターがいた場所
 	Vector3 latestPos;
 	// Playerが動いているかどうかの閾値
-	float judgeMoving = 0.01f;
+	float minimumSpeed = 0.01f;
 
 	// 次に移動する面に移動中かどうか
 	private bool control = true;
@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
 		if(control) // 次の面に移動中でないとき（通常時）
         {
 			// 仮想重力をかけ続ける
-			rBody.AddRelativeForce(-Vector3.up * gravity);
+			rBody.AddForce(-transform.up * gravity);
 
 			// Playerをキー操作で動かす
 
@@ -149,11 +149,17 @@ public class PlayerController : MonoBehaviour
 		/////// rotate ////////
 		///////////////////////
 
-		if (Mathf.Abs(locVel.x) >= judgeMoving || Mathf.Abs(locVel.z) >= judgeMoving)
+		// プレイヤーのリギッドボディのローカル速度locVel2を再取得
+		Vector3 locVel2 = transform.InverseTransformDirection(rBody.velocity);
+
+		// プレイヤーの速度の向きに方向転換する（X、Z軸方向のみ、Y軸は無効）
+		if (Mathf.Abs(locVel2.x) >= minimumSpeed || Mathf.Abs(locVel2.z) >= minimumSpeed)
         {
-			Vector3 looking = new Vector3(locVel.x, 0, locVel.z);
-			yagikun.transform.rotation = Quaternion.LookRotation(transform.TransformDirection(looking)); // 向きを変更する
+			Vector3 looking = new Vector3(locVel2.x, 0, locVel2.z);
+			yagikun.transform.rotation = Quaternion.LookRotation(transform.TransformDirection(looking), transform.up); // 向きを変更する
 		}
+		
+		
 	}
 
 	public bool IsGround

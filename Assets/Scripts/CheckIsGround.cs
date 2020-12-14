@@ -13,16 +13,16 @@ public class CheckIsGround : MonoBehaviour
 
 	void OnTriggerEnter(Collider collision)
 	{
-		if (!collision.gameObject.CompareTag("Face")) pC.IsGround = true;		
+		if (!collision.gameObject.CompareTag("Face") && !collision.gameObject.CompareTag("Edge")) pC.IsGround = true;		
 	}
 
 	void OnTriggerStay(Collider collision)
 	{
-		if (!collision.gameObject.CompareTag("Face")) pC.IsGround = true;
+		if (!collision.gameObject.CompareTag("Face") && !collision.gameObject.CompareTag("Edge")) pC.IsGround = true;
 	}
 
 	void OnTriggerExit(Collider collision)
 	{
-		if (!collision.gameObject.CompareTag("Face")) pC.IsGround = false;
+		if (!collision.gameObject.CompareTag("Face") && !collision.gameObject.CompareTag("Edge")) pC.IsGround = false;
 	}
 }

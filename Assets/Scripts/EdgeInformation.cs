@@ -28,8 +28,8 @@ public class EdgeInformation : MonoBehaviour
 
 	// プレイヤーの面移動前後の回転情報
 	private Vector3 beforeR, afterR;
-	// プレイヤーの回転前の速度情報
-	private Vector3 rVel;
+	// プレイヤーの回転前のリギッドボディのローカル速度
+	private Vector3 locVel;
 	// プレイヤーの回転後の速度情報
 	private Vector3 nextVel;
 	// プレイヤーの初期位置
@@ -98,14 +98,16 @@ public class EdgeInformation : MonoBehaviour
 			// プレイヤーの面移動前の回転情報を取得
 			beforeR = player.transform.eulerAngles;
 
-			// プレイヤーの回転前の速度情報を取得
-			rVel = rBody.velocity;
+			// プレイヤーの回転前のリギッドボディのローカル速度locVelを取得
+			locVel = player.transform.InverseTransformDirection(rBody.velocity);
+
+			//Debug.Log("locVel: " + locVel);
 
 			// プレイヤーの初期位置を取得
 			currentPos = player.transform.position;
 
 			CheckCloserFace(); // ２面の内、Playerからより遠い面を調べる（それがPlayerが次に移動する面となる）
-			CheckNextPlayerPos(rVel); // 軸回転を行い、Playerが次に移動する座標nextPosを調べ、取得する
+			CheckNextPlayerPos(locVel); // 軸回転を行い、Playerが次に移動する座標nextPosを調べ、取得する
 			CheckMiddlePos(); // PlayerがnextPosまで移動するときの中間点middlePos（経由するEdgeあたりの座標）を調べる
 
 			moving = true;
@@ -122,7 +124,7 @@ public class EdgeInformation : MonoBehaviour
 		nextFace = (angle01 > angle02) ? face[0] : face[1];
 	}
 
-	void CheckNextPlayerPos(Vector3 rVel)
+	void CheckNextPlayerPos(Vector3 locVel)
 	{
 		// PlayerをRotateAroundさせる（中心：辺の原点、軸：２つの頂点のベクトル、角度：辺を中心とした２面の原点が成す角度
 		Vector3 axis = vertex[0] - vertex[1]; // 回転軸
@@ -164,6 +166,7 @@ public class EdgeInformation : MonoBehaviour
 		nextVel = (angle01 < angle02) ? vel01 : vel02;
 		*/
 
+		/*
 		if (angle01 < angle02)
         {
 			Debug.Log("angle01 < angle02, angle01 = " + angle01 + ", afterR01 = " + afterR01 + ", afterR02 = " + afterR02);
@@ -172,6 +175,7 @@ public class EdgeInformation : MonoBehaviour
         {
 			Debug.Log("angle01 > angle02, angle02 = " + angle02 + ", afterR01 = " + afterR01 + ", afterR02 = " + afterR02);
 		}
+		*/
 
 		//Debug.Log("afterR01: " + afterR01);
 		//Debug.Log("afterR02: " + afterR02);
@@ -277,11 +281,14 @@ public class EdgeInformation : MonoBehaviour
 	void ResetPlayerVelocity()
 	{
 		//rBody.velocity = nextVel;
-		
+
 		// プレイヤーの速度情報を更新（ベクトルの回転）
-		Vector3 vec = Quaternion.Euler(afterR - beforeR) * rVel;
-		rBody.velocity = vec;
-		
+		// Vector3 vec = Quaternion.Euler(afterR - beforeR) * locVel;
+		// rBody.velocity = vec;
+
+		rBody.velocity = player.transform.TransformDirection(locVel);
+
+		//Debug.Log("rBody.velocity: " + rBody.velocity);
 
 		//Debug.Log("vec: " + vec);
 	}
