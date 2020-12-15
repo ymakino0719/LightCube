@@ -8,4 +8,68 @@ AvatarMask:
   m_PrefabAsset: {fileID: 0}
   m_Name: Yagikun3DUpperBodyMask
   m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-  m_Elements: []
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: Quad Sphere
+    m_Weight: 0
+  - m_Path: rig
+    m_Weight: 0
+  - m_Path: WGTS_rig
+    m_Weight: 0
+  - m_Path: WGTS_rig/WGT-rig_root
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/Body01"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/Body01/Neck"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/Body01/Neck/Face"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/Body01/Neck/Face/L_Ear01"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/Body01/Neck/Face/L_Ear01/L_Ear02"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/Body01/Neck/Face/L_Ear01/L_Ear02/L_Ear03"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/Body01/Neck/Face/R_Ear01"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/Body01/Neck/Face/R_Ear01/R_Ear02"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/Body01/Neck/Face/R_Ear01/R_Ear02/R_Ear03"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/Bone.007"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/L_Shoulder"
+    m_Weight: 1
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/L_Shoulder/L_Arm01"
+    m_Weight: 1
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/L_Shoulder/L_Arm01/L_Arm02"
+    m_Weight: 1
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/R_Shoulder"
+    m_Weight: 1
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/R_Shoulder/R_Arm01"
+    m_Weight: 1
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/Body04/Body03/Body02/R_Shoulder/R_Arm01/R_Arm02"
+    m_Weight: 1
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/L_Crotch"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/L_Crotch/L_Leg01"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/L_Crotch/L_Leg01/L_Leg02"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/R_Crotch"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/R_Crotch/R_Leg01"
+    m_Weight: 0
+  - m_Path: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2/Root/R_Crotch/R_Leg01/R_Leg02"
+    m_Weight: 0

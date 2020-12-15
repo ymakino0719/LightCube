@@ -6,21 +6,23 @@ public class AnimationController : MonoBehaviour
 {
 	// Yagikun3DのAnimator
 	Animator animator;
+	// PlayerController
+	PlayerController pC;
 	// Playerが動いているかどうかの閾値
 	float judgeMoving = 0.01f;
 	// AnimationのRunの速さパラメータ
 	float runAnimSpeed = 1.0f;
-
-
 
 	// Start is called before the first frame update
 	void Awake()
 	{
 		// Yagikun3DにアタッチされているAnimatorを取得する
 		animator = GetComponent<Animator>();
+		// PlayerControllerの取得
+		pC = GameObject.Find("Player").GetComponent<PlayerController>();
 	}
 
-	public void MoveAnimation(bool jump, bool pick, ref bool holding, bool isGround, bool lastGround, Vector3 vec)
+	public void MoveAnimation(bool jump, bool pick, bool holding, bool isGround, bool lastGround, Vector3 vec)
 	{
 		if (isGround)
 		{
@@ -41,8 +43,6 @@ public class AnimationController : MonoBehaviour
                 {
 					animator.SetBool("holding", true);
 				}
-
-				holding = !holding;
 			}
 			else
 			{
@@ -74,4 +74,24 @@ public class AnimationController : MonoBehaviour
 		}
 	}
 
+	void PickUpEvent()
+    {
+		animator.SetBool("bring", true);
+		pC.Holding = true;
+	}
+
+	void PutDownEvent()
+    {
+		animator.SetBool("bring", false);
+		pC.Holding = false;
+	}
+
+	void CantMovingEvent()
+    {
+		pC.Control = false;
+    }
+	void CanMovingEvent()
+	{
+		pC.Control = true;
+	}
 }

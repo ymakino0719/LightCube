@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
 
 			Vector3 vec = rBody.velocity;
 
-			aC.MoveAnimation(jump, pick, ref holding, isGround, lastGround, vec);
+			aC.MoveAnimation(jump, pick, holding, isGround, lastGround, vec);
 			MoveCharacter(hor, ver, jump);
 			//TurnDirection(move);
 
@@ -171,5 +171,10 @@ public class PlayerController : MonoBehaviour
 	{
 		set { control = value; }
 		get { return control; }
+	}
+	public bool Holding
+	{
+		set { holding = value; }
+		get { return holding; }
 	}
 }
