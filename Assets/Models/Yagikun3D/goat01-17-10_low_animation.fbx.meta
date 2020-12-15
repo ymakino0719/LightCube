@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2d7374a38175b5a4d968c998e7859e43
+guid: 00fb83afc0874a44999b13f588745944
 ModelImporter:
   serializedVersion: 19301
   internalIDToNameTable:
@@ -8,16 +8,13 @@ ModelImporter:
     second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Bringing"
   - first:
       74: 65361366629931794
-    second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|EndRotating"
+    second: EndRotating
   - first:
       74: -2594830005207816443
-    second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Idle"
+    second: Idle
   - first:
       74: 3284188779437416314
-    second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Jump"
-  - first:
-      74: -7136660402031240324
-    second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Jump.001"
+    second: Jump
   - first:
       74: -8646788200585220264
     second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Jumping"
@@ -35,7 +32,7 @@ ModelImporter:
     second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Rotating"
   - first:
       74: -3900006098430850046
-    second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Rotating02"
+    second: Rotating02
   - first:
       74: 3883499938847293663
     second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Run2"
@@ -44,19 +41,40 @@ ModelImporter:
     second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|StartRotating"
   - first:
       74: -2054729920978899392
-    second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Walk"
+    second: Walk
   - first:
       74: 6756163884670735776
     second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|\u30A2\u30AF\u30B7\u30E7\u30F3"
   - first:
-      74: 8277414056026365300
-    second: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|\u30A2\u30AF\u30B7\u30E7\u30F3.001"
+      74: 9586892904987460
+    second: rig|Bringing
   - first:
       74: 4859470207336704588
     second: "rig|\u30A2\u30AF\u30B7\u30E7\u30F3"
   - first:
-      74: -153474626675078177
-    second: "rig|\u30A2\u30AF\u30B7\u30E7\u30F3.001"
+      74: -4160861242677936623
+    second: Bringing
+  - first:
+      74: 1742679161841691293
+    second: Jumping
+  - first:
+      74: 6480610267109901665
+    second: Landing
+  - first:
+      74: 4787742288682755051
+    second: PickUp
+  - first:
+      74: -797761834849594969
+    second: PutDown
+  - first:
+      74: 717212504427751151
+    second: Rotating
+  - first:
+      74: -4028308708599296689
+    second: Run2
+  - first:
+      74: 2066531635240680936
+    second: StartRotating
   externalObjects:
   - first:
       type: UnityEngine:Material
@@ -91,7 +109,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Bringing"
+      name: Bringing
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Bringing"
       internalID: 0
       firstFrame: 0
@@ -120,7 +138,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|EndRotating"
+      name: EndRotating
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|EndRotating"
       internalID: 0
       firstFrame: 0
@@ -149,7 +167,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Idle"
+      name: Idle
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Idle"
       internalID: 0
       firstFrame: 0
@@ -178,7 +196,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Jump"
+      name: Jump
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Jump"
       internalID: 0
       firstFrame: 0
@@ -207,36 +225,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Jump.001"
-      takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Jump.001"
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 18
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Jumping"
+      name: Jumping
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Jumping"
       internalID: 0
       firstFrame: 0
@@ -247,7 +236,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -265,7 +254,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Landing"
+      name: Landing
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Landing"
       internalID: 0
       firstFrame: 0
@@ -294,7 +283,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|PickUp"
+      name: PickUp
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|PickUp"
       internalID: 0
       firstFrame: 0
@@ -323,7 +312,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|PutDown"
+      name: PutDown
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|PutDown"
       internalID: 0
       firstFrame: 0
@@ -352,7 +341,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Rotating"
+      name: Rotating
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Rotating"
       internalID: 0
       firstFrame: 0
@@ -381,7 +370,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Rotating02"
+      name: Rotating02
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Rotating02"
       internalID: 0
       firstFrame: 0
@@ -392,7 +381,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -410,7 +399,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Run2"
+      name: Run2
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Run2"
       internalID: 0
       firstFrame: 0
@@ -439,7 +428,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|StartRotating"
+      name: StartRotating
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|StartRotating"
       internalID: 0
       firstFrame: 0
@@ -468,7 +457,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Walk"
+      name: Walk
       takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|Walk"
       internalID: 0
       firstFrame: 0
@@ -479,7 +468,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -526,8 +515,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|\u30A2\u30AF\u30B7\u30E7\u30F3.001"
-      takeName: "\u30A2\u30FC\u30DE\u30C1\u30E5\u30A2|\u30A2\u30AF\u30B7\u30E7\u30F3.001"
+      name: rig|Bringing
+      takeName: rig|Bringing
       internalID: 0
       firstFrame: 0
       lastFrame: 1
@@ -557,35 +546,6 @@ ModelImporter:
     - serializedVersion: 16
       name: "rig|\u30A2\u30AF\u30B7\u30E7\u30F3"
       takeName: "rig|\u30A2\u30AF\u30B7\u30E7\u30F3"
-      internalID: 0
-      firstFrame: 0
-      lastFrame: 1
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 0
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: "rig|\u30A2\u30AF\u30B7\u30E7\u30F3.001"
-      takeName: "rig|\u30A2\u30AF\u30B7\u30E7\u30F3.001"
       internalID: 0
       firstFrame: 0
       lastFrame: 1
