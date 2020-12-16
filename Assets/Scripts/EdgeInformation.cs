@@ -160,13 +160,6 @@ public class EdgeInformation : MonoBehaviour
 		afterR = (angle01 < angle02) ? afterR01 : afterR02;
 
 		/*
-		Vector3 vel01 = CheckVelocityDirection(edge, axis, angle, rVel);
-		Vector3 vel02 = CheckVelocityDirection(edge, axis, -angle, rVel);
-
-		nextVel = (angle01 < angle02) ? vel01 : vel02;
-		*/
-
-		/*
 		if (angle01 < angle02)
         {
 			Debug.Log("angle01 < angle02, angle01 = " + angle01 + ", afterR01 = " + afterR01 + ", afterR02 = " + afterR02);
@@ -176,12 +169,6 @@ public class EdgeInformation : MonoBehaviour
 			Debug.Log("angle01 > angle02, angle02 = " + angle02 + ", afterR01 = " + afterR01 + ", afterR02 = " + afterR02);
 		}
 		*/
-
-		//Debug.Log("afterR01: " + afterR01);
-		//Debug.Log("afterR02: " + afterR02);
-
-		//Debug.Log("beforeR: " + beforeR);
-		//Debug.Log("afterR: " + afterR);
 	}
 
 	Vector3 CheckRotation(Vector3 edge, Vector3 axis)
@@ -192,36 +179,8 @@ public class EdgeInformation : MonoBehaviour
 		// 元に戻す（-180度回転させる）
 		player.transform.RotateAround(edge, axis, -180);
 
-		/*
-		// 現在の回転情報を取得する
-		Quaternion q = player.transform.rotation;
-		// 回転軸axis周りに180度回転させる
-		Quaternion rot = Quaternion.AngleAxis(180, axis);
-		player.transform.rotation = q * rot;
-
-		// プレイヤーのEulerAnglesを取得する
-		Vector3 vec = player.transform.eulerAngles;
-
-		// 元に戻す
-		player.transform.rotation = q;
-		*/
-
 		return vec;
 	}
-
-	/*
-	Vector3 CheckVelocityDirection(Vector3 edge, Vector3 axis, float angle, Vector3 rVel)
-	{
-		checkRocket.transform.position = edge + rVel;
-
-		// RotateAroundでangle度回転させたあとのEulerAngleを取得する
-		checkRocket.transform.RotateAround(edge, axis, angle);
-		checkRocket.transform.position -= edge;
-		Vector3 vec = player.transform.eulerAngles;
-
-		return vec;
-	}
-	*/
 
 	void CheckMiddlePos()
     {
@@ -280,17 +239,7 @@ public class EdgeInformation : MonoBehaviour
 
 	void ResetPlayerVelocity()
 	{
-		//rBody.velocity = nextVel;
-
-		// プレイヤーの速度情報を更新（ベクトルの回転）
-		// Vector3 vec = Quaternion.Euler(afterR - beforeR) * locVel;
-		// rBody.velocity = vec;
-
 		rBody.velocity = player.transform.TransformDirection(locVel);
-
-		//Debug.Log("rBody.velocity: " + rBody.velocity);
-
-		//Debug.Log("vec: " + vec);
 	}
 
 	public int EdgeNum

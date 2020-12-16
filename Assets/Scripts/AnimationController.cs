@@ -13,6 +13,11 @@ public class AnimationController : MonoBehaviour
 	// AnimationのRunの速さパラメータ
 	float runAnimSpeed = 1.0f;
 
+	// 近くにあるitem
+	GameObject nearestItem;
+	// 手に持った時のitemのPos
+	GameObject bringingPos;
+
 	// Start is called before the first frame update
 	void Awake()
 	{
@@ -20,6 +25,9 @@ public class AnimationController : MonoBehaviour
 		animator = GetComponent<Animator>();
 		// PlayerControllerの取得
 		pC = GameObject.Find("Player").GetComponent<PlayerController>();
+		// BringingPosの取得
+		bringingPos = GameObject.Find("BringingPos");
+
 	}
 
 	public void MoveAnimation(bool jump, bool pick, bool holding, bool isGround, bool lastGround, Vector3 vec)
@@ -78,12 +86,20 @@ public class AnimationController : MonoBehaviour
     {
 		animator.SetBool("bring", true);
 		pC.Holding = true;
+
+		// ※仮設定、後で変える
+		nearestItem.transform.parent = bringingPos.transform;
+		nearestItem.transform.localPosition = Vector3.zero;
+		nearestItem.transform.localEulerAngles = Vector3.zero;
 	}
 
 	void PutDownEvent()
     {
 		animator.SetBool("bring", false);
 		pC.Holding = false;
+
+		// ※仮設定、後で変える
+		nearestItem.transform.parent = null;
 	}
 
 	void CantMovingEvent()
@@ -93,5 +109,10 @@ public class AnimationController : MonoBehaviour
 	void CanMovingEvent()
 	{
 		pC.Control = true;
+	}
+	public GameObject NearestItem
+	{
+		set { nearestItem = value; }
+		get { return nearestItem; }
 	}
 }

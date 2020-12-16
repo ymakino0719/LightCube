@@ -34,10 +34,17 @@ public class PlayerController : MonoBehaviour
 	float minimumSpeed = 0.01f;
 
 	// 次に移動する面に移動中かどうか
-	private bool control = true;
+	bool control = true;
 
 	// Yagikun3DにアタッチされているAnimationControllerの取得
 	AnimationController aC;
+
+	// 近くにあるitem
+	GameObject nearestItem;
+	// 近くのitem探索で使用するコライダーのリスト
+	Collider[] colList;
+	// プレイヤーの原点位置からの探索範囲
+	float searchDis = 1.0f;
 
 	// Start is called before the first frame update
 	void Awake()
@@ -61,30 +68,39 @@ public class PlayerController : MonoBehaviour
 			// 仮想重力をかけ続ける
 			rBody.AddForce(-transform.up * gravity);
 
-			// Playerをキー操作で動かす
 
-			//// Moving ////
+			// Playerをキー操作で動かす
+			/////////////////////////////////
+			//////////// Moving /////////////
+			/////////////////////////////////
+
 			float hor = Input.GetAxis("Horizontal");
 			float ver = Input.GetAxis("Vertical");
 
-			//// Jumping ////
+			/////////////////////////////////
+			//////////// Jumping ////////////
+			/////////////////////////////////
 			bool jump = false;
-
 			// 着地しているときジャンプを可能にする
-			if (isGround)
-            {
-				jump = Input.GetButtonDown("Jump");
-			}
+			if (isGround) jump = Input.GetButtonDown("Jump");
 
-			//// PickUp & PutDown ////
-			bool pick = Input.GetButtonDown("Pick");
-			//if (pick) holding = !holding;
+			/////////////////////////////////
+			/////// PickUp or PutDown ///////
+			/////////////////////////////////
+			///
+			bool pick = false;
+			if (rBody.velocity.sqrMagnitude < minimumSpeed) pick = Input.GetButtonDown("Pick");
+
+			/////////////////////////////////
+			/////////// Functions ///////////
+			/////////////////////////////////
+
+			// アイテムを持っていないときにpickの入力があった場合のみ、アイテムを拾うかどうか判定する
+			if (pick && !holding) JudgePickUpItems(ref pick);
 
 			Vector3 vec = rBody.velocity;
-
 			aC.MoveAnimation(jump, pick, holding, isGround, lastGround, vec);
 			MoveCharacter(hor, ver, jump);
-			//TurnDirection(move);
 
 			// lastGround（直前に着地していたか）の更新
 			lastGround = (isGround) ? true : false;
@@ -93,8 +109,6 @@ public class PlayerController : MonoBehaviour
 		{
 
         }
-
-		Debug.Log("isGround : " + isGround);
 	}
 
 	void MoveCharacter(float hor, float ver, bool jump)
@@ -119,9 +133,6 @@ public class PlayerController : MonoBehaviour
 			// locVel.x：プレイヤーの奥行移動
 			rBody.AddForce(-transform.right * ver * moveS);
 		}
-
-		//Debug.Log("ver: " + ver);
-		//Debug.Log("locVel.z: " + locVel.z);
 
 		///////////////////////
 		////// movelimit //////
@@ -158,8 +169,70 @@ public class PlayerController : MonoBehaviour
 			Vector3 looking = new Vector3(locVel2.x, 0, locVel2.z);
 			yagikun.transform.rotation = Quaternion.LookRotation(transform.TransformDirection(looking), transform.up); // 向きを変更する
 		}
+	}
+
+	void JudgePickUpItems(ref bool pick)
+    {
+		// 近くにitemがあるか探索
+		nearestItem = FindItemsNearby();
+
+		if (nearestItem == null) // 近くにitemがない場合、pickは無効、終了する
+		{
+			pick = false;
+			return;
+		}
+		else // ある場合、nearestItemを更新する
+        {
+			aC.NearestItem = nearestItem;
+        }
+
+		// itemの方を振り向く
+		TurnTowardTheItem(nearestItem);
+	}
+	GameObject FindItemsNearby()
+    {
+		// プレイヤーの原点位置を中心にオブジェクト探索
+		colList = Physics.OverlapSphere(transform.position, searchDis);
+
+		// 近くのゲームオブジェクト
+		GameObject nItem = null;
+
+		for (int i = 0; i < colList.Length; i++)
+		{
+			if (colList[i].gameObject.CompareTag("Item")) // Itemのタグが付いたオブジェクトのみを対象とする
+			{
+				if(nItem == null) // 近くのオブジェクトが１つのみだった場合ここの処理で終わる
+                {
+					nItem = colList[i].gameObject;
+				}
+				else // 近くのオブジェクトが複数ある場合、一番距離が近いitemを特定、nItemを更新する
+				{
+					float disA = (transform.position - colList[i].gameObject.transform.position).sqrMagnitude;
+					float disB = (transform.position - nItem.transform.position).sqrMagnitude;
+
+					if(disA < disB)
+                    {
+						nItem = colList[i].gameObject;
+					}
+				}
+			}
+		}
+
+		return nItem;
+	}
+	void TurnTowardTheItem(GameObject nearestItem)
+    {
+		// プレイヤーとitemの座標差を調べる
+		Vector3 diff = nearestItem.transform.position - transform.position;
+
+		// プレイヤーを基準としたローカル座標系locPosに変換
+		Vector3 locPos = transform.InverseTransformDirection(diff);
 		
-		
+		// プレイヤーを基準としたローカル座標系の内、Y軸の回転は行わないため、Y要素のみ無効とする
+		Vector3 looking = new Vector3(locPos.x, 0, locPos.z);
+
+		// yagikun3Dをオブジェクトのある位置に水平に方向転換する
+		yagikun.transform.rotation = Quaternion.LookRotation(transform.TransformDirection(looking), transform.up);
 	}
 
 	public bool IsGround
