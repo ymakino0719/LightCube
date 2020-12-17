@@ -25,9 +25,14 @@ public class EdgeInformation : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
 	{
-		if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Item"))
+		if (other.gameObject.CompareTag("Player"))
 		{
-			var aEC = other.gameObject.GetComponent<AroundEdgeController>();
+			var aEC = other.gameObject.GetComponent<AroundEdgeController>(); // PlayerはPlayerにAroundEdgeControllerがアタッチされている
+			aEC.FromEdgesInformation(edge, vertex[0], vertex[1], face[0], face[1]);
+		}
+		else if (other.gameObject.CompareTag("Item"))
+		{
+			var aEC = other.transform.parent.gameObject.GetComponent<AroundEdgeController>(); // Itemは親オブジェクトにAroundEdgeControllerがアタッチされている
 			aEC.FromEdgesInformation(edge, vertex[0], vertex[1], face[0], face[1]);
 		}
 	}

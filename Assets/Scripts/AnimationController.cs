@@ -39,18 +39,18 @@ public class AnimationController : MonoBehaviour
 				animator.SetTrigger("pickUpTrigger");
 
 				if (!holding)
-                {
+				{
 					animator.SetBool("holding", false);
 				}
 				else
-                {
+				{
 					animator.SetBool("holding", true);
 				}
 			}
 			else
 			{
-				if(!lastGround)
-                {
+				if (!lastGround)
+				{
 					animator.SetBool("jumpingBool", false);
 				}
 
@@ -78,13 +78,13 @@ public class AnimationController : MonoBehaviour
 	}
 
 	void BringEvent() // PickUpアニメーションの最後と、PutDownアニメーションの手を放した瞬間に実行
-    {
-		if(!pC.Holding)
-        {
+	{
+		if (!pC.Holding)
+		{
 			animator.SetBool("bring", true);
 		}
 		else
-        {
+		{
 			animator.SetBool("bring", false);
 		}
 		pC.Holding = !pC.Holding;
@@ -94,7 +94,7 @@ public class AnimationController : MonoBehaviour
 	{
 		// Itemを掴む
 		var iC = nearestItem.GetComponent<ItemsController>();
-		iC.BeingHeld();		
+		iC.BeingHeld();
 	}
 
 	void PutDownEvent() // PutDownアニメーションの手を放した瞬間に実行
@@ -105,16 +105,16 @@ public class AnimationController : MonoBehaviour
 	}
 
 	void CantMovingEvent()
-    {
+	{
 		pC.Control = false;
-    }
+	}
 	void CanMovingEvent()
 	{
 		pC.Control = true;
 	}
 
 	void StartPuttingDown()
-    {
+	{
 		var iC = nearestItem.GetComponent<ItemsController>();
 		iC.PuttingDown = true;
 	}

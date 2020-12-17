@@ -203,16 +203,17 @@ public class PlayerController : MonoBehaviour
 			{
 				if(nItem == null) // 近くのオブジェクトが１つのみだった場合ここの処理で終わる
                 {
-					nItem = colList[i].gameObject;
+					// nItemには衝突したオブジェクトの１つ上の親オブジェクトを代入する
+					nItem = colList[i].transform.parent.gameObject;
 				}
 				else // 近くのオブジェクトが複数ある場合、一番距離が近いitemを特定、nItemを更新する
 				{
-					float disA = (transform.position - colList[i].gameObject.transform.position).sqrMagnitude;
+					float disA = (transform.position - colList[i].transform.parent.gameObject.transform.position).sqrMagnitude;
 					float disB = (transform.position - nItem.transform.position).sqrMagnitude;
 
 					if(disA < disB)
                     {
-						nItem = colList[i].gameObject;
+						nItem = colList[i].transform.parent.gameObject;
 					}
 				}
 			}

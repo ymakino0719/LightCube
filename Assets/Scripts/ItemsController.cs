@@ -27,25 +27,31 @@ public class ItemsController : MonoBehaviour
     // 置いている最中かどうか
     bool puttingDown = false;
 
-    // Yagikun3Dのゲームオブジェクト
+    // 回転させる子オブジェクト
+    GameObject child;
+    // yagikun3Dのゲームオブジェクト
     GameObject yagikun3D;
     // 手に持った時のitemのPos
     GameObject bringingPos;
 
     void Awake()
     {
-        col = GetComponent<BoxCollider>();
+        // ItemにアタッチされているRigidbodyを取得する
         rBody = GetComponent<Rigidbody>();
         // BringingPosの取得
         bringingPos = GameObject.Find("BringingPos");
-        // プレイヤーのゲームオブジェクトの取得
+        // Itemの直下に配置している子オブジェクトを取得する
+        child = transform.GetChild(0).gameObject;
+        // Itemの直下に配置している子オブジェクトのBoxColliderを取得する
+        col = child.GetComponent<BoxCollider>();
+        // yagikun3Dのゲームオブジェクトを取得する
         yagikun3D = GameObject.Find("Yagikun3D");
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(rBody.velocity);
+        //Debug.Log(rBody.velocity);
 
         if(!puzzle && !held && !rotating)
         {
@@ -80,9 +86,8 @@ public class ItemsController : MonoBehaviour
 
     void PuttingDownRotation()
     {
-        transform.eulerAngles = yagikun3D.transform.eulerAngles;
+        child.transform.eulerAngles = yagikun3D.transform.eulerAngles;
     }
-
     public void StartRotatingAroundEdge()
     {
         rotating = true;
@@ -102,7 +107,8 @@ public class ItemsController : MonoBehaviour
         // Itemの位置を腕に来るようにする
         transform.parent = bringingPos.transform;
         transform.localPosition = Vector3.zero;
-        transform.localEulerAngles = Vector3.zero;
+        // 回転情報はItemの子オブジェクトが受け持つ
+        child.transform.eulerAngles = bringingPos.transform.eulerAngles;
     }
 
     public void NotBeingHeld()
@@ -115,9 +121,18 @@ public class ItemsController : MonoBehaviour
         // Itemを放す
         transform.parent = null;
 
-        // Itemを放した瞬間にも、プレイヤーのワールド回転と同じく垂直な向きにする処理を実行しておく
-        PuttingDownRotation();
+        // Itemを手放した直後の回転処理
+        LetGoOfItemsRotation();
         puttingDown = false;
+    }
+    void LetGoOfItemsRotation()
+    {
+        // 子オブジェクトの回転情報を記録する
+        Vector3 vec = child.transform.eulerAngles;
+        // Itemの回転情報を、yagikun3Dの親オブジェクトであるPlayerの回転情報と一致させる
+        transform.eulerAngles = yagikun3D.transform.parent.gameObject.transform.eulerAngles;
+        // 子オブジェクトの回転情報を更新する
+        child.transform.eulerAngles = vec;
     }
     public bool PuttingDown
     {

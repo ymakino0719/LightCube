@@ -90,25 +90,25 @@ public class AroundEdgeController : MonoBehaviour
 
 	void StopObject()
     {
-		if (this.gameObject.CompareTag("Player"))
+		if (gameObject.CompareTag("Player")) // Playerは当たり判定のあるPlayerにPlayerのタグ付けがされている
 		{
-			this.GetComponent<PlayerController>().Control = false;
+			GetComponent<PlayerController>().Control = false;
 		}
-		else if (this.gameObject.CompareTag("Item"))
+		else if (transform.GetChild(0).gameObject.CompareTag("Item")) // Itemは当たり判定のある子オブジェクトにItemのタグ付けがされている
 		{
-			this.GetComponent<ItemsController>().StartRotatingAroundEdge();
+			GetComponent<ItemsController>().StartRotatingAroundEdge();
 		}
 	}
 
 	void RestartObject()
     {
-		if (this.gameObject.CompareTag("Player"))
+		if (gameObject.CompareTag("Player")) // Playerは当たり判定のあるPlayerにPlayerのタグ付けがされている
 		{
-			this.GetComponent<PlayerController>().Control = true;
+			GetComponent<PlayerController>().Control = true;
 		}
-		else if (this.gameObject.CompareTag("Item"))
+		else if (transform.GetChild(0).gameObject.CompareTag("Item")) // Itemは当たり判定のある子オブジェクトにItemのタグ付けがされている
 		{
-			this.GetComponent<ItemsController>().EndRotatingAroundEdge();
+			GetComponent<ItemsController>().EndRotatingAroundEdge();
 		}
 	}
 
