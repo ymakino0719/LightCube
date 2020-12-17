@@ -87,10 +87,8 @@ public class AnimationController : MonoBehaviour
 		animator.SetBool("bring", true);
 		pC.Holding = true;
 
-		// ※仮設定、後で変える
-		nearestItem.transform.parent = bringingPos.transform;
-		nearestItem.transform.localPosition = Vector3.zero;
-		nearestItem.transform.localEulerAngles = Vector3.zero;
+		var iC = nearestItem.GetComponent<ItemsController>();
+		iC.BeingHeld(bringingPos);		
 	}
 
 	void PutDownEvent()
@@ -98,8 +96,8 @@ public class AnimationController : MonoBehaviour
 		animator.SetBool("bring", false);
 		pC.Holding = false;
 
-		// ※仮設定、後で変える
-		nearestItem.transform.parent = null;
+		var iC = nearestItem.GetComponent<ItemsController>();
+		iC.NotBeingHeld();
 	}
 
 	void CantMovingEvent()
