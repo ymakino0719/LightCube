@@ -22,6 +22,8 @@ public class ItemsController : MonoBehaviour
     Collider col;
     // プレイヤーに持たれているかどうか
     bool held = false;
+    // edgeを回転中かどうか
+    bool rotating = false;
 
     void Awake()
     {
@@ -34,7 +36,7 @@ public class ItemsController : MonoBehaviour
     {
         Debug.Log(rBody.velocity);
 
-        if(!puzzle && !held)
+        if(!puzzle && !held && !rotating)
         {
             ItemsGravityControll();
         }
@@ -58,6 +60,17 @@ public class ItemsController : MonoBehaviour
 
             rBody.velocity = transform.TransformDirection(locVel);
         }
+    }
+
+    public void StartRotatingAroundEdge()
+    {
+        //rBody.isKinematic = true;
+        rotating = true;
+    }
+    public void EndRotatingAroundEdge()
+    {
+        //rBody.isKinematic = false;
+        rotating = false;
     }
 
     public void BeingHeld(GameObject bringingPos)
