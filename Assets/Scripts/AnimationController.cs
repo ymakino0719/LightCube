@@ -15,8 +15,6 @@ public class AnimationController : MonoBehaviour
 
 	// 近くにあるitem
 	GameObject nearestItem;
-	// 手に持った時のitemのPos
-	GameObject bringingPos;
 
 	// Start is called before the first frame update
 	void Awake()
@@ -25,9 +23,6 @@ public class AnimationController : MonoBehaviour
 		animator = GetComponent<Animator>();
 		// PlayerControllerの取得
 		pC = GameObject.Find("Player").GetComponent<PlayerController>();
-		// BringingPosの取得
-		bringingPos = GameObject.Find("BringingPos");
-
 	}
 
 	public void MoveAnimation(bool jump, bool pick, bool holding, bool isGround, bool lastGround, Vector3 vec)
@@ -82,20 +77,29 @@ public class AnimationController : MonoBehaviour
 		}
 	}
 
-	void PickUpEvent()
+	void BringEvent() // PickUpアニメーションの最後と、PutDownアニメーションの手を放した瞬間に実行
     {
-		animator.SetBool("bring", true);
-		pC.Holding = true;
-
-		var iC = nearestItem.GetComponent<ItemsController>();
-		iC.BeingHeld(bringingPos);		
+		if(!pC.Holding)
+        {
+			animator.SetBool("bring", true);
+		}
+		else
+        {
+			animator.SetBool("bring", false);
+		}
+		pC.Holding = !pC.Holding;
 	}
 
-	void PutDownEvent()
-    {
-		animator.SetBool("bring", false);
-		pC.Holding = false;
+	void PickUpEvent() // PickUpアニメーションのアイテムを掴んだ瞬間に実行
+	{
+		// Itemを掴む
+		var iC = nearestItem.GetComponent<ItemsController>();
+		iC.BeingHeld();		
+	}
 
+	void PutDownEvent() // PutDownアニメーションの手を放した瞬間に実行
+	{
+		// Itemを放す
 		var iC = nearestItem.GetComponent<ItemsController>();
 		iC.NotBeingHeld();
 	}
@@ -107,6 +111,12 @@ public class AnimationController : MonoBehaviour
 	void CanMovingEvent()
 	{
 		pC.Control = true;
+	}
+
+	void StartPuttingDown()
+    {
+		var iC = nearestItem.GetComponent<ItemsController>();
+		iC.PuttingDown = true;
 	}
 	public GameObject NearestItem
 	{

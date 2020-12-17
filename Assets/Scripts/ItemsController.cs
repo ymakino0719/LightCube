@@ -24,11 +24,22 @@ public class ItemsController : MonoBehaviour
     bool held = false;
     // edgeを回転中かどうか
     bool rotating = false;
+    // 置いている最中かどうか
+    bool puttingDown = false;
+
+    // Yagikun3Dのゲームオブジェクト
+    GameObject yagikun3D;
+    // 手に持った時のitemのPos
+    GameObject bringingPos;
 
     void Awake()
     {
         col = GetComponent<BoxCollider>();
         rBody = GetComponent<Rigidbody>();
+        // BringingPosの取得
+        bringingPos = GameObject.Find("BringingPos");
+        // プレイヤーのゲームオブジェクトの取得
+        yagikun3D = GameObject.Find("Yagikun3D");
     }
 
     // Update is called once per frame
@@ -39,6 +50,11 @@ public class ItemsController : MonoBehaviour
         if(!puzzle && !held && !rotating)
         {
             ItemsGravityControll();
+        }
+
+        if(puttingDown)
+        {
+            PuttingDownRotation();
         }
     }
 
@@ -62,25 +78,28 @@ public class ItemsController : MonoBehaviour
         }
     }
 
+    void PuttingDownRotation()
+    {
+        transform.eulerAngles = yagikun3D.transform.eulerAngles;
+    }
+
     public void StartRotatingAroundEdge()
     {
-        //rBody.isKinematic = true;
         rotating = true;
     }
     public void EndRotatingAroundEdge()
     {
-        //rBody.isKinematic = false;
         rotating = false;
     }
 
-    public void BeingHeld(GameObject bringingPos)
+    public void BeingHeld()
     {
         // プレイヤーに抱えられているときはItemsの移動速度、あたり判定及び仮想重力をなくす
         rBody.isKinematic = true;
         col.enabled = false;
         held = true;
 
-        // ※仮設定、後で変える
+        // Itemの位置を腕に来るようにする
         transform.parent = bringingPos.transform;
         transform.localPosition = Vector3.zero;
         transform.localEulerAngles = Vector3.zero;
@@ -93,7 +112,16 @@ public class ItemsController : MonoBehaviour
         col.enabled = true;
         held = false;
 
-        // ※仮設定、後で変える
+        // Itemを放す
         transform.parent = null;
+
+        // Itemを放した瞬間にも、プレイヤーのワールド回転と同じく垂直な向きにする処理を実行しておく
+        PuttingDownRotation();
+        puttingDown = false;
+    }
+    public bool PuttingDown
+    {
+        set { puttingDown = value; }
+        get { return puttingDown; }
     }
 }
