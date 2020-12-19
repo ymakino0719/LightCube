@@ -6,6 +6,18 @@ public class ItemsController : MonoBehaviour
 {
     // パズルとして正解の位置にあるかどうか
     bool puzzle = false;
+    // パズルとして正解の位置に移動する際中かどうか
+    bool putKey01 = false;
+    bool putKey02 = false;
+    // 衝突したLockBlockの位置・回転・拡大率情報
+    Vector3 lockPos, lockRot, lockSca;
+    // LockBlockと衝突した瞬間のこのオブジェクトの位置・回転・拡大率情報
+    Vector3 keyPos, keyRot, keySca;
+
+    // このオブジェクトを移動・回転させるときの時間（0～1）
+    private float timeX = 0;
+    // このオブジェクトを移動・回転させるときの時間の調整パラメータ
+    private float timeCoef = 0.8f;
 
     // ItemsのRigidbody
     Rigidbody rBody;
@@ -61,6 +73,41 @@ public class ItemsController : MonoBehaviour
         if(puttingDown)
         {
             PuttingDownRotation();
+        }
+
+        if(putKey01 || putKey02)
+        {
+            // timeXに時間を加算する
+            timeX += timeCoef * Time.deltaTime;
+
+            // 移動・回転に使用するtimeX01の定義
+            float timeX01 = (timeX <= 1) ? timeX : 1;
+            // 拡大に使用するtimeX02の定義
+            float timeX02 = (timeX <= 2) ? timeX * 0.5f : 1;
+
+            // 移動・回転に使用するtimeX01の定義: y = -x(x-2)
+            float timeY01 = -timeX01 * (timeX01 - 2);
+            // 拡大に使用するtimeX02の定義      : y = -x(x-2)
+            float timeY02 = -timeX02 * (timeX02 - 2);
+
+            if (putKey01)
+            {
+                PutKeys_ChangePosAndRot(timeY01);
+                if (timeX01 == 1) putKey01 = false;
+                Debug.Log("putKey01");
+            }
+
+            if (putKey02)
+            {
+                PutKeys_ChangeSca(timeY02);
+                if (timeX02 == 1) putKey01 = false;
+                Debug.Log("putKey02");
+            } 
+
+            if (!putKey01 && !putKey02)
+            {
+                timeX = 0;
+            }
         }
     }
 
@@ -134,6 +181,50 @@ public class ItemsController : MonoBehaviour
         // 子オブジェクトの回転情報を更新する
         child.transform.eulerAngles = vec;
     }
+
+    void OnCollisionEnter(Collision other)
+    {
+        if (other.gameObject.CompareTag("Lock")) // Lockのタグが付いたオブジェクトのみを対象とする
+        {
+            // Itemの物理挙動及び当たり判定を無効化する
+            rBody.isKinematic = true;
+            col.enabled = false;
+
+            // 衝突したLockBlockの位置・回転・拡大率情報を記録する
+            lockPos = other.transform.position;
+            lockRot = other.transform.eulerAngles;
+            lockSca = other.transform.localScale;
+
+            //Debug.Log("lockPos: " + lockPos);
+            //Debug.Log("lockRot: " + lockRot);
+            //Debug.Log("lockSca: " + lockSca);
+
+            // LockBlockと衝突した瞬間のこのオブジェクトの位置・回転・拡大率情報を記録する
+            keyPos = transform.position;
+            keyRot = child.transform.eulerAngles;
+            keySca = child.transform.localScale;
+
+            //Debug.Log("keyPos: " + keyPos);
+            //Debug.Log("keyRot: " + keyRot);
+            //Debug.Log("keySca: " + keySca);
+
+            // 移動、回転の開始
+            putKey01 = true;
+            // 拡大の開始
+            putKey02 = true;
+        }
+    }
+
+    void PutKeys_ChangePosAndRot(float timeY01)
+    {
+        transform.position = Vector3.Lerp(keyPos, lockPos, timeY01);
+        child.transform.eulerAngles = Vector3.Lerp(keyRot, lockRot, timeY01);
+    }
+    void PutKeys_ChangeSca(float timeY02)
+    {
+        child.transform.localScale = Vector3.Lerp(keySca, lockSca, timeY02);
+    }
+
     public bool PuttingDown
     {
         set { puttingDown = value; }

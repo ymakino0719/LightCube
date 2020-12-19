@@ -9,6 +9,7 @@ TagManager:
   - Face
   - HitBox
   - Item
+  - Lock
   layers:
   - Default
   - TransparentFX
