@@ -18,6 +18,10 @@ public class ItemsController : MonoBehaviour
     private float timeX = 0;
     // このオブジェクトを移動・回転させるときの時間の調整パラメータ
     private float timeCoef = 0.8f;
+    // このオブジェクトを回転させるときの回転量
+    Vector3 amountOfRot;
+    // Y軸の余剰回転
+    float extraRotY = 720.0f;
 
     // ItemsのRigidbody
     Rigidbody rBody;
@@ -63,50 +67,21 @@ public class ItemsController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(rBody.velocity);
-
-        if(!puzzle && !held && !rotating)
+        if(!puzzle)
         {
-            ItemsGravityControll();
-        }
-
-        if(puttingDown)
-        {
-            PuttingDownRotation();
-        }
-
-        if(putKey01 || putKey02)
-        {
-            // timeXに時間を加算する
-            timeX += timeCoef * Time.deltaTime;
-
-            // 移動・回転に使用するtimeX01の定義
-            float timeX01 = (timeX <= 1) ? timeX : 1;
-            // 拡大に使用するtimeX02の定義
-            float timeX02 = (timeX <= 2) ? timeX * 0.5f : 1;
-
-            // 移動・回転に使用するtimeX01の定義: y = -x(x-2)
-            float timeY01 = -timeX01 * (timeX01 - 2);
-            // 拡大に使用するtimeX02の定義      : y = -x(x-2)
-            float timeY02 = -timeX02 * (timeX02 - 2);
-
-            if (putKey01)
+            if (!held && !rotating)
             {
-                PutKeys_ChangePosAndRot(timeY01);
-                if (timeX01 == 1) putKey01 = false;
-                Debug.Log("putKey01");
+                ItemsGravityControll();
             }
 
-            if (putKey02)
+            if (puttingDown)
             {
-                PutKeys_ChangeSca(timeY02);
-                if (timeX02 == 1) putKey01 = false;
-                Debug.Log("putKey02");
-            } 
+                PuttingDownRotation();
+            }
 
-            if (!putKey01 && !putKey02)
+            if (putKey01 || putKey02)
             {
-                timeX = 0;
+                PutKeys();
             }
         }
     }
@@ -208,6 +183,11 @@ public class ItemsController : MonoBehaviour
             //Debug.Log("keyRot: " + keyRot);
             //Debug.Log("keySca: " + keySca);
 
+            // このオブジェクトを回転させるときの回転量rotateXYZの取得（Y軸だけ追加で回転させる）
+            amountOfRot.x = (lockRot.x - keyRot.x);
+            amountOfRot.z = (lockRot.z - keyRot.z);
+            amountOfRot.y = (lockRot.y - keyRot.y) + extraRotY;
+
             // 移動、回転の開始
             putKey01 = true;
             // 拡大の開始
@@ -215,10 +195,52 @@ public class ItemsController : MonoBehaviour
         }
     }
 
+    void PutKeys()
+    {
+        // timeXに時間を加算する
+        timeX += timeCoef * Time.deltaTime;
+
+        // 移動・回転に使用するtimeX01の定義
+        float timeX01 = (timeX <= 1.4f) ? timeX * (1 / 1.4f) : 1;
+        // 拡大に使用するtimeX02の定義
+        float timeX02 = (timeX <= 1.5f) ? timeX * (1 / 1.5f) : 1;
+
+        // 移動・回転に使用するtimeX01の定義: y = (sin(π/2 * x))^2
+        float timeY01 = Mathf.Pow(Mathf.Sin(Mathf.PI / 2 * timeX01), 2);
+        // 拡大に使用するtimeX02の定義      : y = (sin(π/2 * x))^5
+        float timeY02 = Mathf.Pow(Mathf.Sin(Mathf.PI / 2 * timeX02), 5);
+
+        if (putKey01)
+        {
+            PutKeys_ChangePosAndRot(timeY01);
+            if (timeX01 == 1) putKey01 = false;
+        }
+
+        if (putKey02)
+        {
+            PutKeys_ChangeSca(timeY02);
+            if (timeX02 == 1) putKey01 = false;
+        }
+
+        if (!putKey01 && !putKey02)
+        {
+            timeX = 0;
+            puzzle = true;
+        }
+    }
     void PutKeys_ChangePosAndRot(float timeY01)
     {
+        //// 移動 ////
         transform.position = Vector3.Lerp(keyPos, lockPos, timeY01);
-        child.transform.eulerAngles = Vector3.Lerp(keyRot, lockRot, timeY01);
+
+        //// 回転 ////
+        Vector3 nextRot;// 次の回転角度
+        nextRot.x = amountOfRot.x * timeY01 - child.transform.eulerAngles.x; // 回転量×時間（線形でない）- 直前の回転量
+        nextRot.y = amountOfRot.y * timeY01 - child.transform.eulerAngles.y;
+        nextRot.z = amountOfRot.z * timeY01 - child.transform.eulerAngles.z;
+
+        // 指定した回転角度分回転させる
+        child.transform.Rotate(nextRot);
     }
     void PutKeys_ChangeSca(float timeY02)
     {
