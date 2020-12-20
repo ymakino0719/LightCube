@@ -18,8 +18,6 @@ public class ItemsController : MonoBehaviour
     private float timeX = 0;
     // このオブジェクトを移動・回転させるときの時間の調整パラメータ
     private float timeCoef = 0.8f;
-    // このオブジェクトを回転させるときの回転量
-    Vector3 amountOfRot;
     // Y軸の余剰回転
     float extraRotY = 720.0f;
 
@@ -165,6 +163,9 @@ public class ItemsController : MonoBehaviour
             rBody.isKinematic = true;
             col.enabled = false;
 
+            // このオブジェクト（子ではなく親オブジェクト）とLockBlockの回転を一致させる
+            transform.eulerAngles = other.transform.eulerAngles;
+
             // 衝突したLockBlockの位置・回転・拡大率情報を記録する
             lockPos = other.transform.position;
             lockRot = other.transform.eulerAngles;
@@ -176,17 +177,12 @@ public class ItemsController : MonoBehaviour
 
             // LockBlockと衝突した瞬間のこのオブジェクトの位置・回転・拡大率情報を記録する
             keyPos = transform.position;
-            keyRot = child.transform.eulerAngles;
+            keyRot = child.transform.localEulerAngles;
             keySca = child.transform.localScale;
 
             //Debug.Log("keyPos: " + keyPos);
             //Debug.Log("keyRot: " + keyRot);
             //Debug.Log("keySca: " + keySca);
-
-            // このオブジェクトを回転させるときの回転量rotateXYZの取得（Y軸だけ追加で回転させる）
-            amountOfRot.x = (lockRot.x - keyRot.x);
-            amountOfRot.z = (lockRot.z - keyRot.z);
-            amountOfRot.y = (lockRot.y - keyRot.y) + extraRotY;
 
             // 移動、回転の開始
             putKey01 = true;
@@ -235,16 +231,17 @@ public class ItemsController : MonoBehaviour
 
         //// 回転 ////
         Vector3 nextRot;// 次の回転角度
-        nextRot.x = amountOfRot.x * timeY01 - child.transform.eulerAngles.x; // 回転量×時間（線形でない）- 直前の回転量
-        nextRot.y = amountOfRot.y * timeY01 - child.transform.eulerAngles.y;
-        nextRot.z = amountOfRot.z * timeY01 - child.transform.eulerAngles.z;
 
-        // 指定した回転角度分回転させる
-        child.transform.Rotate(nextRot);
+        nextRot.x = Mathf.Lerp(keyRot.x, 0, timeY01); // 角度を補完
+        nextRot.z = Mathf.Lerp(keyRot.z, 0, timeY01); // 角度を補完
+        nextRot.y = Mathf.Lerp(keyRot.y + extraRotY, 0, timeY01); // 角度を補完（Y軸だけ追加で回転させる）
+
+        // 指定した角度になるように回転させる
+        child.transform.localEulerAngles = nextRot;
     }
     void PutKeys_ChangeSca(float timeY02)
     {
-        child.transform.localScale = Vector3.Lerp(keySca, lockSca, timeY02);
+        child.transform.localScale = Vector3.Lerp(keySca, lockSca * 0.99f, timeY02); // lockScaに0.99fを掛けることにより、テクスチャの一致によるガビガビ化を応急的に回避
     }
 
     public bool PuttingDown

@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
 	// 1つ前のフレームで着地していたかどうか
 	bool lastGround = false;
 	// ジャンプの高さ
-	float jumpH = 8.0f;
+	float jumpH = 9.0f;
 	// アイテムを持っているか
 	bool holding = false;
 	// 移動スピード
