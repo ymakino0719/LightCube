@@ -33,7 +33,7 @@ public class AroundEdgeController : MonoBehaviour
 	// このオブジェクトを移動・回転させるときの時間（0～1）
 	private float time = 0;
 	// このオブジェクトを移動・回転させるときの時間の調整パラメータ
-	private float timeCoef = 1.0f;
+	private float timeCoef = 2.0f;
 	//
 	private bool reset = false;
 
