@@ -29,10 +29,9 @@ public class AnimationController : MonoBehaviour
 	{
 		if (isGround)
 		{
-			// 着地時且つジャンプ入力があるときjumpingBoolを有効にする
-			if (jump)
+			if (jump) // 着地時且つジャンプ入力があるときjumpBoolを有効にする
 			{
-				animator.SetBool("jumpingBool", true);
+				animator.SetBool("jumpBool", true);
 			}
 			else if (pick)
 			{
@@ -51,6 +50,7 @@ public class AnimationController : MonoBehaviour
 			{
 				if (!lastGround)
 				{
+					animator.SetBool("jumpBool", false);
 					animator.SetBool("jumpingBool", false);
 				}
 
@@ -73,7 +73,11 @@ public class AnimationController : MonoBehaviour
 		}
 		else
 		{
-
+			// ジャンプしていない状態でIsGroundのみがfalseになった場合は、自由落下とみなし滞空モーションに移行する（jumpingBoolを有効にする）
+			if (lastGround)
+			{
+				animator.SetBool("jumpingBool", true);
+			}
 		}
 	}
 
