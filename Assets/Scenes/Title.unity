@@ -1945,7 +1945,7 @@ GameObject:
   - component: {fileID: 1334899381}
   - component: {fileID: 1334899380}
   m_Layer: 0
-  m_Name: UIDirector
+  m_Name: GameDirector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

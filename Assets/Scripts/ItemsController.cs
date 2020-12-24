@@ -47,6 +47,8 @@ public class ItemsController : MonoBehaviour
     GameObject yagikun3D;
     // 手に持った時のitemのPos
     GameObject bringingPos;
+    // クリア条件の渡す先となるClearJudgement
+    ClearJudgement cJ;
 
     void Awake()
     {
@@ -60,6 +62,8 @@ public class ItemsController : MonoBehaviour
         col = child.GetComponent<BoxCollider>();
         // yagikun3Dのゲームオブジェクトを取得する
         yagikun3D = GameObject.Find("Yagikun3D");
+        // クリア条件の渡す先となるClearJudgementを取得する
+        cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
     }
 
     // Update is called once per frame
@@ -215,12 +219,15 @@ public class ItemsController : MonoBehaviour
         if (putKey02)
         {
             PutKeys_ChangeSca(timeY02);
-            if (timeX02 == 1) putKey01 = false;
+            if (timeX02 == 1) putKey02 = false;
         }
 
         if (!putKey01 && !putKey02)
         {
+            // timeXの初期化
             timeX = 0;
+            // ゲームクリアに必要な条件である鍵の本数を１本増やす
+            cJ.KeyNum += 1;
             puzzle = true;
         }
     }

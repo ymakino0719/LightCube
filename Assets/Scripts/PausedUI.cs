@@ -39,9 +39,8 @@ public class PausedUI : MonoBehaviour
     }
     private void SceneLoaded_StageSelect(Scene next, LoadSceneMode mode)
     {
-        Debug.Log("Hello");
         // シーン切り替え後のスクリプトを取得
-        var tUI = GameObject.Find("UIDirector").GetComponent<TitleUI>();
+        var tUI = GameObject.Find("GameDirector").GetComponent<TitleUI>();
 
         // 遷移した後の処理
         tUI.StageSelectBool = true;
