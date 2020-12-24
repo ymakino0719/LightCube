@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class SimpleStar : MonoBehaviour
 {
-    Quaternion rot;
+    Rigidbody rBody;
+
+    // 乱数の下限値
+    float randMin = -10.0f;
+    // 乱数の上限値
+    float randMax = 10.0f;
+
     // Start is called before the first frame update
     void Start()
     {
-        rot = Quaternion.AngleAxis(0.3f, transform.forward);
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        Quaternion q = this.transform.rotation;
-        this.transform.rotation = q * rot;
+        rBody = GetComponent<Rigidbody>();
+        rBody.velocity = new Vector3(Random.Range(randMin, randMax), Random.Range(randMin, randMax), Random.Range(randMin, randMax));
     }
 }
