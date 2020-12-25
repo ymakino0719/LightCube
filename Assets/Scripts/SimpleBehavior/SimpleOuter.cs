@@ -8,7 +8,7 @@ public class SimpleOuter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rot = Quaternion.AngleAxis(0.02f, transform.up);
+        rot = Quaternion.AngleAxis(0.01f, transform.up);
     }
 
     // Update is called once per frame

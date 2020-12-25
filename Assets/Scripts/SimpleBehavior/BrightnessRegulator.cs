@@ -10,11 +10,11 @@ public class BrightnessRegulator : MonoBehaviour
     // Emissionの最小値
     private float minEmission = 1.0f;
     // Emissionの強度
-    private float magEmission = 15.0f;
+    private float magEmission = 25.0f;
     // 角度
     private int degree = 0;
     //発光速度
-    private int speed = 1;
+    private int speed = 2;
     // ターゲットのデフォルトの色
     [ColorUsage(false, true)] public Color defaultColor;
 
