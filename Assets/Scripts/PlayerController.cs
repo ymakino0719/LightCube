@@ -98,9 +98,11 @@ public class PlayerController : MonoBehaviour
 			// アイテムを持っていないときにpickの入力があった場合のみ、アイテムを拾うかどうか判定する
 			if (pick && !holding) JudgePickUpItems(ref pick);
 
-			Vector3 vec = rBody.velocity;
-			aC.MoveAnimation(jump, pick, holding, isGround, lastGround, vec);
-			MoveCharacter(hor, ver, jump);
+			// プレイヤーのリギッドボディのローカル速度locVelを取得
+			Vector3 locVel = transform.InverseTransformDirection(rBody.velocity);
+
+			aC.MoveAnimation(jump, pick, holding, isGround, lastGround, locVel);
+			MoveCharacter(hor, ver, jump, locVel);
 
 			// lastGround（直前に着地していたか）の更新
 			lastGround = (isGround) ? true : false;
@@ -111,14 +113,11 @@ public class PlayerController : MonoBehaviour
         }
 	}
 
-	void MoveCharacter(float hor, float ver, bool jump)
+	void MoveCharacter(float hor, float ver, bool jump, Vector3 locVel)
 	{
 		///////////////////////
 		//////// move /////////
 		///////////////////////
-
-		// プレイヤーのリギッドボディのローカル速度locVelを取得
-		Vector3 locVel = transform.InverseTransformDirection(rBody.velocity);
 
 		// locVel.z：カメラから見てプレイヤーの左右
 		if ((hor > float.Epsilon && locVel.z < moveLimit_XZ) || (hor < float.Epsilon && locVel.z > -moveLimit_XZ))
