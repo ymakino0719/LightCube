@@ -48,6 +48,15 @@ public class PlayerController : MonoBehaviour
 
 	// ゲームクリア判定
 	bool gameOver = false;
+	// ゲームクリア判定: 遷移01
+	bool gameOver01 = false;
+	// ゲームクリア判定: 遷移01 での使用する回転方向先
+	Quaternion g01_Rot;
+
+	// 振り向き時間
+	float time = 0.0f;
+	// 振り向き速度
+	float rotSpeed = 0.02f;
 
 	// Start is called before the first frame update
 	void Awake()
@@ -114,6 +123,11 @@ public class PlayerController : MonoBehaviour
 		{
 
         }
+	}
+
+	void FixedUpdate()
+    {
+		if (gameOver01) LookAtStarLightSmoothly_Processing();
 	}
 
 	void MoveCharacter(float hor, float ver, bool jump, Vector3 locVel)
@@ -236,6 +250,44 @@ public class PlayerController : MonoBehaviour
 
 		// yagikun3Dをオブジェクトのある位置に水平に方向転換する
 		yagikun.transform.rotation = Quaternion.LookRotation(transform.TransformDirection(looking), transform.up);
+	}
+
+	public void LookAtStarLightSmoothly_Beginning()
+    {
+		// プレイヤーから見たClearLightのベクトルを調べる
+		Vector3 dir = GameObject.Find("ClearLight").transform.position - transform.position;
+
+		// プレイヤーを基準としたローカル座標系locPosに変換
+		Vector3 locPos = transform.InverseTransformDirection(dir);
+
+		// プレイヤーを基準としたローカル座標系の内、Y軸の回転は行わないため、Y要素のみ無効とする
+		Vector3 looking = new Vector3(locPos.x, 0, locPos.z);
+
+		// yagikun3DをClearLightに向かって水平に方向転換させたときの回転を求める
+		g01_Rot = Quaternion.LookRotation(transform.TransformDirection(looking), transform.up);
+
+		gameOver01 = true;
+	}
+	void LookAtStarLightSmoothly_Processing()
+	{
+		// 時間
+		time += rotSpeed * Time.deltaTime;
+
+		yagikun.transform.rotation = Quaternion.Lerp(yagikun.transform.rotation, g01_Rot, time);
+
+		if(time >= 1.0f)
+        {
+			yagikun.transform.rotation = g01_Rot;
+			time = 0.0f;
+
+			TurnTheOtherWay();
+			gameOver01 = false;
+		}
+	}
+	void TurnTheOtherWay()
+	{
+		// yagikun3Dを180度回転させる
+		yagikun.transform.Rotate(0, 180, 0);
 	}
 
 	public bool IsGround

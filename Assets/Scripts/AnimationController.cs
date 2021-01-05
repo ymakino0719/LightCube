@@ -81,6 +81,14 @@ public class AnimationController : MonoBehaviour
 		}
 	}
 
+	public void VictoryAnimation()
+    {
+		float a = Random.Range(0.0f, 10.0f);
+
+		animator.SetFloat("victoryValue", a);
+		animator.SetTrigger("victoryTrigger");
+	}
+
 	void BringEvent() // PickUpアニメーションの最後と、PutDownアニメーションの手を放した瞬間に実行
 	{
 		if (!pC.Holding)

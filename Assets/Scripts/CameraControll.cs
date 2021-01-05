@@ -8,19 +8,19 @@ public class CameraControll : MonoBehaviour
     GameObject player;
     // CamPosのGameObject
     GameObject camPos;
+    // ClearJudgement
+    ClearJudgement cJ;
 
-    // ゲームクリア時のカメラ移動：その１
-    bool gameOver01 = false;
-    // ゲームクリア時のカメラ移動：その２
-    bool gameOver02 = false;
     // ClearLight
     GameObject clearLight;
     // 回転時間
     float rotTime = 2.0f;
     // 移動時間
     float moveTime = 2.0f;
-    // ターゲットとの距離
-    float targetDis = 7.0f;
+    // ターゲットとの距離: 遷移01
+    float targetDis01 = 7.0f;
+    // ターゲットとの距離: 遷移02
+    float targetDis02 = 4.0f;
     // 接近停止閾値
     float minDis = 0.01f;
     // 開幕処理
@@ -33,6 +33,7 @@ public class CameraControll : MonoBehaviour
     Vector3 targetPos;
     // ターゲットへの角度
     Vector3 targetAngle;
+    
 
     void Awake()
     {
@@ -42,30 +43,35 @@ public class CameraControll : MonoBehaviour
         camPos = GameObject.Find("CamPos");
         // ClearLightの取得
         clearLight = GameObject.Find("ClearLight");
+        // ClearJudgementの取得
+        cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!gameOver01 && !gameOver02)
+        if(!cJ.GameOver01 && !cJ.GameOver02)
         {
             ChasingCamera();
         }
-        else
+    }
+
+    void FixedUpdate()
+    {
+        if (cJ.GameOver01)
         {
-            if(gameOver01)
-            {
-                if (beginning) StartingOperation();
+            if (beginning) StartingOperation01();
 
-                // ゆっくりStarLightの方を見る
-                TurnAroundToStarLight();
-                // ゆっくりStarLightにカメラを近づける
-                MoveCloserToStarLight();
-            }
-            else
-            {
+            // ゆっくりStarLightの方を見る
+            TurnAroundToStarLight();
+            // ゆっくりStarLightにカメラを近づける
+            MoveCloserToStarLight();
+        }
 
-            }
+        if (cJ.GameOver02)
+        {
+            // StarLightが背景になるようにカメラ移動する
+            Move_StarLightBecomesBackground();
         }
     }
 
@@ -78,10 +84,10 @@ public class CameraControll : MonoBehaviour
         transform.rotation = rotation;
     }
 
-    void StartingOperation()
+    void StartingOperation01()
     {
         // 移動先のtargetPosの取得
-        Vector3 vec = (transform.position - clearLight.transform.position).normalized * targetDis;
+        Vector3 vec = (transform.position - clearLight.transform.position).normalized * targetDis01;
         targetPos = clearLight.transform.position + vec;
 
         // 最初の回転を記録
@@ -113,14 +119,19 @@ public class CameraControll : MonoBehaviour
         float checkDis = (targetPos - transform.position).sqrMagnitude;
         if(checkDis <= minDis)
         {
-            gameOver01 = false;
-            gameOver02 = true;
+            beginning = false;
+            cJ.GameOver01 = false;
+            cJ.GameOver02 = true;
         }
     }
-
-    public bool GameOver01
+    void Move_StarLightBecomesBackground()
     {
-        set { gameOver01 = value; }
-        get { return gameOver01; }
+        // 移動先のtargetPosの取得及び移動
+        Vector3 vec = player.transform.position - clearLight.transform.position;
+        Vector3 targetPos = player.transform.position + vec.normalized * targetDis02 + player.transform.up * 2.0f;
+        transform.position = targetPos;
+
+        // ターゲットの方に向かせる
+        transform.rotation = Quaternion.LookRotation(clearLight.transform.position - transform.position, player.transform.up);
     }
 }

@@ -6,8 +6,15 @@ public class ClearJudgement : MonoBehaviour
 {
     GameObject clearLight;
     Light lighting;
+
     // ゲームクリア判定
     bool gameOver = false;
+    // ゲームクリア判定: 遷移01
+    bool gameOver01 = false;
+    // ゲームクリア判定: 遷移02
+    bool gameOver02 = false;
+    // ゲームクリア判定: 遷移03
+    bool gameOver03 = false;
     // 現在の鍵の数
     int keyNum = 0;
     // ゲームクリアに必要な鍵の数
@@ -21,13 +28,21 @@ public class ClearJudgement : MonoBehaviour
     // Rangeを動かすスピード
     float speed = 2.5f;
     // 光りはじめ（trueのとき、Range = 0 からlowerまで拡大する）
-    bool beginning = true;
+    bool startingOperation01 = true;
+    // キャラクターのStarLight方面への振り向き
+    bool beginning01 = true;
+    // キャラクターのVictory画面
+    bool beginning02 = true;
     // Rangeの振幅開始時間
     float startTime;
     // ゲームクリアムービーの再生
     bool clearMovie = false;
     // カメラ制御
     CameraControll cC;
+    // アニメーション制御
+    AnimationController aC;
+    // プレイヤー制御
+    PlayerController pC;
 
     void Awake()
     {
@@ -37,6 +52,8 @@ public class ClearJudgement : MonoBehaviour
         lighting.enabled = false;
 
         cC = GameObject.Find("Camera").GetComponent<CameraControll>();
+        aC = GameObject.Find("Yagikun3D").GetComponent<AnimationController>();
+        pC = GameObject.Find("Player").GetComponent<PlayerController>();
     }
 
     // Update is called once per frame
@@ -48,15 +65,46 @@ public class ClearJudgement : MonoBehaviour
         }
         else
         {
-            if(beginning)
+            if(gameOver01)
             {
-                ScalingLightBeginningRange();
-                cC.GameOver01 = true;
+                GameOver01_Behavior();
             }
-            else
+            else if(gameOver02)
             {
-                ScalingLightAfterRange();
+                GameOver02_Behavior();
             }
+        }
+    }
+
+    void GameOver01_Behavior()
+    {
+        if (beginning01)
+        {
+            // TurnToStarLight
+            pC.LookAtStarLightSmoothly_Beginning();
+
+            beginning01 = false;
+        }
+
+        if (startingOperation01)
+        {
+            // StarLight
+            ScalingLightBeginningRange();
+        }
+        else
+        {
+            // StarLight
+            ScalingLightAfterRange();
+        }
+    }
+    void GameOver02_Behavior()
+    {
+        if (beginning02)
+        {
+            // VictoryAnimation
+            aC.VictoryAnimation();
+            
+            beginning02 = false;
         }
     }
 
@@ -65,6 +113,7 @@ public class ClearJudgement : MonoBehaviour
         if (keyNum == clearNum)
         {
             gameOver = true;
+            gameOver01 = true;
             lighting.enabled = true;
         }
     }
@@ -79,7 +128,7 @@ public class ClearJudgement : MonoBehaviour
         {
             lighting.range = lower;
             startTime = Time.time;
-            beginning = false;
+            startingOperation01 = false;
         }
     }
     void ScalingLightAfterRange()
@@ -91,5 +140,15 @@ public class ClearJudgement : MonoBehaviour
     {
         set { keyNum = value; }
         get { return keyNum; }
+    }
+    public bool GameOver01
+    {
+        set { gameOver01 = value; }
+        get { return gameOver01; }
+    }
+    public bool GameOver02
+    {
+        set { gameOver02 = value; }
+        get { return gameOver02; }
     }
 }
