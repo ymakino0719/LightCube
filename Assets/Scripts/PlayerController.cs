@@ -46,6 +46,9 @@ public class PlayerController : MonoBehaviour
 	// プレイヤーの原点位置からの探索範囲
 	float searchDis = 1.0f;
 
+	// ゲームクリア判定
+	bool gameOver = false;
+
 	// Start is called before the first frame update
 	void Awake()
     {
@@ -63,7 +66,7 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
-		if(control) // 次の面に移動中でないとき（通常時）
+		if(control) // 次の面に移動中でないとき（通常時）、その他キャラクターの操作を受け付けないとき
         {
 			// 仮想重力をかけ続ける
 			rBody.AddForce(-transform.up * gravity);
@@ -249,5 +252,10 @@ public class PlayerController : MonoBehaviour
 	{
 		set { holding = value; }
 		get { return holding; }
+	}
+	public bool GameOver
+	{
+		set { gameOver = value; }
+		get { return gameOver; }
 	}
 }

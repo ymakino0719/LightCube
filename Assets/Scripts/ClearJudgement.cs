@@ -24,12 +24,19 @@ public class ClearJudgement : MonoBehaviour
     bool beginning = true;
     // Rangeの振幅開始時間
     float startTime;
+    // ゲームクリアムービーの再生
+    bool clearMovie = false;
+    // カメラ制御
+    CameraControll cC;
+
     void Awake()
     {
         clearLight = GameObject.Find("ClearLight");
         lighting = clearLight.GetComponent<Light>();
         lighting.range = 0;
         lighting.enabled = false;
+
+        cC = GameObject.Find("Camera").GetComponent<CameraControll>();
     }
 
     // Update is called once per frame
@@ -41,7 +48,15 @@ public class ClearJudgement : MonoBehaviour
         }
         else
         {
-            ScalingLightRange();
+            if(beginning)
+            {
+                ScalingLightBeginningRange();
+                cC.GameOver01 = true;
+            }
+            else
+            {
+                ScalingLightAfterRange();
+            }
         }
     }
 
@@ -54,26 +69,23 @@ public class ClearJudgement : MonoBehaviour
         }
     }
 
-    void ScalingLightRange()
+    void ScalingLightBeginningRange()
     {
-        if (beginning)
+        if (lighting.range < lower)
         {
-            if (lighting.range < lower)
-            {
-                lighting.range += ampAmount;
-            }
-            else
-            {
-                lighting.range = lower;
-                startTime = Time.time;
-                beginning = false;
-            }
+            lighting.range += ampAmount;
         }
         else
         {
-            float currentTime = Time.time - startTime;
-            lighting.range = lower + Mathf.Sin(currentTime * speed) * magnification;
+            lighting.range = lower;
+            startTime = Time.time;
+            beginning = false;
         }
+    }
+    void ScalingLightAfterRange()
+    {
+        float currentTime = Time.time - startTime;
+        lighting.range = lower + Mathf.Sin(currentTime * speed) * magnification;
     }
     public int KeyNum
     {

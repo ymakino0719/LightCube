@@ -114,7 +114,10 @@ public class AnimationController : MonoBehaviour
 	}
 	void CanMovingEvent()
 	{
-		pC.Control = true;
+		if(!pC.GameOver)
+        {
+			pC.Control = true;
+		}
 	}
 
 	void StartPuttingDown()

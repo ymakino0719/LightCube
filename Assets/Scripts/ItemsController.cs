@@ -167,6 +167,12 @@ public class ItemsController : MonoBehaviour
             rBody.isKinematic = true;
             col.enabled = false;
 
+            // クリア条件を満たす最後のブロックである場合、ブロックが接触した時点でプレイヤーのコントロールを無効にする
+            if(cJ.KeyNum == cJ.clearNum - 1)
+            {
+                GameObject.Find("Player").GetComponent<PlayerController>().GameOver = true;
+            }
+
             // このオブジェクト（子ではなく親オブジェクト）とLockBlockの回転を一致させる
             transform.eulerAngles = other.transform.eulerAngles;
 
