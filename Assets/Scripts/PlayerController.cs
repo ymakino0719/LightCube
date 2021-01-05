@@ -38,6 +38,8 @@ public class PlayerController : MonoBehaviour
 
 	// Yagikun3DにアタッチされているAnimationControllerの取得
 	AnimationController aC;
+	// ClearJudgement
+	ClearJudgement cJ;
 
 	// 近くにあるitem
 	GameObject nearestItem;
@@ -65,8 +67,9 @@ public class PlayerController : MonoBehaviour
 		// Playerの直下の一番上に配置しているYagikun3DにアタッチされているAnimationControllerを取得する
 		yagikun = transform.GetChild(0).gameObject;
 		aC = yagikun.GetComponent<AnimationController>();
-		
-    }
+		// ClearJudgementの取得
+		cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
+	}
 	void Start()
 	{
 		latestPos = transform.position;
@@ -127,7 +130,19 @@ public class PlayerController : MonoBehaviour
 
 	void FixedUpdate()
     {
-		if (gameOver01) LookAtStarLightSmoothly_Processing();
+		if (gameOver01)
+        {
+			if (cJ.GameOver01)
+			{
+				// yagikun3DをStarLightの方向にゆっくり回転させる
+				LookAtStarLightSmoothly_Processing();
+			}
+			else
+            {
+				// 回転の強制終了、gameOver02に移行させる
+				LookAtStarLightSmoothly_End();
+			}
+		}
 	}
 
 	void MoveCharacter(float hor, float ver, bool jump, Vector3 locVel)
@@ -277,15 +292,22 @@ public class PlayerController : MonoBehaviour
 
 		if(time >= 1.0f)
         {
-			yagikun.transform.rotation = g01_Rot;
-			time = 0.0f;
-
-			TurnTheOtherWay();
-			gameOver01 = false;
+			// 時間を超過したら回転終了
+			LookAtStarLightSmoothly_End();
 		}
 	}
-	void TurnTheOtherWay()
+	void LookAtStarLightSmoothly_End()
 	{
+		yagikun.transform.rotation = g01_Rot;
+		TurnTheOtherWay();
+
+		time = 0.0f;
+		gameOver01 = false;
+	}
+
+	public void TurnTheOtherWay()
+	{
+		Debug.Log("Hellooo");
 		// yagikun3Dを180度回転させる
 		yagikun.transform.Rotate(0, 180, 0);
 	}

@@ -131,7 +131,7 @@ public class CameraControll : MonoBehaviour
         Vector3 targetPos = player.transform.position + vec.normalized * targetDis02 + player.transform.up * 2.0f;
         transform.position = targetPos;
 
-        // ターゲットの方に向かせる
+        // カメラをターゲットの方に向かせる
         transform.rotation = Quaternion.LookRotation(clearLight.transform.position - transform.position, player.transform.up);
     }
 }
