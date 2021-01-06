@@ -13,10 +13,10 @@ public class CameraControll : MonoBehaviour
 
     // ClearLight
     GameObject clearLight;
-    // 回転時間
+    // 回転時間: 遷移01
     float rotTime = 2.0f;
-    // 移動時間
-    float moveTime = 2.0f;
+    // 移動時間: 遷移01
+    float moveTime = 3.0f;
     // ターゲットとの距離: 遷移01
     float targetDis01 = 7.0f;
     // ターゲットとの距離: 遷移02

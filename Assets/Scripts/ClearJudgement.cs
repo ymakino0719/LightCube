@@ -73,6 +73,17 @@ public class ClearJudgement : MonoBehaviour
             {
                 GameOver02_Behavior();
             }
+
+            if (startingOperation01)
+            {
+                // StarLight
+                ScalingLightBeginningRange();
+            }
+            else
+            {
+                // StarLight
+                ScalingLightAfterRange();
+            }
         }
     }
 
@@ -84,17 +95,6 @@ public class ClearJudgement : MonoBehaviour
             pC.LookAtStarLightSmoothly_Beginning();
 
             beginning01 = false;
-        }
-
-        if (startingOperation01)
-        {
-            // StarLight
-            ScalingLightBeginningRange();
-        }
-        else
-        {
-            // StarLight
-            ScalingLightAfterRange();
         }
     }
     void GameOver02_Behavior()

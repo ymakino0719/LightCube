@@ -133,6 +133,11 @@ public class AnimationController : MonoBehaviour
 		var iC = nearestItem.GetComponent<ItemsController>();
 		iC.PuttingDown = true;
 	}
+
+	void DisplayGameClearPanel()
+    {
+		GameObject.Find("UIDirector").GetComponent<GameClearUI>().DisplayGameClear();
+	}
 	public GameObject NearestItem
 	{
 		set { nearestItem = value; }
