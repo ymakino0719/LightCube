@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
 	// 1つ前のフレームで着地していたかどうか
 	bool lastGround = false;
 	// ジャンプの高さ
-	float jumpH = 9.0f;
+	float jumpH = 10.0f;
 	// アイテムを持っているか
 	bool holding = false;
 	// 移動スピード
@@ -307,7 +307,6 @@ public class PlayerController : MonoBehaviour
 
 	public void TurnTheOtherWay()
 	{
-		Debug.Log("Hellooo");
 		// yagikun3Dを180度回転させる
 		yagikun.transform.Rotate(0, 180, 0);
 	}
