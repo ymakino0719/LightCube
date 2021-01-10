@@ -2545,7 +2545,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 1
+  m_progress: 0.11777778
   usePosition: 1
   useRotation: 0
   useScale: 0
@@ -2818,7 +2818,7 @@ MonoBehaviour:
   delay: 3
   style: 1
   playOnAwake: 1
-  m_progress: 0.85398096
+  m_progress: 0
   usePosition: 0
   useRotation: 0
   useScale: 0
@@ -3301,7 +3301,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 1
+  m_progress: 0.11777778
   usePosition: 1
   useRotation: 0
   useScale: 0
