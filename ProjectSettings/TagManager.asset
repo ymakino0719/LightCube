@@ -11,6 +11,9 @@ TagManager:
   - Item
   - Lock
   - Star
+  - Mark
+  - Switch
+  - BridgeColorBox
   layers:
   - Default
   - TransparentFX
