@@ -124,12 +124,12 @@ public class AroundEdgeController : MonoBehaviour
 		float angle01 = Vector3.Angle(middlePosTra.position - edge, face01 - edge);
 		float angle02 = Vector3.Angle(middlePosTra.position - edge, face02 - edge);
 
-		Debug.Log("angle01: " + angle01);
-		Debug.Log("angle02: " + angle02);
+		//Debug.Log("angle01: " + angle01);
+		//Debug.Log("angle02: " + angle02);
 
 		// 角度がより大きい面を次に移動する面と定義する
 		nextFace = (angle01 > angle02) ? face01 : face02;
-		Debug.Log("nextFace = " + nextFace);
+		//Debug.Log("nextFace = " + nextFace);
 	}
 
 	void CheckNextPlayerPos(Vector3 edge, Vector3 vertex01, Vector3 vertex02, Vector3 face01, Vector3 face02)

@@ -8,6 +8,8 @@ public class GateBehavior : MonoBehaviour
     GameObject parent;
     // 一つ下の子オブジェクト（方角ごとのHitBox）
     GameObject hB;
+    // ゲートドア
+    BoxCollider[] door;
     // Start is called before the first frame update
     void Awake()
     {
@@ -15,23 +17,56 @@ public class GateBehavior : MonoBehaviour
         parent = transform.parent.gameObject;
         // 一つ下の子オブジェクト（方角ごとのHitBox）を取得する
         hB = transform.GetChild(0).gameObject;
-        // HitBoxの当たり判定を非アクティブにしておく
-        hB.SetActive(false);
+        // 全てのゲートドアを取得
+        door = GetComponents<BoxCollider>();
     }
 
     void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // ４方角全てのHitBoxを一度非アクティブにする
-            Deactivate4Directions();
-            // この方角のHitBoxのみアクティブにする
-            hB.SetActive(true);
+            GameObject player = collision.gameObject;
+
+            // Playerの向きとゲートの向きを確認し、Playerがゲートを通る正しい方角であるかを確認する
+            bool trueGate = CheckPlayerAndGateDirection(player);
+
+            // ゲートの処理
+            ActivateProcess(trueGate);
         }
     }
-    void Deactivate4Directions()
+
+    bool CheckPlayerAndGateDirection(GameObject player)
     {
-        // 親オブジェクトから見て４方角全てのHitBoxを一度非アクティブにする
+        // Playerの上方向の向きとゲートの上方向の向きの角度を確認する
+        float angle = Vector3.Angle(player.transform.up, transform.up);
+        //Debug.Log("angle: " + angle);
+
+        // 差が45度以下の場合、正しい方角と判断する
+        bool tG = (angle <= 45) ? true : false;
+
+        return tG;
+    }
+
+    void ActivateProcess(bool tG)
+    {
+        if (tG) // Playerがゲートを通る正しい方角である場合、その方角のHitBoxのみをアクティブにする
+        {
+            // 全ての方角のHitBoxを一度非アクティブにする
+            DeactivateAllDirections();
+            // この方角のHitBoxのみアクティブにする
+            hB.SetActive(true);
+            // 全てのゲートドアを開ける
+            for (int i = 0; i < door.Length; i++) door[i].enabled = false;
+        }
+        else
+        {
+            // 全てのゲートドアを閉める（正しい方向でない場合、プレイヤーが侵入できないようにする）
+            for (int i = 0; i < door.Length; i++) door[i].enabled = true;
+        }
+    }
+    void DeactivateAllDirections()
+    {
+        // 親オブジェクトから見て全ての方角のHitBoxを一度非アクティブにする
         foreach (Transform c1Tra in parent.transform)
         {
             c1Tra.GetChild(0).gameObject.SetActive(false);
