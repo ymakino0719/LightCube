@@ -12,13 +12,9 @@ public class SwitchBehavior : MonoBehaviour
     // マテリアルのセット
     public Material mat00, mat01, mat02, mat03;
 
-    GameObject b_Main, bHB_ON, bHB_OFF;
+    GameObject b_Main, bHB_ON, bHB_OFF, b_Gate;
     List<MeshRenderer> b_Main_MRList = new List<MeshRenderer>();
     List<BoxCollider> b_Main_BCList = new List<BoxCollider>();
-    void Awake()
-    {
-        
-    }
     void Start()
     {
         OpeningSequence();
@@ -37,18 +33,21 @@ public class SwitchBehavior : MonoBehaviour
             b_Main = GameObject.Find("B01_Main");
             bHB_ON = GameObject.Find("B01HB_ON");
             bHB_OFF = GameObject.Find("B01HB_OFF");
+            b_Gate = GameObject.Find("Gates01");
         }
         else if (switchNum == 2)
         {
             b_Main = GameObject.Find("B02_Main");
             bHB_ON = GameObject.Find("B02HB_ON");
             bHB_OFF = GameObject.Find("B02HB_OFF");
+            b_Gate = GameObject.Find("Gates02");
         }
         else if (switchNum == 3)
         {
             b_Main = GameObject.Find("B03_Main");
             bHB_ON = GameObject.Find("B03HB_ON");
             bHB_OFF = GameObject.Find("B03HB_OFF");
+            b_Gate = GameObject.Find("Gates03");
         }
         else
         {
@@ -56,8 +55,9 @@ public class SwitchBehavior : MonoBehaviour
             Debug.Log("Error! SwitchNum is not correct");
         }
 
-        // スイッチオン時の当たり判定を非アクティブにしておく
+        // スイッチがONのときの当たり判定とゲートを非アクティブにしておく
         bHB_ON.SetActive(false);
+        b_Gate.SetActive(false);
 
         // 橋の歩く部分（Main部）のBoxColliderとMeshRendererのリスト化
         foreach (Transform c1Tra in b_Main.transform)
@@ -88,6 +88,7 @@ public class SwitchBehavior : MonoBehaviour
         {
             bHB_ON.SetActive(true);
             bHB_OFF.SetActive(false);
+            b_Gate.SetActive(true);
 
             SwitchONProcess();
         }
@@ -95,6 +96,7 @@ public class SwitchBehavior : MonoBehaviour
         {
             bHB_ON.SetActive(false);
             bHB_OFF.SetActive(true);
+            b_Gate.SetActive(false);
 
             SwitchOFFProcess();
         }
