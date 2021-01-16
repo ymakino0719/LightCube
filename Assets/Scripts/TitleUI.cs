@@ -39,9 +39,21 @@ public class TitleUI : MonoBehaviour
         stageSelectPanel.SetActive(false);
         titlePanel.SetActive(true);
     }
-    public void Stage01()
+    public void Stage01_1()
     {
         SceneManager.LoadScene("Stage01-1");
+    }
+    public void Stage01_2()
+    {
+        SceneManager.LoadScene("Stage01-2");
+    }
+    public void Stage01_3()
+    {
+        SceneManager.LoadScene("Stage01-3");
+    }
+    public void Stage01_4()
+    {
+        SceneManager.LoadScene("Stage01-4");
     }
     public bool StageSelectBool
     {
