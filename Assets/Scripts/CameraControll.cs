@@ -33,7 +33,15 @@ public class CameraControll : MonoBehaviour
     Vector3 targetPos;
     // ターゲットへの角度
     Vector3 targetAngle;
-    
+
+    // サテライトモード
+    bool satellite = false;
+    // サテライトモードの開幕移動判定
+    bool openingMove = false;
+    // カウンター
+    int counter = 0;
+    // サテライトモード用の追跡ロボット（位置（現在属する面または辺の位置）及び方向（原点位置を正面とする）を記録させる）
+    GameObject robot;
 
     void Awake()
     {
@@ -45,14 +53,17 @@ public class CameraControll : MonoBehaviour
         clearLight = GameObject.Find("ClearLight");
         // ClearJudgementの取得
         cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
+        // 追跡用ロボットの取得
+        robot = GameObject.Find("TrackingRobot");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(!cJ.GameOver01 && !cJ.GameOver02)
+        if (!cJ.GameOver01 && !cJ.GameOver02)
         {
-            ChasingCamera();
+            if (satellite) SatelliteCamMovement();
+            else ChasingCamera();
         }
     }
 
@@ -75,12 +86,67 @@ public class CameraControll : MonoBehaviour
         }
     }
 
+    void SatelliteCamMovement()
+    {
+        // 初期カメラ位置への移動
+        if (!openingMove)
+        {
+            OpeningCamMovement();
+        }
+
+        // サテライトモードの終了条件
+        bool endCondition = EndConditionOfSatelliteMode();
+        if (endCondition) return;
+    }
+    void OpeningCamMovement()
+    {
+        // 初期位置へのカメラの移動
+        GameObject gao = player.GetComponent<PlayerController>().CurrentFace;
+        transform.position = gao.transform.GetChild(0).transform.position;
+
+        // カメラの視点: 原点位置の方を向く
+        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - transform.position);
+        transform.rotation = rotation;
+
+        UpdateRobotInfo_First(gao.transform.position);
+
+        openingMove = true;
+    }
+
+    void UpdateRobotInfo_First(Vector3 pos)
+    {
+        // ロボットの初期位置
+        robot.transform.position = pos;
+        // ロボットの初期方向
+        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - robot.transform.position, player.transform.up);
+        robot.transform.rotation = rotation;
+    }
+    bool EndConditionOfSatelliteMode()
+    {
+        bool eC = false;
+        // サテライトモード時に対応するボタンをもう一度押された場合、サテライトモードを終了する
+        bool satelliteCam = Input.GetButtonDown("SatelliteCam");
+        // 二重に押される処理になるらしいので、counterを追加した。counterが２になった場合終了処理を行う
+        if (satelliteCam) counter++;
+        if(counter == 2)
+        {
+            counter = 0;
+
+            ChasingCamera(); // 追尾カメラに戻す
+            player.GetComponent<PlayerController>().Control = true;
+            openingMove = false;
+            satellite = false;
+            eC = true;
+        }
+
+        return eC;
+    }
     void ChasingCamera()
     {
         // カメラの移動
         transform.position = camPos.transform.position;
         // カメラの視点: playerの方を向く（playerの頭が上になるように）
-        Quaternion rotation = Quaternion.LookRotation(player.transform.position - camPos.transform.position, camPos.transform.up);
+        Quaternion rotation = Quaternion.LookRotation(player.transform.position - camPos.transform.position, player.transform.up);
         transform.rotation = rotation;
     }
 
@@ -133,5 +199,10 @@ public class CameraControll : MonoBehaviour
 
         // カメラをターゲットの方に向かせる
         transform.rotation = Quaternion.LookRotation(clearLight.transform.position - transform.position, player.transform.up);
+    }
+    public bool Satellite
+    {
+        set { satellite = value; }
+        get { return satellite; }
     }
 }

@@ -13,10 +13,12 @@ public class CubeInformation : MonoBehaviour
 
     [System.NonSerialized] public List<List<GameObject>> vertexList_FromEdge = new List<List<GameObject>>(); // 辺に接する頂点のリスト
     [System.NonSerialized] public List<List<GameObject>> faceList_FromEdge = new List<List<GameObject>>();   // 辺に接する面のリスト
+    [System.NonSerialized] public List<List<GameObject>> edgeList_FromFace = new List<List<GameObject>>();   // 面に接する辺のリスト
 
     private Collider[] colList;
     private bool openingSequence = true;
     private EdgeInformation edge;
+    private FaceInformation face;
 
     private float searchDis_vertex = 2.0f; // 頂点の原点位置からの探索範囲、ステージの大きさに依存する！Debug_Countの値を確認して都度調整
     private float searchDis_edge = 2.0f; // 辺の原点位置からの探索範囲、ステージの大きさに依存する！Debug_Countの値を確認して都度調整
@@ -27,11 +29,11 @@ public class CubeInformation : MonoBehaviour
         if (openingSequence) // 開幕処理
         {
             ObjectClassification(); // 全ての頂点・辺・面をリスト化
-            NumberingAndMakeLists(); // 辺に識別番号を付与、新規リストの作成
+            NumberingAndMakeLists(); // 辺と面に識別番号を付与、新規リストの作成
             MakeLists1_AroundVertex(); // 頂点探索の実行し、辺に接する頂点をリスト化
             MakeLists2_AroundEdge(); // 辺探索（各辺の原点位置から円形に）の実行、辺に接する面のリスト化
 
-            Debug_Count(); // デバッグ用（範囲探索距離の調整に用いる）
+            //Debug_Count(); // デバッグ用（範囲探索距離の調整に用いる）
 
             openingSequence = false;
         }
@@ -59,13 +61,21 @@ public class CubeInformation : MonoBehaviour
 
     void NumberingAndMakeLists()
     {
-        for (int j = 0; j < edgeList.Count; j++)
+        for (int i = 0; i < edgeList.Count; i++)
         {
-            edge = edgeList[j].GetComponent<EdgeInformation>();
-            edge.EdgeNum = j; // 辺に識別番号を付与
+            edge = edgeList[i].GetComponent<EdgeInformation>();
+            edge.EdgeNum = i; // 辺に識別番号を付与
 
             vertexList_FromEdge.Add(new List<GameObject>()); // 辺の数だけ新規リストを作成
             faceList_FromEdge.Add(new List<GameObject>()); // 辺の数だけ新規リストを作成
+        }
+
+        for (int j = 0; j < faceList.Count; j++)
+        {
+            face = faceList[j].GetComponent<FaceInformation>();
+            face.FaceNum = j; // 面に識別番号を付与
+
+            edgeList_FromFace.Add(new List<GameObject>()); // 面の数だけ新規リストを作成
         }
     }
 
@@ -80,7 +90,7 @@ public class CubeInformation : MonoBehaviour
                 if (colList[j].gameObject.CompareTag("Edge"))
                 {
                     edge = colList[j].gameObject.GetComponent<EdgeInformation>();
-                    // EdgeInformationに辺に接する２頂点のtransform情報を与える
+                    // EdgeInformationに、辺に接する２頂点のtransform情報を与える
                     if (edge.vertex[0] == Vector3.zero)
                     {
                         edge.vertex[0] = vertexList[i].transform.position;
@@ -109,7 +119,11 @@ public class CubeInformation : MonoBehaviour
             {
                 if (colList[j].gameObject.CompareTag("Face"))
                 {
-                    // EdgeInformationに辺に接する２面のtransform情報を与える
+                    ////////////////////////////////
+                    //// 辺に接する面のリスト化 ////
+                    ////////////////////////////////
+
+                    // EdgeInformationに、辺に接する２面のtransform情報を与える
                     if (edge.face[0] == Vector3.zero)
                     {
                         edge.face[0] = colList[j].gameObject.transform.position;
@@ -121,6 +135,32 @@ public class CubeInformation : MonoBehaviour
 
                     // 辺に接する面のリスト化
                     faceList_FromEdge[i].Add(colList[j].gameObject); // ◆今のところデバッグ用としてのみの使用◆辺の識別番号 = i、面のgameObject = colList[j].gameObject
+
+                    ////////////////////////////////
+                    //// 面に接する辺のリスト化 ////
+                    ////////////////////////////////
+
+                    face = colList[j].gameObject.GetComponent<FaceInformation>();
+                    // FaceInformationに、面に接する４辺のtransform情報を与える
+                    if (face.edge[0] == Vector3.zero)
+                    {
+                        face.edge[0] = edgeList[i].transform.position;
+                    }
+                    else if (face.edge[1] == Vector3.zero)
+                    {
+                        face.edge[1] = edgeList[i].transform.position;
+                    }
+                    else if (face.edge[2] == Vector3.zero)
+                    {
+                        face.edge[2] = edgeList[i].transform.position;
+                    }
+                    else
+                    {
+                        face.edge[3] = edgeList[i].transform.position;
+                    }
+
+                    // 面に接する辺のリスト化
+                    edgeList_FromFace[face.FaceNum].Add(edgeList[i]); // ◆今のところデバッグ用としてのみの使用◆面の識別番号 = face.FaceNum、辺のgameObject = edgeList[i]
                 }
             }
         }
@@ -143,6 +183,15 @@ public class CubeInformation : MonoBehaviour
             if (faceList_FromEdge[i].Count != 2)
             {
                 Debug.Log("エラー！辺に接する面の数が２ではありません！");
+            }
+        }
+
+        for (int i = 0; i < edgeList_FromFace.Count; i++)
+        {
+            Debug.Log("faceに接するedgeの数 = " + edgeList_FromFace[i].Count);
+            if (edgeList_FromFace[i].Count != 4)
+            {
+                Debug.Log("エラー！辺に接する面の数が４ではありません！");
             }
         }
     }

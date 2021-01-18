@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour
 	AnimationController aC;
 	// ClearJudgement
 	ClearJudgement cJ;
+	// CameraControl
+	CameraControll cC;
 
 	// 近くにあるitem
 	GameObject nearestItem;
@@ -60,6 +62,9 @@ public class PlayerController : MonoBehaviour
 	// 振り向き速度
 	float rotSpeed = 0.02f;
 
+	// プレイヤーが今いる（直前にいた）Face
+	GameObject currentFace = null;
+
 	// Start is called before the first frame update
 	void Awake()
     {
@@ -69,6 +74,7 @@ public class PlayerController : MonoBehaviour
 		aC = yagikun.GetComponent<AnimationController>();
 		// ClearJudgementの取得
 		cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
+		cC = GameObject.Find("Camera").GetComponent<CameraControll>();
 	}
 	void Start()
 	{
@@ -102,13 +108,29 @@ public class PlayerController : MonoBehaviour
 			/////////////////////////////////
 			/////// PickUp or PutDown ///////
 			/////////////////////////////////
-			///
+			
 			bool pick = false;
-			if (rBody.velocity.sqrMagnitude < minimumSpeed) pick = Input.GetButtonDown("Pick");
+			// 静止状態かつ着地しているときpickを可能にする
+			if (rBody.velocity.sqrMagnitude < minimumSpeed && isGround) pick = Input.GetButtonDown("Pick");
+
+			/////////////////////////////////
+			///////// Satellite Cam /////////
+			/////////////////////////////////
+
+			bool satelliteCam = false;
+			// 静止状態かつ着地しているときsatelliteCamを可能にする
+			if (rBody.velocity.sqrMagnitude < minimumSpeed && isGround) satelliteCam = Input.GetButtonDown("SatelliteCam");
 
 			/////////////////////////////////
 			/////////// Functions ///////////
 			/////////////////////////////////
+
+			// 静止状態で衛星カメラへの切り替えがあった場合、優先的に処理する（他処理は無視する）
+			bool turnOnSCM = false;
+			if (satelliteCam) turnOnSCM = TurnOnSatelliteCamMode();
+
+			// 衛星カメラへ切り替える場合、他処理は無視する
+			if (turnOnSCM) return;
 
 			// アイテムを持っていないときにpickの入力があった場合のみ、アイテムを拾うかどうか判定する
 			if (pick && !holding) JudgePickUpItems(ref pick);
@@ -145,6 +167,18 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+	bool TurnOnSatelliteCamMode()
+    {
+		// カメラのサテライトモードをオンにする
+		cC.Satellite = true;
+
+		// プレイヤーの操作を無効にする
+		control = false;
+
+		// 以下の処理の終了用
+		bool tOSCM = true;
+		return tOSCM;
+	}
 	void MoveCharacter(float hor, float ver, bool jump, Vector3 locVel)
 	{
 		///////////////////////
@@ -330,5 +364,10 @@ public class PlayerController : MonoBehaviour
 	{
 		set { gameOver = value; }
 		get { return gameOver; }
+	}
+	public GameObject CurrentFace
+	{
+		set { currentFace = value; }
+		get { return currentFace; }
 	}
 }
