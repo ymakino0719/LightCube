@@ -91,13 +91,13 @@ public class CubeInformation : MonoBehaviour
                 {
                     edge = colList[j].gameObject.GetComponent<EdgeInformation>();
                     // EdgeInformationに、辺に接する２頂点のtransform情報を与える
-                    if (edge.vertex[0] == Vector3.zero)
+                    if (edge.vertex[0] == null)
                     {
-                        edge.vertex[0] = vertexList[i].transform.position;
+                        edge.vertex[0] = vertexList[i];
                     }
                     else
                     {
-                        edge.vertex[1] = vertexList[i].transform.position;
+                        edge.vertex[1] = vertexList[i];
                     }
 
                     int num = edge.EdgeNum; // 辺の識別番号 edgeNum を取得する
@@ -124,13 +124,13 @@ public class CubeInformation : MonoBehaviour
                     ////////////////////////////////
 
                     // EdgeInformationに、辺に接する２面のtransform情報を与える
-                    if (edge.face[0] == Vector3.zero)
+                    if (edge.face[0] == null)
                     {
-                        edge.face[0] = colList[j].gameObject.transform.position;
+                        edge.face[0] = colList[j].gameObject;
                     }
                     else
                     {
-                        edge.face[1] = colList[j].gameObject.transform.position;
+                        edge.face[1] = colList[j].gameObject;
                     }
 
                     // 辺に接する面のリスト化
@@ -142,21 +142,21 @@ public class CubeInformation : MonoBehaviour
 
                     face = colList[j].gameObject.GetComponent<FaceInformation>();
                     // FaceInformationに、面に接する４辺のtransform情報を与える
-                    if (face.edge[0] == Vector3.zero)
+                    if (face.edge[0] == null)
                     {
-                        face.edge[0] = edgeList[i].transform.position;
+                        face.edge[0] = edgeList[i];
                     }
-                    else if (face.edge[1] == Vector3.zero)
+                    else if (face.edge[1] == null)
                     {
-                        face.edge[1] = edgeList[i].transform.position;
+                        face.edge[1] = edgeList[i];
                     }
-                    else if (face.edge[2] == Vector3.zero)
+                    else if (face.edge[2] == null)
                     {
-                        face.edge[2] = edgeList[i].transform.position;
+                        face.edge[2] = edgeList[i];
                     }
                     else
                     {
-                        face.edge[3] = edgeList[i].transform.position;
+                        face.edge[3] = edgeList[i];
                     }
 
                     // 面に接する辺のリスト化

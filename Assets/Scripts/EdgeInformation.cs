@@ -11,8 +11,8 @@ public class EdgeInformation : MonoBehaviour
 	private int edgeNum;
 
 	// 辺に接する２つの頂点と２つの面の位置
-	[System.NonSerialized] public Vector3[] vertex = new Vector3[2];
-	[System.NonSerialized] public Vector3[] face = new Vector3[2];
+	[System.NonSerialized] public GameObject[] vertex = new GameObject[2];
+	[System.NonSerialized] public GameObject[] face = new GameObject[2];
 
 	// 辺の原点位置のtransform
 	private Vector3 edge;
@@ -28,12 +28,12 @@ public class EdgeInformation : MonoBehaviour
 		if (other.gameObject.CompareTag("Player"))
 		{
 			var aEC = other.gameObject.GetComponent<AroundEdgeController>(); // PlayerはPlayerにAroundEdgeControllerがアタッチされている
-			aEC.FromEdgesInformation(edge, vertex[0], vertex[1], face[0], face[1]);
+			aEC.FromEdgesInformation(edge, vertex[0].transform.position, vertex[1].transform.position, face[0].transform.position, face[1].transform.position);
 		}
 		else if (other.gameObject.CompareTag("Item"))
 		{
 			var aEC = other.transform.parent.gameObject.GetComponent<AroundEdgeController>(); // Itemは親オブジェクトにAroundEdgeControllerがアタッチされている
-			aEC.FromEdgesInformation(edge, vertex[0], vertex[1], face[0], face[1]);
+			aEC.FromEdgesInformation(edge, vertex[0].transform.position, vertex[1].transform.position, face[0].transform.position, face[1].transform.position);
 		}
 	}
 

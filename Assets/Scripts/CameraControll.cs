@@ -10,6 +10,10 @@ public class CameraControll : MonoBehaviour
     GameObject camPos;
     // ClearJudgement
     ClearJudgement cJ;
+    // FaceInformation
+    FaceInformation face;
+    // EdgeInformation
+    EdgeInformation edge;
 
     // ClearLight
     GameObject clearLight;
@@ -42,6 +46,21 @@ public class CameraControll : MonoBehaviour
     int counter = 0;
     // サテライトモード用の追跡ロボット（位置（現在属する面または辺の位置）及び方向（原点位置を正面とする）を記録させる）
     GameObject robot;
+    // 追跡ロボットが現在属する面または辺のGameObject
+    GameObject currentGao;
+    // 追跡ロボットが次に移動する面または辺のGameObject
+    GameObject nextGao;
+    // サテライトモードでカメラが回転中かどうか
+    bool rolling = false;
+    // 縦横の操作入力受付
+    bool vertical = false;
+    bool horizontal = false;
+    // ロボットの移動距離（※大きすぎないように！）
+    float moveDis = 5.0f;
+    // サテライトカメラを移動させるときの時間（0～1）
+    private float time = 0;
+    // サテライトカメラを移動させるときの時間の調整パラメータ
+    private float timeCoef = 2.0f;
 
     void Awake()
     {
@@ -62,7 +81,7 @@ public class CameraControll : MonoBehaviour
     {
         if (!cJ.GameOver01 && !cJ.GameOver02)
         {
-            if (satellite) SatelliteCamMovement();
+            if (satellite) SatelliteCamera();
             else ChasingCamera();
         }
     }
@@ -86,41 +105,158 @@ public class CameraControll : MonoBehaviour
         }
     }
 
-    void SatelliteCamMovement()
+    void SatelliteCamera()
     {
         // 初期カメラ位置への移動
         if (!openingMove)
         {
-            OpeningCamMovement();
+            OpeningSatelliteCamMovement();
         }
+
+        if (!rolling) SatelliteCamMovement_Input();
+        else SatelliteCamMovement_Rotate();
 
         // サテライトモードの終了条件
         bool endCondition = EndConditionOfSatelliteMode();
         if (endCondition) return;
     }
-    void OpeningCamMovement()
+    void OpeningSatelliteCamMovement()
     {
         // 初期位置へのカメラの移動
-        GameObject gao = player.GetComponent<PlayerController>().CurrentFace;
-        transform.position = gao.transform.GetChild(0).transform.position;
+        currentGao = player.GetComponent<PlayerController>().CurrentFace;
+        transform.position = currentGao.transform.GetChild(0).transform.position;
 
         // カメラの視点: 原点位置の方を向く
         Quaternion rotation = Quaternion.LookRotation(Vector3.zero - transform.position);
         transform.rotation = rotation;
 
-        UpdateRobotInfo_First(gao.transform.position);
+        UpdateRobotInfo_First();
 
         openingMove = true;
     }
 
-    void UpdateRobotInfo_First(Vector3 pos)
+    void UpdateRobotInfo_First()
     {
         // ロボットの初期位置
-        robot.transform.position = pos;
+        robot.transform.position = currentGao.transform.position;
         // ロボットの初期方向
         Quaternion rotation = Quaternion.LookRotation(Vector3.zero - robot.transform.position, player.transform.up);
         robot.transform.rotation = rotation;
     }
+    void SatelliteCamMovement_Input()
+    {
+        // 操作入力
+        float hor = 0;
+        // vertical 方向に奇数回回転している状態では horizontal 方向の入力を受け付けない
+        if (!vertical) hor = Input.GetAxis("Horizontal");
+        float ver = 0;
+        // horizontal 方向に奇数回回転している状態では vertical 方向の入力を受け付けない
+        if (!horizontal) ver = Input.GetAxis("Vertical");
+
+        if (Mathf.Abs(hor) > float.Epsilon)
+        {
+            // robotによる探索（水平移動）
+            robot.transform.position += -transform.right * moveDis;
+
+            // 最短距離探索
+            SearchShortestDistance();
+
+            // ロボットの移動
+            UpdateRobotInfo();
+
+            // horizontal の入力を切り替える
+            horizontal = !horizontal;
+
+            // 回転処理に移行する
+            rolling = true;
+        }
+        else if (Mathf.Abs(ver) > float.Epsilon)
+        {
+            // robotによる探索（上下移動）
+            robot.transform.position += transform.up * moveDis;
+
+            // 最短距離探索
+            SearchShortestDistance();
+
+            // ロボットの移動
+            UpdateRobotInfo();
+
+            // vertical の入力を切り替える
+            vertical = !vertical;
+
+            // 回転処理に移行する
+            rolling = true;
+        }
+    }
+
+    void SearchShortestDistance()
+    {
+        // 直前までカメラが面していたのは面か辺か
+        if (!vertical && !horizontal) // 面の時
+        {
+            face = currentGao.GetComponent<FaceInformation>();
+            float? dis = null;
+
+            for (int i = 0; i < 4; i++)
+            {
+                // robotが探索移動した後の座標と最も距離が近い辺（のGameObject）を割り出す
+                float tempDis = (face.edge[i].transform.position - robot.transform.position).sqrMagnitude;
+                if (dis == null || tempDis < dis)
+                {
+                    dis = tempDis;
+                    nextGao = face.edge[i];
+                }
+            }
+        }
+        else // 辺の時
+        {
+            edge = currentGao.GetComponent<EdgeInformation>();
+            float? dis = null;
+
+            for (int i = 0; i < 2; i++)
+            {
+                // robotが探索移動した後の座標と最も距離が近い面（のGameObject）を割り出す
+                float tempDis = (edge.face[i].transform.position - robot.transform.position).sqrMagnitude;
+                if (dis == null || tempDis < dis)
+                {
+                    dis = tempDis;
+                    nextGao = edge.face[i];
+                }
+            }
+        }
+    }
+    void UpdateRobotInfo()
+    {
+        // ロボットの位置
+        robot.transform.position = nextGao.transform.position;
+        // ロボットの方向
+        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - robot.transform.position);
+        robot.transform.rotation = rotation;
+    }
+    void SatelliteCamMovement_Rotate()
+    {
+        // timeに時間を加算する
+        time += timeCoef * Time.deltaTime;
+
+        Vector3 currentCamPos = currentGao.transform.GetChild(0).transform.position;
+        Vector3 nextCamPos = nextGao.transform.GetChild(0).transform.position;
+
+        // サテライトカメラをゆっくり移動させる
+        transform.position = Vector3.Slerp(currentCamPos, nextCamPos, time);
+
+        // サテライトカメラの方向は常に原点位置を向くようにする//（上方向はロボットの上方向に合わせる）
+        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - transform.position);
+        transform.rotation = rotation;
+
+        if (time >= 1)
+        {
+            transform.position = nextCamPos;
+            currentGao = nextGao;
+            time = 0;
+            rolling = false;
+        }
+    }
+
     bool EndConditionOfSatelliteMode()
     {
         bool eC = false;

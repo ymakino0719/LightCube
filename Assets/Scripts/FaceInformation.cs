@@ -7,7 +7,7 @@ public class FaceInformation : MonoBehaviour
 	// 辺の固有番号（CubeInformationからプロパティで取得）
 	private int faceNum;
 	// 面に接する４つの辺の位置
-	[System.NonSerialized] public Vector3[] edge = new Vector3[4];
+	[System.NonSerialized] public GameObject[] edge = new GameObject[4];
 
 	void OnTriggerEnter(Collider other)
 	{
