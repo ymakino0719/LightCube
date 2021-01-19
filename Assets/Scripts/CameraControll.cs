@@ -146,20 +146,24 @@ public class CameraControll : MonoBehaviour
     void SatelliteCamMovement_Input()
     {
         // 操作入力
-        float hor = 0;
         // vertical 方向に奇数回回転している状態では horizontal 方向の入力を受け付けない
-        if (!vertical) hor = Input.GetAxis("Horizontal");
-        float ver = 0;
+        float hor = (vertical) ? 0 : Input.GetAxis("Horizontal");
+        int horA = ZeroOne(hor);
+
         // horizontal 方向に奇数回回転している状態では vertical 方向の入力を受け付けない
-        if (!horizontal) ver = Input.GetAxis("Vertical");
+        float ver = (horizontal) ? 0 : Input.GetAxis("Vertical");
+        int verA = ZeroOne(ver);
 
         if (Mathf.Abs(hor) > float.Epsilon)
         {
             // robotによる探索（水平移動）
-            robot.transform.position += -transform.right * moveDis;
+            robot.transform.position += transform.right * moveDis * horA;
 
             // 最短距離探索
             SearchShortestDistance();
+
+            // ロボットの位置を元に戻す
+            robot.transform.position -= transform.right * moveDis * horA;
 
             // ロボットの移動
             UpdateRobotInfo();
@@ -173,10 +177,13 @@ public class CameraControll : MonoBehaviour
         else if (Mathf.Abs(ver) > float.Epsilon)
         {
             // robotによる探索（上下移動）
-            robot.transform.position += transform.up * moveDis;
+            robot.transform.position += transform.up * moveDis * verA;
 
             // 最短距離探索
             SearchShortestDistance();
+
+            // ロボットの位置を元に戻す
+            robot.transform.position -= transform.up * moveDis * verA;
 
             // ロボットの移動
             UpdateRobotInfo();
@@ -187,6 +194,15 @@ public class CameraControll : MonoBehaviour
             // 回転処理に移行する
             rolling = true;
         }
+    }
+
+    int ZeroOne(float num)
+    {
+        int a = 0;
+        if (num > float.Epsilon) a = 1;
+        else if (num < float.Epsilon) a = -1;
+
+        return a;
     }
 
     void SearchShortestDistance()
@@ -227,11 +243,37 @@ public class CameraControll : MonoBehaviour
     }
     void UpdateRobotInfo()
     {
+        // 移動先までの角度差を計算する
+        float angle = Vector3.Angle(currentGao.transform.position - Vector3.zero, nextGao.transform.position - Vector3.zero);
+        // 回転軸を割り出す
+        // currentGaoとnextGaoのどちらかは必ず辺のオブジェクトで、回転軸を持つ
+        edge = (currentGao.GetComponent<EdgeInformation>() != null) ? currentGao.GetComponent<EdgeInformation>() : nextGao.GetComponent<EdgeInformation>();
+        Vector3 axis = edge.vertex[0].transform.position - edge.vertex[1].transform.position; // 回転軸
+
+        // angle度でrobotのRotateAroundを行う
+        robot.transform.RotateAround(Vector3.zero, axis, angle);
+        // angle度で回転後の位置及び角度を記録する
+        Vector3 nextPos01 = robot.transform.position;
+        Vector3 nextAngle01 = robot.transform.eulerAngles;
+
+        // -2 * angle度でrobotのRotateAroundを行う（逆方向に回転させる）
+        robot.transform.RotateAround(Vector3.zero, axis, -2 * angle);
+        // -angle度で回転後の位置及び角度を記録する
+        Vector3 nextPos02 = robot.transform.position;
+        Vector3 nextAngle02 = robot.transform.eulerAngles;
+
+        // angle度でrobotのRotateAroundを行う（初期位置に戻す）
+        robot.transform.RotateAround(Vector3.zero, axis, angle);
+
+        // 上で調べたnextPosとnextGaoが原点と織りなす角度の差を求め、より小さい方を正しい回転方向として採用する
+        float angle01 = Vector3.Angle(nextGao.transform.position - Vector3.zero, nextPos01 - Vector3.zero);
+        float angle02 = Vector3.Angle(nextGao.transform.position - Vector3.zero, nextPos02 - Vector3.zero);
+        Vector3 nextAngle = (angle01 < angle02) ? nextAngle01 : nextAngle02;
+
         // ロボットの位置
         robot.transform.position = nextGao.transform.position;
         // ロボットの方向
-        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - robot.transform.position);
-        robot.transform.rotation = rotation;
+        robot.transform.eulerAngles = nextAngle;
     }
     void SatelliteCamMovement_Rotate()
     {
@@ -244,8 +286,8 @@ public class CameraControll : MonoBehaviour
         // サテライトカメラをゆっくり移動させる
         transform.position = Vector3.Slerp(currentCamPos, nextCamPos, time);
 
-        // サテライトカメラの方向は常に原点位置を向くようにする//（上方向はロボットの上方向に合わせる）
-        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - transform.position);
+        // サテライトカメラの方向は常に原点位置を向くようにする（上方向はロボットの上方向に合わせる）
+        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - transform.position, robot.transform.up);
         transform.rotation = rotation;
 
         if (time >= 1)
