@@ -126,8 +126,8 @@ public class CameraControll : MonoBehaviour
         currentGao = player.GetComponent<PlayerController>().CurrentFace;
         transform.position = currentGao.transform.GetChild(0).transform.position;
 
-        // カメラの視点: 原点位置の方を向く
-        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - transform.position);
+        // カメラの視点: 原点位置の方を向く（上方向はプレイヤーと合わせる）
+        Quaternion rotation = Quaternion.LookRotation(Vector3.zero - transform.position, player.transform.up);
         transform.rotation = rotation;
 
         UpdateRobotInfo_First();
@@ -139,7 +139,7 @@ public class CameraControll : MonoBehaviour
     {
         // ロボットの初期位置
         robot.transform.position = currentGao.transform.position;
-        // ロボットの初期方向
+        // ロボットの初期方向（上方向はプレイヤーと合わせる）
         Quaternion rotation = Quaternion.LookRotation(Vector3.zero - robot.transform.position, player.transform.up);
         robot.transform.rotation = rotation;
     }
