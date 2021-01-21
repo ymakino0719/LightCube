@@ -2206,7 +2206,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 0.2288889
+  m_progress: 0
   usePosition: 1
   useRotation: 0
   useScale: 0
@@ -2962,7 +2962,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 0.2288889
+  m_progress: 0
   usePosition: 1
   useRotation: 0
   useScale: 0
@@ -10170,7 +10170,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1919716593
 MonoBehaviour:
   m_ObjectHideFlags: 0
