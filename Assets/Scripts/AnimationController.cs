@@ -138,6 +138,12 @@ public class AnimationController : MonoBehaviour
     {
 		GameObject.Find("UIDirector").GetComponent<GameClearUI>().DisplayGameClear();
 	}
+	void CompleteFlag()
+	{
+		var cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
+		cJ.GameOver02 = false;
+		cJ.GameOver03 = true;
+	}
 	public GameObject NearestItem
 	{
 		set { nearestItem = value; }

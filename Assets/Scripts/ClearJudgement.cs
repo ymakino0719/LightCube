@@ -33,6 +33,8 @@ public class ClearJudgement : MonoBehaviour
     bool beginning01 = true;
     // キャラクターのVictory画面
     bool beginning02 = true;
+    // エンドムービーの待機時間
+    bool beginning03 = true;
     // Rangeの振幅開始時間
     float startTime;
     // ゲームクリアムービーの再生
@@ -73,6 +75,10 @@ public class ClearJudgement : MonoBehaviour
             {
                 GameOver02_Behavior();
             }
+            else if(gameOver03)
+            {
+                GameOver03_Behavior();
+            }
 
             if (startingOperation01)
             {
@@ -107,6 +113,25 @@ public class ClearJudgement : MonoBehaviour
             beginning02 = false;
         }
     }
+    void GameOver03_Behavior()
+    {
+        if (beginning03)
+        {
+            StartCoroutine("GameOverScreenDisplayTime");
+        }
+        else
+        {
+            GoBackToStageSelect();
+        }
+    }
+
+    IEnumerator GameOverScreenDisplayTime()
+    {
+        // 勝利画面でn秒間待機する
+        yield return new WaitForSeconds(2);
+
+        beginning03 = false;
+    }
 
     void JudgeClearConditions()
     {
@@ -115,6 +140,14 @@ public class ClearJudgement : MonoBehaviour
             gameOver = true;
             gameOver01 = true;
             lighting.enabled = true;
+        }
+    }
+    void GoBackToStageSelect()
+    {
+        if (Input.anyKey)
+        {
+            TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
+            traUI.GoBackToStageSelect(5.0f, 3.0f);
         }
     }
 
@@ -150,5 +183,10 @@ public class ClearJudgement : MonoBehaviour
     {
         set { gameOver02 = value; }
         get { return gameOver02; }
+    }
+    public bool GameOver03
+    {
+        set { gameOver03 = value; }
+        get { return gameOver03; }
     }
 }

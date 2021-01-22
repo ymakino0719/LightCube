@@ -16,12 +16,6 @@ public class GameClearUI : MonoBehaviour
         gameClearPanel.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void DisplayGameClear()
     {
         gameClearPanel.SetActive(true);

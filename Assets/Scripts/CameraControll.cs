@@ -79,7 +79,7 @@ public class CameraControll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!cJ.GameOver01 && !cJ.GameOver02)
+        if (!cJ.GameOver01 && !cJ.GameOver02 && !cJ.GameOver03)
         {
             if (satellite) SatelliteCamera();
             else ChasingCamera();
