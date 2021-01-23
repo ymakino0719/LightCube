@@ -128,7 +128,7 @@ public class ClearJudgement : MonoBehaviour
     IEnumerator GameOverScreenDisplayTime()
     {
         // 勝利画面でn秒間待機する
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(4);
 
         beginning03 = false;
     }

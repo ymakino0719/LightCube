@@ -33,8 +33,8 @@ public class PlayerController : MonoBehaviour
 	// Playerが動いているかどうかの閾値
 	float minimumSpeed = 0.01f;
 
-	// 次に移動する面に移動中かどうか
-	bool control = true;
+	// 操作可能な状態かどうか
+	bool control = false;
 
 	// Yagikun3DにアタッチされているAnimationControllerの取得
 	AnimationController aC;
@@ -79,6 +79,8 @@ public class PlayerController : MonoBehaviour
 	void Start()
 	{
 		latestPos = transform.position;
+		// 開幕n秒間の操作を止める
+		StartCoroutine("OpeningControlStopCoroutine");
 	}
 
 	// Update is called once per frame
@@ -148,6 +150,16 @@ public class PlayerController : MonoBehaviour
 		{
 
         }
+	}
+	IEnumerator OpeningControlStopCoroutine()
+	{
+		// 開幕n秒間の操作を止める
+		yield return new WaitForSeconds(2.0f);
+
+		control = true;
+
+		PausedUI pUI = GameObject.Find("UIDirector").GetComponent<PausedUI>();
+		if(pUI.FirstStage) pUI.HowToPlay();
 	}
 
 	void FixedUpdate()
