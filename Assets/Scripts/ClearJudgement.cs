@@ -121,7 +121,7 @@ public class ClearJudgement : MonoBehaviour
         }
         else
         {
-            GoBackToStageSelect();
+            ReturnToStageSelect();
         }
     }
 
@@ -142,12 +142,12 @@ public class ClearJudgement : MonoBehaviour
             lighting.enabled = true;
         }
     }
-    void GoBackToStageSelect()
+    void ReturnToStageSelect()
     {
         if (Input.anyKey)
         {
             TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
-            traUI.GoBackToStageSelect(5.0f, 3.0f);
+            traUI.ReturnToStageSelect(5.0f, 3.0f);
         }
     }
 

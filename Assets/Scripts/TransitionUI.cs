@@ -30,9 +30,9 @@ public class TransitionUI : MonoBehaviour
     {
         StartCoroutine("RestartFadeCoroutine");
     }
-    public void GoBackToStageSelect(float fTime, float tTime)
+    public void ReturnToStageSelect(float fTime, float tTime)
     {
-        StartCoroutine(GoBackToStageSelectCoroutine(fTime, tTime));
+        StartCoroutine(ReturnToStageSelectCoroutine(fTime, tTime));
     }
 
     IEnumerator FadeCoroutine()
@@ -52,7 +52,7 @@ public class TransitionUI : MonoBehaviour
         PausedUI pUI = GameObject.Find("UIDirector").GetComponent<PausedUI>();
         pUI.Restart_SceneChange();
     }
-    IEnumerator GoBackToStageSelectCoroutine(float fTime, float tTime)
+    IEnumerator ReturnToStageSelectCoroutine(float fTime, float tTime)
     {
         fade_N.FadeIn(fTime);
 
@@ -60,6 +60,6 @@ public class TransitionUI : MonoBehaviour
         yield return new WaitForSeconds(tTime);
 
         PausedUI pUI = GameObject.Find("UIDirector").GetComponent<PausedUI>();
-        pUI.ReturnToStageSelect();
+        pUI.ReturnToStageSelect_SceneChange();
     }
 }

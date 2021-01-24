@@ -50,18 +50,18 @@ public class PausedUI : MonoBehaviour
         TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
         traUI.RestartFade();
     }
-    public void GoBackToStageSelect_FromPausedUI()
-    {
-        TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
-        traUI.GoBackToStageSelect(3.0f, 1.5f);
-    }
-
     public void Restart_SceneChange()
     {
         string scene = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(scene);
     }
     public void ReturnToStageSelect()
+    {
+        TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
+        traUI.ReturnToStageSelect(3.0f, 1.5f);
+    }
+
+    public void ReturnToStageSelect_SceneChange()
     {
         SceneManager.sceneLoaded += SceneLoaded_StageSelect;
         SceneManager.LoadScene("Title");
