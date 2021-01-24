@@ -56,7 +56,7 @@ public class CameraControll : MonoBehaviour
     bool vertical = false;
     bool horizontal = false;
     // ロボットの移動距離（※大きすぎないように！）
-    float moveDis = 5.0f;
+    float moveDis = 1.0f;
     // サテライトカメラを移動させるときの時間（0～1）
     private float time = 0;
     // サテライトカメラを移動させるときの時間の調整パラメータ
@@ -159,8 +159,8 @@ public class CameraControll : MonoBehaviour
             // robotによる探索（水平移動）
             robot.transform.position += transform.right * moveDis * horA;
 
-            // 最短距離探索
-            SearchShortestDistance();
+            // 最近面・辺探索
+            FindNearestFaceOrEdge();
 
             // ロボットの位置を元に戻す
             robot.transform.position -= transform.right * moveDis * horA;
@@ -179,8 +179,8 @@ public class CameraControll : MonoBehaviour
             // robotによる探索（上下移動）
             robot.transform.position += transform.up * moveDis * verA;
 
-            // 最短距離探索
-            SearchShortestDistance();
+            // 最近面・辺探索
+            FindNearestFaceOrEdge();
 
             // ロボットの位置を元に戻す
             robot.transform.position -= transform.up * moveDis * verA;
@@ -205,21 +205,24 @@ public class CameraControll : MonoBehaviour
         return a;
     }
 
-    void SearchShortestDistance()
+    void FindNearestFaceOrEdge()
     {
         // 直前までカメラが面していたのは面か辺か
         if (!vertical && !horizontal) // 面の時
         {
             face = currentGao.GetComponent<FaceInformation>();
-            float? dis = null;
+            float? diff = null;
 
             for (int i = 0; i < 4; i++)
             {
-                // robotが探索移動した後の座標と最も距離が近い辺（のGameObject）を割り出す
-                float tempDis = (face.edge[i].transform.position - robot.transform.position).sqrMagnitude;
-                if (dis == null || tempDis < dis)
+                // robotの探索移動前後の距離を比較し、最も距離が縮まった辺（のGameObject）を割り出す
+                // robotの探索移動前（＝現在いる面）と移動先候補の辺との距離
+                float beforeDis = (face.edge[i].transform.position - currentGao.transform.position).magnitude;
+                // robotの探索移動後と移動先候補の辺との距離
+                float afterDis = (face.edge[i].transform.position - robot.transform.position).magnitude;
+                if (diff == null || afterDis - beforeDis < diff)
                 {
-                    dis = tempDis;
+                    diff = afterDis - beforeDis;
                     nextGao = face.edge[i];
                 }
             }
@@ -227,15 +230,18 @@ public class CameraControll : MonoBehaviour
         else // 辺の時
         {
             edge = currentGao.GetComponent<EdgeInformation>();
-            float? dis = null;
+            float? diff = null;
 
             for (int i = 0; i < 2; i++)
             {
-                // robotが探索移動した後の座標と最も距離が近い面（のGameObject）を割り出す
-                float tempDis = (edge.face[i].transform.position - robot.transform.position).sqrMagnitude;
-                if (dis == null || tempDis < dis)
+                // robotの探索移動前後の距離を比較し、最も距離が縮まった面（のGameObject）を割り出す
+                // robotの探索移動前（＝現在いる面）と移動先候補の辺との距離
+                float beforeDis = (edge.face[i].transform.position - currentGao.transform.position).magnitude;
+                // robotの探索移動後と移動先候補の辺との距離
+                float afterDis = (edge.face[i].transform.position - robot.transform.position).magnitude;
+                if (diff == null || afterDis - beforeDis < diff)
                 {
-                    dis = tempDis;
+                    diff = afterDis - beforeDis;
                     nextGao = edge.face[i];
                 }
             }
