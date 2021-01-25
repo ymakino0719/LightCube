@@ -57,13 +57,22 @@ public class PlayerController : MonoBehaviour
 	// ゲームクリア判定: 遷移01 での使用する回転方向先
 	Quaternion g01_Rot;
 
-	// 振り向き時間
-	float time = 0.0f;
-	// 振り向き速度
-	float rotSpeed = 0.02f;
+	// 振り向き時間（StarLight）
+	float timeSL = 0.0f;
+	// 振り向き速度（StarLight）
+	float rotSpeedSL = 0.02f;
 
 	// プレイヤーが今いる（直前にいた）Face
 	GameObject currentFace = null;
+
+	// プレイヤーが直前に通過した橋の中間地点
+	GameObject midpoint = null;
+	// 橋を通過し、カメラの回転が必要な場合
+	bool throughGate = false;
+	// カメラの振りむき時間
+	float timeBr = 0.0f;
+	// カメラの振りむき速度
+	float rotSpeedBr = 0.2f;
 
 	// Start is called before the first frame update
 	void Awake()
@@ -177,6 +186,11 @@ public class PlayerController : MonoBehaviour
 				LookAtStarLightSmoothly_End();
 			}
 		}
+
+		if(throughGate)
+        {
+			ThroughGateRotation();
+        }
 	}
 
 	bool TurnOnSatelliteCamMode()
@@ -332,11 +346,11 @@ public class PlayerController : MonoBehaviour
 	void LookAtStarLightSmoothly_Processing()
 	{
 		// 時間
-		time += rotSpeed * Time.deltaTime;
+		timeSL += rotSpeedSL * Time.deltaTime;
 
-		yagikun.transform.rotation = Quaternion.Lerp(yagikun.transform.rotation, g01_Rot, time);
+		yagikun.transform.rotation = Quaternion.Lerp(yagikun.transform.rotation, g01_Rot, timeSL);
 
-		if(time >= 1.0f)
+		if(timeSL >= 1.0f)
         {
 			// 時間を超過したら回転終了
 			LookAtStarLightSmoothly_End();
@@ -347,7 +361,7 @@ public class PlayerController : MonoBehaviour
 		yagikun.transform.rotation = g01_Rot;
 		TurnTheOtherWay();
 
-		time = 0.0f;
+		timeSL = 0.0f;
 		gameOver01 = false;
 	}
 
@@ -356,7 +370,27 @@ public class PlayerController : MonoBehaviour
 		// yagikun3Dを180度回転させる
 		yagikun.transform.Rotate(0, 180, 0);
 	}
+	void ThroughGateRotation()
+	{
+		Debug.Log("BAAA");
+		// 時間
+		timeBr += rotSpeedBr * Time.deltaTime;
 
+		transform.rotation = Quaternion.Lerp(transform.rotation, midpoint.transform.rotation, timeBr);
+
+		// Playerの前方方向の向きとmidpointの前方方向の向きの角度を確認する（前方はx軸のためtransform.rightとなる）
+		float angle = Vector3.Angle(transform.right, midpoint.transform.right);
+
+		// timeBr が1を超過またはangleが0.1度未満になった場合処理を終了させる
+		if (timeBr >= 1.0f || angle <= 0.1f)
+		{
+			transform.rotation = midpoint.transform.rotation;
+
+			timeBr = 0.0f;
+			midpoint = null;
+			throughGate = false;
+		}
+	}
 	public bool IsGround
 	{
 		set { isGround = value; }
@@ -381,5 +415,15 @@ public class PlayerController : MonoBehaviour
 	{
 		set { currentFace = value; }
 		get { return currentFace; }
+	}
+	public GameObject Midpoint
+	{
+		set { midpoint = value; }
+		get { return midpoint; }
+	}
+	public bool ThroughGate
+	{
+		set { throughGate = value; }
+		get { return throughGate; }
 	}
 }

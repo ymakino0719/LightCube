@@ -8,6 +8,11 @@ public class GateBehavior : MonoBehaviour
     GameObject parent;
     // 一つ下の子オブジェクト（方角ごとのHitBox）
     GameObject hB;
+    // Player
+    GameObject player;
+    // PlayerController
+    PlayerController pC;
+
     // ゲートドア
     BoxCollider[] door;
     // Start is called before the first frame update
@@ -19,23 +24,28 @@ public class GateBehavior : MonoBehaviour
         hB = transform.GetChild(0).gameObject;
         // 全てのゲートドアを取得
         door = GetComponents<BoxCollider>();
+        // Playerの取得
+        player = GameObject.Find("Player");
+        // PlayerControllerの取得
+        pC = player.GetComponent<PlayerController>();
     }
 
     void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            GameObject player = collision.gameObject;
-
             // Playerの向きとゲートの向きを確認し、Playerがゲートを通る正しい方角であるかを確認する
-            bool trueGate = CheckPlayerAndGateDirection(player);
+            bool trueGate = CheckPlayerAndGateDirection();
 
             // ゲートの処理
             ActivateProcess(trueGate);
+
+            // 橋を渡り、元々いた面と異なる面に移動した場合、カメラを回転する（なお回転処理中である場合は無効とする）
+            if (!pC.ThroughGate) CheckThroughGate();
         }
     }
 
-    bool CheckPlayerAndGateDirection(GameObject player)
+    bool CheckPlayerAndGateDirection()
     {
         // Playerの上方向の向きとゲートの上方向の向きの角度を確認する
         float angle = Vector3.Angle(player.transform.up, transform.up);
@@ -70,6 +80,16 @@ public class GateBehavior : MonoBehaviour
         foreach (Transform c1Tra in parent.transform)
         {
             c1Tra.GetChild(0).gameObject.SetActive(false);
+        }
+    }
+    void CheckThroughGate()
+    {
+        // 差が45度以下の場合（橋を通ったが元の面に帰ってきた場合）、あるいはmidpointがnull（橋にこれから入る状態）の時は、カメラの回転を実行しない
+        if(pC.Midpoint != null)
+        {
+            // Playerの前方方向の向きとmidpointの前方方向の向きの角度を確認する（前方はx軸のためtransform.rightとなる）
+            float angle = Vector3.Angle(player.transform.right, pC.Midpoint.transform.right);
+            if (angle > 45) pC.ThroughGate = true;
         }
     }
 }

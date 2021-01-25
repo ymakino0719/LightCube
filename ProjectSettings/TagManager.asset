@@ -15,6 +15,7 @@ TagManager:
   - Switch
   - BridgeColorBox
   - Gate
+  - MiddlePoint
   layers:
   - Default
   - TransparentFX
