@@ -12,9 +12,16 @@ public class SwitchBehavior : MonoBehaviour
     // マテリアルのセット
     public Material mat00, mat01, mat02, mat03;
 
-    GameObject b_Main, bHB_OFF, b_Gate;
+    GameObject b_Main, bHB_OFF, b_Gate, b_Arrow;
     List<MeshRenderer> b_Main_MRList = new List<MeshRenderer>();
     List<BoxCollider> b_Main_BCList = new List<BoxCollider>();
+
+    // Player
+    GameObject player;
+    void Awake()
+    {
+        player = GameObject.Find("Player");
+    }
     void Start()
     {
         OpeningSequence();
@@ -33,18 +40,21 @@ public class SwitchBehavior : MonoBehaviour
             b_Main = GameObject.Find("B01_Main");
             bHB_OFF = GameObject.Find("B01HB_OFF");
             b_Gate = GameObject.Find("Gates01");
+            b_Arrow = GameObject.Find("B01_Arrow");
         }
         else if (switchNum == 2)
         {
             b_Main = GameObject.Find("B02_Main");
             bHB_OFF = GameObject.Find("B02HB_OFF");
             b_Gate = GameObject.Find("Gates02");
+            b_Arrow = GameObject.Find("B02_Arrow");
         }
         else if (switchNum == 3)
         {
             b_Main = GameObject.Find("B03_Main");
             bHB_OFF = GameObject.Find("B03HB_OFF");
             b_Gate = GameObject.Find("Gates03");
+            b_Arrow = GameObject.Find("B03_Arrow");
         }
         else
         {
@@ -52,8 +62,9 @@ public class SwitchBehavior : MonoBehaviour
             Debug.Log("Error! SwitchNum is not correct");
         }
 
-        // 開始時はスイッチがOFFのため、ゲートを非アクティブにしておく
+        // 開始時はスイッチがOFFのため、ゲートと矢印を非アクティブにしておく
         b_Gate.SetActive(false);
+        b_Arrow.SetActive(false);
 
         // 橋の歩く部分（Main部）のBoxColliderとMeshRendererのリスト化
         foreach (Transform c1Tra in b_Main.transform)
@@ -75,7 +86,17 @@ public class SwitchBehavior : MonoBehaviour
             }
         }
     }
-    public void SwitchONOFF()
+
+    public void CheckSwitchAndPlayerDir()
+    {
+        // プレイヤーが正しい向きでスイッチを踏んでいるか確認する
+        // プレイヤーとスイッチそれぞれのtransform.upの角度差を算出し、45度以下であれば同じ方向とみなす
+        float angle = Vector3.Angle(player.transform.up, transform.up);
+
+        if (angle <= 45) SwitchONOFF();
+    }
+
+    void SwitchONOFF()
     {
         // スイッチの切り替え
         switchBool = !switchBool;
@@ -84,6 +105,7 @@ public class SwitchBehavior : MonoBehaviour
         {
             bHB_OFF.SetActive(false);
             b_Gate.SetActive(true);
+            b_Arrow.SetActive(true);
 
             SwitchONProcess();
         }
@@ -91,6 +113,7 @@ public class SwitchBehavior : MonoBehaviour
         {
             bHB_OFF.SetActive(true);
             b_Gate.SetActive(false);
+            b_Arrow.SetActive(false);
 
             SwitchOFFProcess();
         }
