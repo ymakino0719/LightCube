@@ -64,6 +64,14 @@ public class TitleUI : MonoBehaviour
     {
         StartCoroutine(FadeInCoroutine("Stage01-4"));
     }
+    public void Stage01_5()
+    {
+        StartCoroutine(FadeInCoroutine("Stage01-5"));
+    }
+    public void Stage01_6()
+    {
+        StartCoroutine(FadeInCoroutine("Stage01-6"));
+    }
     public void GoBackToStageSelect()
     {
         StartCoroutine("FadeOutCoroutine");
