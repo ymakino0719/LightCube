@@ -25,8 +25,6 @@ public class CheckIsGround : MonoBehaviour
 	{
 		// 着地判定
 		if (!collision.gameObject.CompareTag("Face") && !collision.gameObject.CompareTag("Edge") && !collision.gameObject.CompareTag("Gate")) pC.IsGround = true;
-
-		Debug.Log(collision.gameObject);
 	}
 
 	void OnTriggerExit(Collider collision)
