@@ -18,15 +18,13 @@ public class CheckIsGround : MonoBehaviour
 		if (!collision.gameObject.CompareTag("Face") && !collision.gameObject.CompareTag("Edge") && !collision.gameObject.CompareTag("Gate")) pC.IsGround = true;
 
 		// スイッチを踏んだ時
-		if (collision.gameObject.CompareTag("Switch")) collision.transform.parent.gameObject.GetComponent<SwitchBehavior>().CheckSwitchAndPlayerDir(collision.gameObject);
+		if (collision.gameObject.CompareTag("Switch")) collision.gameObject.GetComponent<SwitchBehavior>().CheckSwitchAndPlayerDir();
 	}
 
 	void OnTriggerStay(Collider collision)
 	{
 		// 着地判定
 		if (!collision.gameObject.CompareTag("Face") && !collision.gameObject.CompareTag("Edge") && !collision.gameObject.CompareTag("Gate")) pC.IsGround = true;
-
-		Debug.Log(collision.gameObject);
 	}
 
 	void OnTriggerExit(Collider collision)

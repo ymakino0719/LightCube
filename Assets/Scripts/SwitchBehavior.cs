@@ -18,13 +18,9 @@ public class SwitchBehavior : MonoBehaviour
 
     // Player
     GameObject player;
-    // AllSwitchesManager
-    AllSwitchesManager aSM;
-
     void Awake()
     {
         player = GameObject.Find("Player");
-        aSM = GameObject.Find("GameDirector").GetComponent<AllSwitchesManager>();
     }
     void Start()
     {
@@ -91,18 +87,13 @@ public class SwitchBehavior : MonoBehaviour
         }
     }
 
-    public void CheckSwitchAndPlayerDir(GameObject switchCol)
+    public void CheckSwitchAndPlayerDir()
     {
-        // プレイヤーが正しい向きでスイッチを踏んでいるか確認する（判断に用いるのはBoxColliderが設定されている個別のGameObjectの方）
+        // プレイヤーが正しい向きでスイッチを踏んでいるか確認する
         // プレイヤーとスイッチそれぞれのtransform.upの角度差を算出し、45度以下であれば同じ方向とみなす
-        float angle = Vector3.Angle(player.transform.up, switchCol.transform.up);
+        float angle = Vector3.Angle(player.transform.up, transform.up);
 
-        if (angle <= 45)
-        {
-            aSM.OtherCororSwitchesOFF(switchNum);
-            SwitchONOFF();
-            aSM.LastSwitchNum = switchNum;
-        } 
+        if (angle <= 45) SwitchONOFF();
     }
 
     void SwitchONOFF()
@@ -110,16 +101,26 @@ public class SwitchBehavior : MonoBehaviour
         // スイッチの切り替え
         switchBool = !switchBool;
 
-        if(switchBool) SwitchONProcess(); // スイッチがONに切り替わったとき
-        else SwitchOFFProcess(); // スイッチがOFFに切り替わったとき
+        if(switchBool) // スイッチがONに切り替わったとき
+        {
+            bHB_OFF.SetActive(false);
+            b_Gate.SetActive(true);
+            b_Arrow.SetActive(true);
+
+            SwitchONProcess();
+        }
+        else // スイッチがOFFに切り替わったとき
+        {
+            bHB_OFF.SetActive(true);
+            b_Gate.SetActive(false);
+            b_Arrow.SetActive(false);
+
+            SwitchOFFProcess();
+        }
     }
 
     void SwitchONProcess()
     {
-        bHB_OFF.SetActive(false);
-        b_Gate.SetActive(true);
-        b_Arrow.SetActive(true);
-
         // Materialの変更（色を付ける）
         if (switchNum == 1)
         {
@@ -149,12 +150,8 @@ public class SwitchBehavior : MonoBehaviour
             bC.enabled = true;
         }
     }
-    public void SwitchOFFProcess()
+    void SwitchOFFProcess()
     {
-        bHB_OFF.SetActive(true);
-        b_Gate.SetActive(false);
-        b_Arrow.SetActive(false);
-
         // Materialの変更（無色に）
         foreach (MeshRenderer mR in b_Main_MRList)
         {
@@ -166,10 +163,5 @@ public class SwitchBehavior : MonoBehaviour
         {
             bC.enabled = false;
         }
-    }
-    public bool SwitchBool
-    {
-        set { switchBool = value; }
-        get { return switchBool; }
     }
 }

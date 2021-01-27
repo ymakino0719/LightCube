@@ -16,9 +16,6 @@ TagManager:
   - BridgeColorBox
   - Gate
   - MiddlePoint
-  - SwitchHub01
-  - SwitchHub02
-  - SwitchHub03
   layers:
   - Default
   - TransparentFX
