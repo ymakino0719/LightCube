@@ -89,7 +89,15 @@ public class GateBehavior : MonoBehaviour
         {
             // Playerの前方方向の向きとmidpointの前方方向の向きの角度を確認する（前方はx軸のためtransform.rightとなる）
             float angle = Vector3.Angle(player.transform.right, pC.Midpoint.transform.right);
-            if (angle > 45) pC.ThroughGate = true;
+            if (angle > 45 && !pC.Island) // ゲートの出口が浮島の場合も回転を実行しない
+            {
+                pC.ThroughGate = true;
+            }
+            else
+            {
+                pC.Midpoint = null; // midpointのリセット
+                pC.Island = false; // islandのリセット
+            } 
         }
     }
 }

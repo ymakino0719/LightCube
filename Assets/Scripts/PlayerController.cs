@@ -67,6 +67,8 @@ public class PlayerController : MonoBehaviour
 
 	// プレイヤーが直前に通過した橋の中間地点
 	GameObject midpoint = null;
+	// ゲートの出口が浮島かどうか
+	bool island = false;
 	// 橋を通過し、カメラの回転が必要な場合
 	bool throughGate = false;
 	// カメラの振りむき時間
@@ -372,7 +374,6 @@ public class PlayerController : MonoBehaviour
 	}
 	void ThroughGateRotation()
 	{
-		Debug.Log("BAAA");
 		// 時間
 		timeBr += rotSpeedBr * Time.deltaTime;
 
@@ -420,6 +421,11 @@ public class PlayerController : MonoBehaviour
 	{
 		set { midpoint = value; }
 		get { return midpoint; }
+	}
+	public bool Island
+	{
+		set { island = value; }
+		get { return island; }
 	}
 	public bool ThroughGate
 	{

@@ -22,9 +22,9 @@ public class CameraControll : MonoBehaviour
     // 移動時間: 遷移01
     float moveTime = 3.0f;
     // ターゲットとの距離: 遷移01
-    float targetDis01 = 7.0f;
+    public float targetDis01 = 7.0f;
     // ターゲットとの距離: 遷移02
-    float targetDis02 = 4.0f;
+    public float targetDis02 = 4.0f;
     // 接近停止閾値
     float minDis = 0.01f;
     // 開幕処理
@@ -340,14 +340,20 @@ public class CameraControll : MonoBehaviour
         Vector3 vec = (transform.position - clearLight.transform.position).normalized * targetDis01;
         targetPos = clearLight.transform.position + vec;
 
+        // 最初の位置を記録
+        Vector3 startPos = transform.position;
         // 最初の回転を記録
         Quaternion startRot = transform.rotation;
+        // ターゲット位置に移動させてみる
+        transform.position = targetPos;
         // ターゲットの方に向かせてみる
-        transform.rotation = Quaternion.LookRotation(targetPos - transform.position, transform.up);
+        transform.rotation = Quaternion.LookRotation(clearLight.transform.position - transform.position, transform.up);
         // ターゲットへの角度を取得
         targetAngle = transform.eulerAngles;
         // 最初の回転に戻す
         transform.rotation = startRot;
+        // 最初の位置に戻す
+        transform.position = startPos;
 
         beginning = false;
     }
