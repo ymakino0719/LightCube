@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     // PlayerのRigidbody
     Rigidbody rBody;
     // 仮想重力の係数
-    float gravity = 2.0f;
+    float gravity = 12.0f;
 
 	// Yagikun3D
 	GameObject yagikun;
@@ -18,11 +18,11 @@ public class PlayerController : MonoBehaviour
 	// 1つ前のフレームで着地していたかどうか
 	bool lastGround = false;
 	// ジャンプの高さ
-	float jumpH = 10.0f;
+	float jumpH = 9.5f;
 	// アイテムを持っているか
 	bool holding = false;
 	// 移動スピード
-	float moveS = 1.5f;
+	float moveS = 5.0f;
 	// 平面方向（XとZ方向）に対する移動上限速度
 	float moveLimit_XZ = 2.0f;
 	// 上下方向（Y方向）に対する移動上限速度
@@ -76,6 +76,16 @@ public class PlayerController : MonoBehaviour
 	// カメラの振りむき速度
 	float rotSpeedBr = 0.2f;
 
+	// 縦横移動
+	float hor, ver;
+	// ジャンプ
+	bool jump;
+	// プレイヤー基準のローカルベクトル
+	Vector3 locVel;
+
+	// 衛星カメラへの切り替え禁止時間（追尾カメラに戻してからすぐには戻せないように）
+	bool prohibitCamSwitching = false;
+
 	// Start is called before the first frame update
 	void Awake()
     {
@@ -99,22 +109,18 @@ public class PlayerController : MonoBehaviour
     {
 		if(control) // 次の面に移動中でないとき（通常時）、その他キャラクターの操作を受け付けないとき
         {
-			// 仮想重力をかけ続ける
-			rBody.AddForce(-transform.up * gravity);
-
-
 			// Playerをキー操作で動かす
 			/////////////////////////////////
 			//////////// Moving /////////////
 			/////////////////////////////////
 
-			float hor = Input.GetAxis("Horizontal");
-			float ver = Input.GetAxis("Vertical");
+			hor = Input.GetAxis("Horizontal");
+			ver = Input.GetAxis("Vertical");
 
 			/////////////////////////////////
 			//////////// Jumping ////////////
 			/////////////////////////////////
-			bool jump = false;
+			jump = false;
 			// 着地しているときジャンプを可能にする
 			if (isGround) jump = Input.GetButtonDown("Jump");
 
@@ -131,8 +137,8 @@ public class PlayerController : MonoBehaviour
 			/////////////////////////////////
 
 			bool satelliteCam = false;
-			// 静止状態かつ着地しているときsatelliteCamを可能にする
-			if (rBody.velocity.sqrMagnitude < minimumSpeed && isGround) satelliteCam = Input.GetButtonDown("SatelliteCam");
+			// 静止状態、着地しているときかつ切り替えを禁止していないとき、satelliteCamを可能にする
+			if (rBody.velocity.sqrMagnitude < minimumSpeed && isGround && !prohibitCamSwitching) satelliteCam = Input.GetButtonDown("SatelliteCam");
 
 			/////////////////////////////////
 			/////////// Functions ///////////
@@ -149,7 +155,7 @@ public class PlayerController : MonoBehaviour
 			if (pick && !holding) JudgePickUpItems(ref pick);
 
 			// プレイヤーのリギッドボディのローカル速度locVelを取得
-			Vector3 locVel = transform.InverseTransformDirection(rBody.velocity);
+			locVel = transform.InverseTransformDirection(rBody.velocity);
 
 			aC.MoveAnimation(jump, pick, holding, isGround, lastGround, locVel);
 			MoveCharacter(hor, ver, jump, locVel);
@@ -175,6 +181,12 @@ public class PlayerController : MonoBehaviour
 
 	void FixedUpdate()
     {
+		if(control)
+        {
+			// 仮想重力をかけ続ける
+			rBody.AddForce(-transform.up * gravity);
+		}
+
 		if (gameOver01)
         {
 			if (cJ.GameOver01)
@@ -431,5 +443,10 @@ public class PlayerController : MonoBehaviour
 	{
 		set { throughGate = value; }
 		get { return throughGate; }
+	}
+	public bool ProhibitCamSwitching
+	{
+		set { prohibitCamSwitching = value; }
+		get { return prohibitCamSwitching; }
 	}
 }

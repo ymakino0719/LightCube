@@ -70,11 +70,11 @@ public class PausedUI : MonoBehaviour
     {
         // シーン切り替え後のスクリプトを取得
         var titUI = GameObject.Find("GameDirector").GetComponent<TitleUI>();
-        var fade_N = GameObject.Find("FadeCanvas_Normal").GetComponent<Fade>();
+        //var fade_N = GameObject.Find("FadeCanvas_Normal").GetComponent<Fade>();
 
         // 遷移した後の処理
         titUI.StageSelectBool = true;
-        fade_N.cutoutRange = 1;
+        //fade_N.cutoutRange = 1;
         titUI.GoBackToStageSelect();
 
         // イベントから削除

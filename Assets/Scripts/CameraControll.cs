@@ -6,6 +6,8 @@ public class CameraControll : MonoBehaviour
 {
     // PlayerのGameObject
     GameObject player;
+    // PlayerController
+    PlayerController pC;
     // CamPosのGameObject
     GameObject camPos;
     // ClearJudgement
@@ -42,8 +44,6 @@ public class CameraControll : MonoBehaviour
     bool satellite = false;
     // サテライトモードの開幕移動判定
     bool openingMove = false;
-    // カウンター
-    int counter = 0;
     // サテライトモード用の追跡ロボット（位置（現在属する面または辺の位置）及び方向（原点位置を正面とする）を記録させる）
     GameObject robot;
     // 追跡ロボットが現在属する面または辺のGameObject
@@ -66,6 +66,8 @@ public class CameraControll : MonoBehaviour
     {
         // playerの取得
         player = GameObject.Find("Player");
+        // PlayerControllerの取得
+        pC = player.GetComponent<PlayerController>();
         // camPosの取得
         camPos = GameObject.Find("CamPos");
         // ClearLightの取得
@@ -107,9 +109,12 @@ public class CameraControll : MonoBehaviour
 
     void SatelliteCamera()
     {
-        // 初期カメラ位置への移動
         if (!openingMove)
         {
+            // カメラ切り替えボタン入力制限
+            StartCoroutine("ProhibitCamSwitchingTime");
+
+            // 初期カメラ位置への移動
             OpeningSatelliteCamMovement();
         }
 
@@ -123,7 +128,7 @@ public class CameraControll : MonoBehaviour
     void OpeningSatelliteCamMovement()
     {
         // 初期位置へのカメラの移動
-        currentGao = player.GetComponent<PlayerController>().CurrentFace;
+        currentGao = pC.CurrentFace;
         transform.position = currentGao.transform.GetChild(0).transform.position;
 
         // カメラの視点: 原点位置の方を向く（上方向はプレイヤーと合わせる）
@@ -309,15 +314,21 @@ public class CameraControll : MonoBehaviour
     {
         bool eC = false;
         // サテライトモード時に対応するボタンをもう一度押された場合、サテライトモードを終了する
-        bool satelliteCam = Input.GetButtonDown("SatelliteCam");
-        // 二重に押される処理になるらしいので、counterを追加した。counterが２になった場合終了処理を行う
-        if (satelliteCam) counter++;
-        if(counter == 2)
-        {
-            counter = 0;
+        // ただし、カメラ切り替え後の再切替え禁止時間、またはカメラ回転中の入力は無効とする
+        bool satelliteCam = false;
+        if (!pC.ProhibitCamSwitching && !rolling) satelliteCam = Input.GetButtonDown("SatelliteCam");
 
+        if (satelliteCam)
+        {
             ChasingCamera(); // 追尾カメラに戻す
-            player.GetComponent<PlayerController>().Control = true;
+            // 追尾カメラに戻した後、0.5秒間は衛星カメラ入力を受け付けない
+            StartCoroutine("ProhibitCamSwitchingTime");
+            pC.Control = true;
+
+            // 初期化
+            vertical = false;
+            horizontal = false;
+
             openingMove = false;
             satellite = false;
             eC = true;
@@ -325,6 +336,16 @@ public class CameraControll : MonoBehaviour
 
         return eC;
     }
+    IEnumerator ProhibitCamSwitchingTime()
+    {
+        pC.ProhibitCamSwitching = true;
+
+        // カメラ入力受け付け禁止時間
+        yield return new WaitForSeconds(0.5f);
+
+        pC.ProhibitCamSwitching = false;
+    }
+
     void ChasingCamera()
     {
         // カメラの移動

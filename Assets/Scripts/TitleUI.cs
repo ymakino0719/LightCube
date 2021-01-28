@@ -8,11 +8,11 @@ public class TitleUI : MonoBehaviour
     GameObject stageSelectPanel;
     GameObject titlePanel;
     
-    Fade fade, fade_N;
+    //Fade fade, fade_N;
     // フェードを行う時間
-    float fadeTime = 1.5f;
+    //float fadeTime = 1.5f;
     // フェードを始めてからシーンが遷移するまでの時間（fadeTimeと同じかそれ以上の長さにする）
-    float transitionTime = 1.6f;
+    //float transitionTime = 1.6f;
 
     bool stageSelectBool = false;
     void Awake()
@@ -20,8 +20,8 @@ public class TitleUI : MonoBehaviour
         titlePanel = GameObject.Find("TitlePanel");
         stageSelectPanel = GameObject.Find("StageSelectPanel");
 
-        fade = GameObject.Find("FadeCanvas").GetComponent<Fade>();
-        fade_N = GameObject.Find("FadeCanvas_Normal").GetComponent<Fade>();
+        //fade = GameObject.Find("FadeCanvas").GetComponent<Fade>();
+        //fade_N = GameObject.Find("FadeCanvas_Normal").GetComponent<Fade>();
     }
 
     // Start is called before the first frame update
@@ -79,19 +79,29 @@ public class TitleUI : MonoBehaviour
 
     IEnumerator FadeInCoroutine(string stageName)
     {
+        /*
         fade.FadeIn(fadeTime);
         
         // フェード時間中の時間を止める
-        yield return new WaitForSeconds(transitionTime);
+        //yield return new WaitForSeconds(transitionTime);
+        */
+
+        // ★仮措置
+        yield return null;
 
         SceneManager.LoadScene(stageName);
     }
     IEnumerator FadeOutCoroutine()
     {
+        /*
         fade_N.FadeOut(fadeTime);
 
         // フェード時間中の時間を止める
         yield return new WaitForSeconds(transitionTime);
+        */
+
+        // ★仮措置
+        yield return null;
     }
 
     public bool StageSelectBool
