@@ -31,17 +31,26 @@ public class PausedUI : MonoBehaviour
         if (pC.Control && !openHTP && (Input.GetButtonDown("Paused") || Input.GetKeyDown(KeyCode.Escape)))
         {
             pausedPanel.SetActive(true);
+            pC.Control = false;
         }
 
-        // HowToPlayパネル表示中にいずれかのボタンが押された場合、HowToPlayパネルを閉じ、Pausedパネルを開く
-        if (openHTP && Input.anyKey)
+        // HowToPlayパネル表示中に左クリック、エンターキーまたはエスケープキーが押された場合、HowToPlayパネルを閉じ、Pausedパネルを開く
+        if (openHTP && (Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.Return) || Input.GetKeyDown(KeyCode.Escape)))
         {
             howToPlayPanel.SetActive(false);
             openHTP = false;
 
             // 最初のステージの開幕に限り、Pausedパネルを開かない
-            if (!firstStage) pausedPanel.SetActive(true);
-            else firstStage = false;
+            // また、プレイヤーのコントロールも有効にする
+            if (!firstStage)
+            {
+                pausedPanel.SetActive(true);
+            }
+            else
+            {
+                firstStage = false;
+                pC.Control = true;
+            }
         }
     }
 
@@ -91,6 +100,7 @@ public class PausedUI : MonoBehaviour
     public void BackToGame()
     {
         pausedPanel.SetActive(false);
+        pC.Control = true;
     }
     public bool FirstStage
     {

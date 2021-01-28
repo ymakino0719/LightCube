@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 	// アイテムを持っているか
 	bool holding = false;
 	// 移動スピード
-	float moveS = 5.0f;
+	float moveS = 10.0f;
 	// 平面方向（XとZ方向）に対する移動上限速度
 	float moveLimit_XZ = 2.0f;
 	// 上下方向（Y方向）に対する移動上限速度
@@ -43,12 +43,13 @@ public class PlayerController : MonoBehaviour
 	// CameraControl
 	CameraControll cC;
 
-	// 近くにあるitem
-	GameObject nearestItem;
+	// 近くにあるitem, LockBlock
+	GameObject nearestItem, nearestLock;
 	// 近くのitem探索で使用するコライダーのリスト
 	Collider[] colList;
-	// プレイヤーの原点位置からの探索範囲
-	float searchDis = 1.0f;
+	// プレイヤーの原点位置からの探索範囲（キーブロック、ロックブロックの探索）
+	float searchDis_Key = 1.0f;
+	float searchDis_Lock = 0.35f;
 
 	// ゲームクリア判定
 	bool gameOver = false;
@@ -151,8 +152,12 @@ public class PlayerController : MonoBehaviour
 			// 衛星カメラへ切り替える場合、他処理は無視する
 			if (turnOnSCM) return;
 
-			// アイテムを持っていないときにpickの入力があった場合のみ、アイテムを拾うかどうか判定する
-			if (pick && !holding) JudgePickUpItems(ref pick);
+			// アイテムを持っていないときに拾うかどうか、またはアイテムを持っているときに置くかどうか判定する
+			if (pick) 
+			{
+				if(!holding) JudgePickUpItems(ref pick);
+				else JudgePutDownItems(ref pick);
+			}
 
 			// プレイヤーのリギッドボディのローカル速度locVelを取得
 			locVel = transform.InverseTransformDirection(rBody.velocity);
@@ -171,12 +176,14 @@ public class PlayerController : MonoBehaviour
 	IEnumerator OpeningControlStopCoroutine()
 	{
 		// 開幕n秒間の操作を止める
-		yield return new WaitForSeconds(2.0f);
+		//yield return new WaitForSeconds(2.0f);
 
-		control = true;
+		// ★仮措置
+		yield return null;
 
 		PausedUI pUI = GameObject.Find("UIDirector").GetComponent<PausedUI>();
-		if(pUI.FirstStage) pUI.HowToPlay();
+		if (pUI.FirstStage) pUI.HowToPlay();
+		else control = true;
 	}
 
 	void FixedUpdate()
@@ -278,8 +285,11 @@ public class PlayerController : MonoBehaviour
 
 	void JudgePickUpItems(ref bool pick)
     {
+		// stringにタグ名を代入
+		string tagName = "Item";
+
 		// 近くにitemがあるか探索
-		nearestItem = FindItemsNearby();
+		nearestItem = FindTargetsNearby(tagName, searchDis_Key);
 
 		if (nearestItem == null) // 近くにitemがない場合、pickは無効、終了する
 		{
@@ -292,44 +302,61 @@ public class PlayerController : MonoBehaviour
         }
 
 		// itemの方を振り向く
-		TurnTowardTheItem(nearestItem);
+		TurnTowardTheTarget(nearestItem);
 	}
-	GameObject FindItemsNearby()
+	void JudgePutDownItems(ref bool pick)
+	{
+		string tagName = "Lock";
+
+		// 近くにLockBlockがあるか探索
+		nearestLock = FindTargetsNearby(tagName, searchDis_Lock);
+
+		if (nearestLock == null) // 近くにLockBlockがない場合、pickは無効、終了する
+		{
+			pick = false;
+			return;
+		}
+
+		// LockBlockの方を振り向く
+		TurnTowardTheTarget(nearestLock);
+	}
+	GameObject FindTargetsNearby(string tag, float searchDis)
     {
 		// プレイヤーの原点位置を中心にオブジェクト探索
 		colList = Physics.OverlapSphere(transform.position, searchDis);
 
 		// 近くのゲームオブジェクト
-		GameObject nItem = null;
+		GameObject target = null;
 
 		for (int i = 0; i < colList.Length; i++)
 		{
-			if (colList[i].gameObject.CompareTag("Item")) // Itemのタグが付いたオブジェクトのみを対象とする
+			if (colList[i].gameObject.CompareTag(tag)) // 指定のタグが付いたオブジェクトのみを対象とする
 			{
-				if(nItem == null) // 近くのオブジェクトが１つのみだった場合ここの処理で終わる
+				if(target == null) // 近くのオブジェクトが１つのみだった場合ここの処理で終わる
                 {
-					// nItemには衝突したオブジェクトの１つ上の親オブジェクトを代入する
-					nItem = colList[i].transform.parent.gameObject;
+					// targetには衝突したオブジェクトの１つ上の親オブジェクトを代入する（子オブジェクトに回転情報を持たせる都合によるもの）
+					target = colList[i].transform.parent.gameObject;
 				}
 				else // 近くのオブジェクトが複数ある場合、一番距離が近いitemを特定、nItemを更新する
 				{
 					float disA = (transform.position - colList[i].transform.parent.gameObject.transform.position).sqrMagnitude;
-					float disB = (transform.position - nItem.transform.position).sqrMagnitude;
+					float disB = (transform.position - target.transform.position).sqrMagnitude;
 
 					if(disA < disB)
                     {
-						nItem = colList[i].transform.parent.gameObject;
+						target = colList[i].transform.parent.gameObject;
 					}
 				}
 			}
 		}
 
-		return nItem;
+		return target;
 	}
-	void TurnTowardTheItem(GameObject nearestItem)
+
+	void TurnTowardTheTarget(GameObject target)
     {
 		// プレイヤーとitemの座標差を調べる
-		Vector3 diff = nearestItem.transform.position - transform.position;
+		Vector3 diff = target.transform.position - transform.position;
 
 		// プレイヤーを基準としたローカル座標系locPosに変換
 		Vector3 locPos = transform.InverseTransformDirection(diff);

@@ -56,7 +56,7 @@ public class ItemsController : MonoBehaviour
         rBody = GetComponent<Rigidbody>();
         // BringingPosの取得
         bringingPos = GameObject.Find("BringingPos");
-        // Itemの直下に配置している子オブジェクトを取得する
+        // Itemの一階層目に配置している子オブジェクト（KeyBlock本体）を取得する
         child = transform.GetChild(0).gameObject;
         // Itemの直下に配置している子オブジェクトのBoxColliderを取得する
         col = child.GetComponent<BoxCollider>();

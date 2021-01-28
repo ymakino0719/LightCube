@@ -37,8 +37,6 @@ public class ClearJudgement : MonoBehaviour
     bool beginning03 = true;
     // Rangeの振幅開始時間
     float startTime;
-    // ゲームクリアムービーの再生
-    bool clearMovie = false;
     // カメラ制御
     CameraControll cC;
     // アニメーション制御
