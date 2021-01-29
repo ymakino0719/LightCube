@@ -24,7 +24,7 @@ public class ItemsController : MonoBehaviour
     // ItemsのRigidbody
     Rigidbody rBody;
     // 仮想重力の係数
-    float gravity = 2.0f;
+    float gravity = 32.0f;
     // 移動上限速度
     float maxSpeed = 5.0f;
     // 移動最低速度
@@ -87,7 +87,6 @@ public class ItemsController : MonoBehaviour
             }
         }
     }
-
     void ItemsGravityControll()
     {
         if (rBody.velocity.sqrMagnitude < maxSpeed) // 制限速度を超過していない場合、ローカル座標系で見て垂直方向（Y軸）に仮想重力をかける
@@ -114,13 +113,16 @@ public class ItemsController : MonoBehaviour
     }
     public void StartRotatingAroundEdge()
     {
+        child.GetComponent<BoxCollider>().enabled = false;
+
         rotating = true;
     }
     public void EndRotatingAroundEdge()
     {
+        child.GetComponent<BoxCollider>().enabled = true;
+
         rotating = false;
     }
-
     public void BeingHeld()
     {
         // プレイヤーに抱えられているときはItemsの移動速度、あたり判定及び仮想重力をなくす
@@ -256,7 +258,6 @@ public class ItemsController : MonoBehaviour
     {
         child.transform.localScale = Vector3.Lerp(keySca, lockSca * 0.99f, timeY02); // lockScaに0.99fを掛けることにより、テクスチャの一致によるガビガビ化を応急的に回避
     }
-
     public bool PuttingDown
     {
         set { puttingDown = value; }

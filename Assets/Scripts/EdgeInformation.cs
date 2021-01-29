@@ -22,21 +22,27 @@ public class EdgeInformation : MonoBehaviour
 		// 辺の原点位置のtransformを取得
 		edge = transform.position;
 	}
-
 	void OnTriggerEnter(Collider other)
 	{
 		if (other.gameObject.CompareTag("Player"))
 		{
 			var aEC = other.gameObject.GetComponent<AroundEdgeController>(); // PlayerはPlayerにAroundEdgeControllerがアタッチされている
-			aEC.FromEdgesInformation(edge, vertex[0].transform.position, vertex[1].transform.position, face[0].transform.position, face[1].transform.position);
+
+			if(!aEC.StopEdgeEntering)
+            {
+				aEC.FromEdgesInformation(edge, vertex[0].transform.position, vertex[1].transform.position, face[0].transform.position, face[1].transform.position);
+			}
 		}
 		else if (other.gameObject.CompareTag("Item"))
 		{
 			var aEC = other.transform.parent.gameObject.GetComponent<AroundEdgeController>(); // Itemは親オブジェクトにAroundEdgeControllerがアタッチされている
-			aEC.FromEdgesInformation(edge, vertex[0].transform.position, vertex[1].transform.position, face[0].transform.position, face[1].transform.position);
+			
+			if(!aEC.StopEdgeEntering) // 回転終了直後のEdge再衝突でない場合
+			{
+				aEC.FromEdgesInformation(edge, vertex[0].transform.position, vertex[1].transform.position, face[0].transform.position, face[1].transform.position);
+			}
 		}
 	}
-
 	public int EdgeNum
 	{
 		set { edgeNum = value; }

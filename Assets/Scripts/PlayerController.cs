@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour
 	// アイテムを持っているか
 	bool holding = false;
 	// 移動スピード
-	float moveS = 10.0f;
+	float moveS = 15.0f;
 	// 平面方向（XとZ方向）に対する移動上限速度
 	float moveLimit_XZ = 2.0f;
 	// 上下方向（Y方向）に対する移動上限速度

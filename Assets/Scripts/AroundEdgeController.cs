@@ -34,7 +34,7 @@ public class AroundEdgeController : MonoBehaviour
 	private float time = 0;
 	// このオブジェクトを移動・回転させるときの時間の調整パラメータ
 	private float timeCoef = 2.0f;
-	//
+
 	private bool reset = false;
 
 	private Rigidbody rBody;
@@ -42,6 +42,11 @@ public class AroundEdgeController : MonoBehaviour
 	// プレイヤーの中心位置のTransform（nextFaceの判定に使用する）
 	private Transform middlePosTra;
 
+	// Edgeの接触判定を無効化し回転を禁止する
+	bool stopEdgeEntering = false;
+
+	// 射出単位ベクトル
+	Vector3 injectionUnitVec;
 	void Awake()
 	{
 		rBody = GetComponent<Rigidbody>();
@@ -60,10 +65,10 @@ public class AroundEdgeController : MonoBehaviour
 			else
 			{
 				ResetPlayerVelocity(); // このオブジェクトの速度を再設定する
-				RestartObject(); // 無効にしていたこのオブジェクトの仮想重力やキー入力操作等を有効に戻す
+				RestartObject(); // 無効にしていたこのオブジェクトの仮想重力やキー入力操作、当たり判定等を有効に戻す
 
-				moving = false;
 				reset = false;
+				moving = false;
 			}
 		}
 	}
@@ -97,10 +102,16 @@ public class AroundEdgeController : MonoBehaviour
     {
 		if (gameObject.CompareTag("Player")) // Playerは当たり判定のあるPlayerにPlayerのタグ付けがされている
 		{
+			// 重力と操作の無効化
 			GetComponent<PlayerController>().Control = false;
+
+			// 当たり判定の無効化
+			GetComponent<CapsuleCollider>().enabled = false;
+			transform.Find("HitBox_side").GetComponent<CapsuleCollider>().enabled = false;
 		}
 		else if (transform.GetChild(0).gameObject.CompareTag("Item")) // Itemは当たり判定のある子オブジェクトにItemのタグ付けがされている
 		{
+			// 重力と操作と当たり判定の無効化
 			GetComponent<ItemsController>().StartRotatingAroundEdge();
 		}
 	}
@@ -109,14 +120,33 @@ public class AroundEdgeController : MonoBehaviour
     {
 		if (gameObject.CompareTag("Player")) // Playerは当たり判定のあるPlayerにPlayerのタグ付けがされている
 		{
+			// 重力と操作の有効化
 			GetComponent<PlayerController>().Control = true;
+
+			// 当たり判定の有効化
+			GetComponent<CapsuleCollider>().enabled = true;
+			transform.Find("HitBox_side").GetComponent<CapsuleCollider>().enabled = true;
+
+			// 当たり判定を再度入れなおした瞬間に同じEdgeに再衝突してしまう場合に備え、その入れなおした１フレームだけ接触判定を無効化し回転を禁止する
+			StartCoroutine("ReCollisionInhibitionTime");
 		}
 		else if (transform.GetChild(0).gameObject.CompareTag("Item")) // Itemは当たり判定のある子オブジェクトにItemのタグ付けがされている
 		{
+			// 重力と操作と当たり判定の有効化
 			GetComponent<ItemsController>().EndRotatingAroundEdge();
+
+			// 当たり判定を再度入れなおした瞬間に同じEdgeに再衝突してしまう場合に備え、その入れなおした１フレームだけ接触判定を無効化し回転を禁止する
+			StartCoroutine("ReCollisionInhibitionTime");
 		}
 	}
+	IEnumerator ReCollisionInhibitionTime()
+	{
+		stopEdgeEntering = true;
 
+		yield return new WaitForSeconds(0.1f);
+
+		stopEdgeEntering = false;
+	}
 	void CheckCloserFace(Vector3 edge, Vector3 face01, Vector3 face02)
 	{
 		// Edgeを中心とした各２面とPlayerの位置から形成される角度を調べる
@@ -130,6 +160,9 @@ public class AroundEdgeController : MonoBehaviour
 		// 角度がより大きい面を次に移動する面と定義する
 		nextFace = (angle01 > angle02) ? face01 : face02;
 		//Debug.Log("nextFace = " + nextFace);
+
+		// 射出単位ベクトルの算出（ResetPlayerVelocity()で用いる）
+		injectionUnitVec = (nextFace - edge).normalized;
 	}
 
 	void CheckNextPlayerPos(Vector3 edge, Vector3 vertex01, Vector3 vertex02, Vector3 face01, Vector3 face02)
@@ -248,6 +281,15 @@ public class AroundEdgeController : MonoBehaviour
 
 	void ResetPlayerVelocity()
 	{
-		rBody.velocity = transform.TransformDirection(locVel);
+		Vector3 vec = transform.TransformDirection(locVel);
+		// 射出の際、その方向にベクトルを加算する
+		Vector3 addedVec = vec + injectionUnitVec * 1.0f;
+		rBody.velocity = addedVec;
+		
+	}
+	public bool StopEdgeEntering
+	{
+		set { stopEdgeEntering = value; }
+		get { return stopEdgeEntering; }
 	}
 }
