@@ -25,8 +25,10 @@ public class CameraControll : MonoBehaviour
     float moveTime = 3.0f;
     // ターゲットとの距離: 遷移01
     public float targetDis01 = 7.0f;
-    // ターゲットとの距離: 遷移02
-    public float targetDis02 = 4.0f;
+    // ターゲットとの距離: 遷移02（奥行）
+    public float targetDis02_Depth = 4.0f;
+    // ターゲットとの距離: 遷移02（高さ）
+    public float targetDis02_Height = 2.0f;
     // 接近停止閾値
     float minDis = 0.01f;
     // 開幕処理
@@ -405,7 +407,7 @@ public class CameraControll : MonoBehaviour
     {
         // 移動先のtargetPosの取得及び移動
         Vector3 vec = player.transform.position - clearLight.transform.position;
-        Vector3 targetPos = player.transform.position + vec.normalized * targetDis02 + player.transform.up * 2.0f;
+        Vector3 targetPos = player.transform.position + vec.normalized * targetDis02_Depth + player.transform.up * targetDis02_Height;
         transform.position = targetPos;
 
         // カメラをターゲットの方に向かせる

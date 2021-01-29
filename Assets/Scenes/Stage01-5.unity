@@ -9211,7 +9211,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetDis01: 7
-  targetDis02: 4
+  targetDis02_Depth: 5
+  targetDis02_Height: 3
 --- !u!1 &975778211
 GameObject:
   m_ObjectHideFlags: 0
