@@ -282,8 +282,8 @@ public class AroundEdgeController : MonoBehaviour
 	void ResetPlayerVelocity()
 	{
 		Vector3 vec = transform.TransformDirection(locVel);
-		// 射出の際、その方向にベクトルを加算する
-		Vector3 addedVec = vec + injectionUnitVec * 1.0f;
+		// 射出の際、その方向にベクトルを加算する（1.2fでEdge側にめり込まないようになったため、安全を見て1.35fとした）
+		Vector3 addedVec = vec + injectionUnitVec * 1.35f;
 		rBody.velocity = addedVec;
 		
 	}
