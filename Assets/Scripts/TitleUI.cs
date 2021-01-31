@@ -7,7 +7,8 @@ public class TitleUI : MonoBehaviour
 {
     GameObject stageSelectPanel;
     GameObject titlePanel;
-    
+
+    GameObject fadeCanvas, fade_NCanvas;
     Fade fade, fade_N;
     // フェードを行う時間
     float fadeTime = 1.5f;
@@ -22,14 +23,20 @@ public class TitleUI : MonoBehaviour
         titlePanel = GameObject.Find("TitlePanel");
         stageSelectPanel = GameObject.Find("StageSelectPanel");
 
-        fade = GameObject.Find("FadeCanvas").GetComponent<Fade>();
-        fade_N = GameObject.Find("FadeCanvas_Normal").GetComponent<Fade>();
+        fadeCanvas = GameObject.Find("FadeCanvas");
+        fade_NCanvas = GameObject.Find("FadeCanvas_Normal");
+        fade = fadeCanvas.GetComponent<Fade>();
+        fade_N = fade_NCanvas.GetComponent<Fade>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         stageSelectPanel.SetActive(false);
+
+        fadeCanvas.SetActive(false);
+        fade_NCanvas.SetActive(false);
+
         if (returnFromStages) { StartCoroutine("FadeOutCoroutine"); }
     }
     void Update()
@@ -78,38 +85,32 @@ public class TitleUI : MonoBehaviour
 
     IEnumerator FadeInCoroutine(string stageName)
     {
+        fadeCanvas.SetActive(true);
         fade.FadeIn(fadeTime);
         
         // フェード時間中の時間を止める
         yield return new WaitForSeconds(transitionTime);
-
-        // ★仮措置
-        //yield return null;
 
         SceneManager.sceneLoaded += SceneLoaded_StageSelect;
         SceneManager.LoadScene(stageName);
     }
     IEnumerator FadeOutCoroutine()
     {
-        Debug.Log("FadeOutStart");
-
+        fade_NCanvas.SetActive(true);
         fade_N.FadeOut(fadeTime);
 
         // フェード時間中の時間を止める
         yield return new WaitForSeconds(transitionTime);
 
-        Debug.Log("FadeOutEnd");
-
-        // ★仮措置
-        //yield return null;
+        fade_NCanvas.SetActive(false);
     }
     private void SceneLoaded_StageSelect(Scene next, LoadSceneMode mode)
     {
         // シーン切り替え後のスクリプトを取得
-        var fade = GameObject.Find("FadeCanvas").GetComponent<Fade>();
+        var fade_Next = GameObject.Find("FadeCanvas").GetComponent<Fade>();
 
         // 遷移した後の処理
-        fade.cutoutRange = 1;
+        fade_Next.cutoutRange = 1;
 
         // イベントから削除
         SceneManager.sceneLoaded -= SceneLoaded_StageSelect;
