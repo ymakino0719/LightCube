@@ -61,9 +61,24 @@ public class PausedUI : MonoBehaviour
     }
     public void Restart_SceneChange()
     {
-        string scene = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(scene);
+        string stage = SceneManager.GetActiveScene().name;
+
+        SceneManager.sceneLoaded += SceneLoaded_Restart;
+        SceneManager.LoadScene(stage);
     }
+
+    private void SceneLoaded_Restart(Scene next, LoadSceneMode mode)
+    {
+        // シーン切り替え後のスクリプトを取得
+        var fade = GameObject.Find("FadeCanvas").GetComponent<Fade>();
+
+        // 遷移した後の処理
+        fade.cutoutRange = 1;
+
+        // イベントから削除
+        SceneManager.sceneLoaded -= SceneLoaded_StageSelect;
+    }
+
     public void ReturnToStageSelect()
     {
         TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
@@ -78,13 +93,13 @@ public class PausedUI : MonoBehaviour
     private void SceneLoaded_StageSelect(Scene next, LoadSceneMode mode)
     {
         // シーン切り替え後のスクリプトを取得
+        var fade_N = GameObject.Find("FadeCanvas_Normal").GetComponent<Fade>();
         var titUI = GameObject.Find("GameDirector").GetComponent<TitleUI>();
-        //var fade_N = GameObject.Find("FadeCanvas_Normal").GetComponent<Fade>();
 
         // 遷移した後の処理
+        fade_N.cutoutRange = 1;
         titUI.StageSelectBool = true;
-        //fade_N.cutoutRange = 1;
-        titUI.GoBackToStageSelect();
+        titUI.ReturnFromStages = true;
 
         // イベントから削除
         SceneManager.sceneLoaded -= SceneLoaded_StageSelect;
