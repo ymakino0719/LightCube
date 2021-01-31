@@ -107,7 +107,7 @@ public class ClearJudgement : MonoBehaviour
         {
             // VictoryAnimation
             aC.VictoryAnimation();
-            
+
             beginning02 = false;
         }
     }

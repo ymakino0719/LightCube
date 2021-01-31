@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
 	float moveLimit_XZ = 2.0f;
 	// 上下方向（Y方向）に対する移動上限速度
 	float moveLimit_Y = 3.0f;
+	// キャラクターが静止しているかどうか
+	bool stopping = true;
 
 	// 1フレーム前にキャラクターがいた場所
 	Vector3 latestPos;
@@ -121,25 +123,33 @@ public class PlayerController : MonoBehaviour
 			/////////////////////////////////
 			//////////// Jumping ////////////
 			/////////////////////////////////
+			
 			jump = false;
 			// 着地しているときジャンプを可能にする
 			if (isGround) jump = Input.GetButtonDown("Jump");
 
 			/////////////////////////////////
+			///////// JudgeStopping /////////
+			/////////////////////////////////
+
+			// キャラクターが静止状態かつ着地しているとき
+			stopping = (rBody.velocity.sqrMagnitude < minimumSpeed && isGround) ? true : false;
+
+			/////////////////////////////////
 			/////// PickUp or PutDown ///////
 			/////////////////////////////////
-			
+
 			bool pick = false;
 			// 静止状態かつ着地しているときpickを可能にする
-			if (rBody.velocity.sqrMagnitude < minimumSpeed && isGround) pick = Input.GetButtonDown("Pick");
+			if (stopping) pick = Input.GetButtonDown("Pick");
 
 			/////////////////////////////////
 			///////// Satellite Cam /////////
 			/////////////////////////////////
 
 			bool satelliteCam = false;
-			// 静止状態、着地しているときかつ切り替えを禁止していないとき、satelliteCamを可能にする
-			if (rBody.velocity.sqrMagnitude < minimumSpeed && isGround && !prohibitCamSwitching) satelliteCam = Input.GetButtonDown("SatelliteCam");
+			// 静止、着地状態かつカメラの切り替えを禁止していないとき、satelliteCamを可能にする
+			if (stopping && !prohibitCamSwitching) satelliteCam = Input.GetButtonDown("SatelliteCam");
 
 			/////////////////////////////////
 			/////////// Functions ///////////
@@ -435,6 +445,11 @@ public class PlayerController : MonoBehaviour
 	{
 		set { isGround = value; }
 		get { return isGround; }
+	}
+	public bool Stopping
+	{
+		set { stopping = value; }
+		get { return stopping; }
 	}
 	public bool Control
 	{

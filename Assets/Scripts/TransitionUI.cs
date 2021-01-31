@@ -15,10 +15,6 @@ public class TransitionUI : MonoBehaviour
     float fadeTime = 2.0f;
     // 星型のフェードを始めてからシーンが遷移するまでの時間
     float transitionTime = 2.1f;
-    // 通常のフェードを行う時間
-    float fadeTime_N = 3.0f;
-    // 通常のフェードを始めてからシーンが遷移するまでの時間
-    float transitionTime_N = 1.5f;
 
     void Awake()
     {

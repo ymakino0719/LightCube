@@ -27,8 +27,8 @@ public class PausedUI : MonoBehaviour
 
     void Update()
     {
-        // Pausedに対応するPボタンが押されるか、Escキーが押されたらPausedパネルを開く（ただしプレイヤーが操作可能な状態の時に限り、HowToPlayパネルが表示中も無効）
-        if (pC.Control && !openHTP && (Input.GetButtonDown("Paused") || Input.GetKeyDown(KeyCode.Escape)))
+        // Pausedに対応するPボタンが押されるか、Escキーが押されたらPausedパネルを開く（ただしプレイヤーが操作可能な状態で停止している場合に限り、HowToPlayパネルが表示中も無効）
+        if (pC.Control && pC.Stopping && !openHTP && (Input.GetButtonDown("Paused") || Input.GetKeyDown(KeyCode.Escape)))
         {
             pausedPanel.SetActive(true);
             pC.Control = false;
