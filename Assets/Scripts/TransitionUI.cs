@@ -4,8 +4,13 @@ using UnityEngine;
 
 public class TransitionUI : MonoBehaviour
 {
-    GameObject fadeCanvas, fade_NCanvas;
-    Fade fade, fade_N;
+    GameObject fadeCanvas;
+    Fade fade;
+    FadeImage fI;
+
+    // テクスチャのセット
+    public Texture tex_S, tex_N;
+
     // 星型のフェードを行う時間
     float fadeTime = 2.0f;
     // 星型のフェードを始めてからシーンが遷移するまでの時間
@@ -18,16 +23,14 @@ public class TransitionUI : MonoBehaviour
     void Awake()
     {
         fadeCanvas = GameObject.Find("FadeCanvas");
-        fade_NCanvas = GameObject.Find("FadeCanvas_Normal");
         fade = fadeCanvas.GetComponent<Fade>();
-        fade_N = fade_NCanvas.GetComponent<Fade>();
+        fI = fadeCanvas.GetComponent<FadeImage>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         fadeCanvas.SetActive(false);
-        fade_NCanvas.SetActive(false);
 
         StartCoroutine("FadeOutCoroutine");
     }
@@ -44,6 +47,7 @@ public class TransitionUI : MonoBehaviour
     IEnumerator FadeOutCoroutine()
     {
         fadeCanvas.SetActive(true);
+        fI.maskTexture = tex_S;
         fade.FadeOut(fadeTime);
 
         // フェード時間中の時間を止める
@@ -54,6 +58,7 @@ public class TransitionUI : MonoBehaviour
     IEnumerator RestartFadeInCoroutine()
     {
         fadeCanvas.SetActive(true);
+        fI.maskTexture = tex_S;
         fade.FadeIn(fadeTime);
         
         // フェード時間中の時間を止める
@@ -67,8 +72,9 @@ public class TransitionUI : MonoBehaviour
     }
     IEnumerator ReturnToStageSelectCoroutine(float fTime, float tTime)
     {
-        fade_NCanvas.SetActive(true);
-        fade_N.FadeIn(fTime);
+        fadeCanvas.SetActive(true);
+        fI.maskTexture = tex_N;
+        fade.FadeIn(fTime);
 
         // フェード時間中の時間を止める
         yield return new WaitForSeconds(tTime);

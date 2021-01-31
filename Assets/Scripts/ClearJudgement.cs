@@ -145,7 +145,7 @@ public class ClearJudgement : MonoBehaviour
         if (Input.anyKey)
         {
             TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
-            traUI.ReturnToStageSelect(5.0f, 3.0f);
+            traUI.ReturnToStageSelect(5.0f, 5.1f);
         }
     }
 

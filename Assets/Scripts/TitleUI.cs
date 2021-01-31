@@ -8,8 +8,15 @@ public class TitleUI : MonoBehaviour
     GameObject stageSelectPanel;
     GameObject titlePanel;
 
-    GameObject fadeCanvas, fade_NCanvas;
-    Fade fade, fade_N;
+    GameObject fadeCanvas;
+    Fade fade;
+    FadeImage fI;
+
+    // マテリアルのセット
+    public Material mat_S, mat_N;
+    // テクスチャのセット
+    public Texture tex_S, tex_N;
+
     // フェードを行う時間
     float fadeTime = 1.5f;
     // フェードを始めてからシーンが遷移するまでの時間（fadeTimeと同じかそれ以上の長さにする）
@@ -24,9 +31,8 @@ public class TitleUI : MonoBehaviour
         stageSelectPanel = GameObject.Find("StageSelectPanel");
 
         fadeCanvas = GameObject.Find("FadeCanvas");
-        fade_NCanvas = GameObject.Find("FadeCanvas_Normal");
         fade = fadeCanvas.GetComponent<Fade>();
-        fade_N = fade_NCanvas.GetComponent<Fade>();
+        fI = fadeCanvas.GetComponent<FadeImage>();
     }
 
     // Start is called before the first frame update
@@ -35,7 +41,6 @@ public class TitleUI : MonoBehaviour
         stageSelectPanel.SetActive(false);
 
         fadeCanvas.SetActive(false);
-        fade_NCanvas.SetActive(false);
 
         if (returnFromStages) { StartCoroutine("FadeOutCoroutine"); }
     }
@@ -86,6 +91,8 @@ public class TitleUI : MonoBehaviour
     IEnumerator FadeInCoroutine(string stageName)
     {
         fadeCanvas.SetActive(true);
+        fI.material = mat_S;
+        fI.maskTexture = tex_S;
         fade.FadeIn(fadeTime);
         
         // フェード時間中の時間を止める
@@ -96,13 +103,15 @@ public class TitleUI : MonoBehaviour
     }
     IEnumerator FadeOutCoroutine()
     {
-        fade_NCanvas.SetActive(true);
-        fade_N.FadeOut(fadeTime);
+        fadeCanvas.SetActive(true);
+        fI.material = mat_N;
+        fI.maskTexture = tex_N;
+        fade.FadeOut(fadeTime);
 
         // フェード時間中の時間を止める
         yield return new WaitForSeconds(transitionTime);
 
-        fade_NCanvas.SetActive(false);
+        fadeCanvas.SetActive(false);
     }
     private void SceneLoaded_StageSelect(Scene next, LoadSceneMode mode)
     {

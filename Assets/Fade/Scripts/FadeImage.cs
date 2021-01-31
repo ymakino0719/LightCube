@@ -26,8 +26,7 @@ using UnityEngine.UI;
 
 public class FadeImage : UnityEngine.UI.Graphic , IFade
 {
-	[SerializeField]
-	private Texture maskTexture = null;
+	public Texture maskTexture = null;
 
 	[SerializeField, Range (0, 1)]
 	private float cutoutRange;

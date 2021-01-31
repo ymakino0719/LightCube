@@ -82,7 +82,7 @@ public class PausedUI : MonoBehaviour
     public void ReturnToStageSelect()
     {
         TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
-        traUI.ReturnToStageSelect(3.0f, 1.5f);
+        traUI.ReturnToStageSelect(1.5f, 1.6f);
     }
 
     public void ReturnToStageSelect_SceneChange()
@@ -93,11 +93,11 @@ public class PausedUI : MonoBehaviour
     private void SceneLoaded_StageSelect(Scene next, LoadSceneMode mode)
     {
         // シーン切り替え後のスクリプトを取得
-        var fade_N_Next = GameObject.Find("FadeCanvas_Normal").GetComponent<Fade>();
+        var fade_Next = GameObject.Find("FadeCanvas").GetComponent<Fade>();
         var titUI = GameObject.Find("GameDirector").GetComponent<TitleUI>();
 
         // 遷移した後の処理
-        fade_N_Next.cutoutRange = 1;
+        fade_Next.cutoutRange = 1;
         titUI.StageSelectBool = true;
         titUI.ReturnFromStages = true;
 
