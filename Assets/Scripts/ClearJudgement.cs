@@ -15,6 +15,8 @@ public class ClearJudgement : MonoBehaviour
     bool gameOver02 = false;
     // ゲームクリア判定: 遷移03
     bool gameOver03 = false;
+    // ステージセレクト画面へ戻るための入力
+    bool pressedAnyKey = false;
     // 現在の鍵の数
     int keyNum = 0;
     // ゲームクリアに必要な鍵の数
@@ -142,8 +144,9 @@ public class ClearJudgement : MonoBehaviour
     }
     void ReturnToStageSelect()
     {
-        if (Input.anyKey)
+        if (Input.anyKey && !pressedAnyKey)
         {
+            pressedAnyKey = true;
             TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
             traUI.ReturnToStageSelect(5.0f, 5.1f);
         }
