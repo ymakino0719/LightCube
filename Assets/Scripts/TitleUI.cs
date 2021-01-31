@@ -13,10 +13,10 @@ public class TitleUI : MonoBehaviour
     FadeImage fI;
 
     // フェードに用いるマテリアルのセット
-    public Material mat_S, mat_N;
+    public Material mat_S;
     // フェードに用いるテクスチャのセット
     public Texture maskTexture_S, maskTexture_N = null;
-
+    
     // フェードを行う時間
     float fadeTime = 1.5f;
     // フェードを始めてからシーンが遷移するまでの時間（fadeTimeと同じかそれ以上の長さにする）
@@ -98,13 +98,16 @@ public class TitleUI : MonoBehaviour
         // フェード時間中の時間を止める
         yield return new WaitForSeconds(transitionTime);
 
+        // ★仮措置
+        //yield return null;
+
         SceneManager.sceneLoaded += SceneLoaded_StageSelect;
         SceneManager.LoadScene(stageName);
     }
     IEnumerator FadeOutCoroutine()
     {
         fadeCanvas.SetActive(true);
-        fI.material = mat_N;
+        fI.material = mat_S;
         fI.maskTexture = maskTexture_N;
         fade.FadeOut(fadeTime);
 
@@ -112,14 +115,17 @@ public class TitleUI : MonoBehaviour
         yield return new WaitForSeconds(transitionTime);
 
         fadeCanvas.SetActive(false);
+
+        // ★仮措置
+        //yield return null;
     }
     private void SceneLoaded_StageSelect(Scene next, LoadSceneMode mode)
     {
         // シーン切り替え後のスクリプトを取得
-        var fade_Next = GameObject.Find("FadeCanvas").GetComponent<Fade>();
+        var fade = GameObject.Find("FadeCanvas").GetComponent<Fade>();
 
         // 遷移した後の処理
-        fade_Next.cutoutRange = 1;
+        fade.cutoutRange = 1;
 
         // イベントから削除
         SceneManager.sceneLoaded -= SceneLoaded_StageSelect;

@@ -34,35 +34,38 @@ public class TransitionUI : MonoBehaviour
     {
         fadeCanvas.SetActive(false);
 
-        StartCoroutine("FadeOutCoroutine");
+        StartCoroutine("FadeCoroutine");
     }
 
     public void RestartFade()
     {
-        StartCoroutine("RestartFadeInCoroutine");
+        StartCoroutine("RestartFadeCoroutine");
     }
     public void ReturnToStageSelect(float fTime, float tTime)
     {
         StartCoroutine(ReturnToStageSelectCoroutine(fTime, tTime));
     }
 
-    IEnumerator FadeOutCoroutine()
+    IEnumerator FadeCoroutine()
     {
         fadeCanvas.SetActive(true);
         fI.material = mat_S;
         fI.maskTexture = maskTexture_S;
+
         fade.FadeOut(fadeTime);
 
         // フェード時間中の時間を止める
         yield return new WaitForSeconds(transitionTime);
 
-        fadeCanvas.SetActive(false);
+        // ★仮措置
+        //yield return null;
     }
-    IEnumerator RestartFadeInCoroutine()
+    IEnumerator RestartFadeCoroutine()
     {
         fadeCanvas.SetActive(true);
         fI.material = mat_S;
         fI.maskTexture = maskTexture_S;
+
         fade.FadeIn(fadeTime);
         
         // フェード時間中の時間を止める
