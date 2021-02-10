@@ -68,10 +68,11 @@ public class PlayerController : MonoBehaviour
 	// プレイヤーが今いる（直前にいた）Face
 	GameObject currentFace = null;
 
-	// プレイヤーが直前に通過した橋の中間地点
-	GameObject midpoint = null;
-	// ゲートの出口が浮島かどうか
-	bool island = false;
+	// プレイヤーが中間地点を経由したかどうか
+	bool halfway = false;
+	// 中間地点を経由したプレイヤーを回転させるための基準となるオブジェクト
+	GameObject rotRef;
+
 	// 橋を通過し、カメラの回転が必要な場合
 	bool throughGate = false;
 	// カメラの振りむき時間
@@ -426,18 +427,17 @@ public class PlayerController : MonoBehaviour
 		// 時間
 		timeBr += rotSpeedBr * Time.deltaTime;
 
-		transform.rotation = Quaternion.Lerp(transform.rotation, midpoint.transform.rotation, timeBr);
+		transform.rotation = Quaternion.Lerp(transform.rotation, rotRef.transform.rotation, timeBr);
 
-		// Playerの前方方向の向きとmidpointの前方方向の向きの角度を確認する（前方はx軸のためtransform.rightとなる）
-		float angle = Vector3.Angle(transform.right, midpoint.transform.right);
+		// Playerの前方方向の向きとrotRefの前方方向の向きの角度を確認する（前方はx軸のためtransform.rightとなる）
+		float angle = Vector3.Angle(transform.right, rotRef.transform.right);
 
 		// timeBr が1を超過またはangleが0.1度未満になった場合処理を終了させる
 		if (timeBr >= 1.0f || angle <= 0.1f)
 		{
-			transform.rotation = midpoint.transform.rotation;
+			transform.rotation = rotRef.transform.rotation;
 
 			timeBr = 0.0f;
-			midpoint = null;
 			throughGate = false;
 		}
 	}
@@ -471,15 +471,15 @@ public class PlayerController : MonoBehaviour
 		set { currentFace = value; }
 		get { return currentFace; }
 	}
-	public GameObject Midpoint
+	public bool Halfway
 	{
-		set { midpoint = value; }
-		get { return midpoint; }
+		set { halfway = value; }
+		get { return halfway; }
 	}
-	public bool Island
+	public GameObject RotRef
 	{
-		set { island = value; }
-		get { return island; }
+		set { rotRef = value; }
+		get { return rotRef; }
 	}
 	public bool ThroughGate
 	{

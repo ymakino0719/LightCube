@@ -39,9 +39,6 @@ public class GateBehavior : MonoBehaviour
 
             // ゲートの処理
             ActivateProcess(trueGate);
-
-            // 橋を渡り、元々いた面と異なる面に移動した場合、カメラを回転する（なお回転処理中である場合は無効とする）
-            if (!pC.ThroughGate) CheckThroughGate();
         }
     }
 
@@ -80,24 +77,6 @@ public class GateBehavior : MonoBehaviour
         foreach (Transform c1Tra in parent.transform)
         {
             c1Tra.GetChild(0).gameObject.SetActive(false);
-        }
-    }
-    void CheckThroughGate()
-    {
-        // 差が45度以下の場合（橋を通ったが元の面に帰ってきた場合）、あるいはmidpointがnull（橋にこれから入る状態）の時は、カメラの回転を実行しない
-        if(pC.Midpoint != null)
-        {
-            // Playerの前方方向の向きとmidpointの前方方向の向きの角度を確認する（前方はx軸のためtransform.rightとなる）
-            float angle = Vector3.Angle(player.transform.right, pC.Midpoint.transform.right);
-            if (angle > 45 && !pC.Island) // ゲートの出口が浮島の場合も回転を実行しない
-            {
-                pC.ThroughGate = true;
-            }
-            else
-            {
-                pC.Midpoint = null; // midpointのリセット
-                pC.Island = false; // islandのリセット
-            } 
         }
     }
 }
