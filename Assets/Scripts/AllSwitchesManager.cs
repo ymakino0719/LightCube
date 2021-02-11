@@ -22,6 +22,7 @@ public class AllSwitchesManager : MonoBehaviour
 
     public void OtherCororSwitchesOFF(int pressedSwitchNum)
     {
+        // 直前に他のスイッチがONになっていた場合、そのスイッチをOFFにする
         if(lastSwitchNum != -1 && lastSwitchNum != pressedSwitchNum)
         {
             if(lastSwitchNum == 1)

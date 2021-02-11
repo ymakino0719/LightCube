@@ -183,18 +183,10 @@ public class ItemsController : MonoBehaviour
             lockRot = other.transform.eulerAngles;
             lockSca = other.transform.localScale;
 
-            //Debug.Log("lockPos: " + lockPos);
-            //Debug.Log("lockRot: " + lockRot);
-            //Debug.Log("lockSca: " + lockSca);
-
             // LockBlockと衝突した瞬間のこのオブジェクトの位置・回転・拡大率情報を記録する
             keyPos = transform.position;
             keyRot = child.transform.localEulerAngles;
             keySca = child.transform.localScale;
-
-            //Debug.Log("keyPos: " + keyPos);
-            //Debug.Log("keyRot: " + keyRot);
-            //Debug.Log("keySca: " + keySca);
 
             // 移動、回転の開始
             putKey01 = true;
@@ -218,18 +210,21 @@ public class ItemsController : MonoBehaviour
         // 拡大に使用するtimeX02の定義      : y = (sin(π/2 * x))^5
         float timeY02 = Mathf.Pow(Mathf.Sin(Mathf.PI / 2 * timeX02), 5);
 
+        // timeX01 == 1となるまで処理を継続する
         if (putKey01)
         {
             PutKeys_ChangePosAndRot(timeY01);
             if (timeX01 == 1) putKey01 = false;
         }
 
+        // timeX02 == 1となるまで処理を継続する
         if (putKey02)
         {
             PutKeys_ChangeSca(timeY02);
             if (timeX02 == 1) putKey02 = false;
         }
 
+        // 処理の終了
         if (!putKey01 && !putKey02)
         {
             // timeXの初期化
@@ -256,7 +251,7 @@ public class ItemsController : MonoBehaviour
     }
     void PutKeys_ChangeSca(float timeY02)
     {
-        child.transform.localScale = Vector3.Lerp(keySca, lockSca * 0.99f, timeY02); // lockScaに0.99fを掛けることにより、テクスチャの一致によるガビガビ化を応急的に回避
+        child.transform.localScale = Vector3.Lerp(keySca, lockSca * 0.99f, timeY02); // lockScaに0.99fを掛けることにより、テクスチャの一致によるガビガビ化を回避
     }
     public bool PuttingDown
     {

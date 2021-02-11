@@ -29,7 +29,7 @@ public class ImageSlider : MonoBehaviour
             if(slideNum != 3) { slideNum++; }
             else { slideNum = 1; } // 0は使わない
 
-            if (slideNum == 0) { image.sprite = slide00; }
+            if (slideNum == 0) { image.sprite = slide00; } // 0は使わない
             else if (slideNum == 1) { image.sprite = slide01; }
             else if (slideNum == 2) { image.sprite = slide02; }
             else if (slideNum == 3) { image.sprite = slide03; }

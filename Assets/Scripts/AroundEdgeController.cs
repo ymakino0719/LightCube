@@ -198,19 +198,7 @@ public class AroundEdgeController : MonoBehaviour
 
 		// angle01と02を比較し、より小さい値の方のnextPosをこのオブジェクトが移動する座標先として採用する
 		nextPos = (angle01 < angle02) ? nextPos01 : nextPos02;
-		afterR = (angle01 < angle02) ? afterR01 : afterR02;
-
-		/*
-		if (angle01 < angle02)
-        {
-			Debug.Log("angle01 < angle02, angle01 = " + angle01 + ", afterR01 = " + afterR01 + ", afterR02 = " + afterR02);
-        }
-		else
-        {
-			Debug.Log("angle01 > angle02, angle02 = " + angle02 + ", afterR01 = " + afterR01 + ", afterR02 = " + afterR02);
-		}
-		*/
-		
+		afterR = (angle01 < angle02) ? afterR01 : afterR02;		
 	}
 
 	Vector3 CheckRotation(Vector3 edge, Vector3 axis)

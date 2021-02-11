@@ -22,10 +22,18 @@ public class IslandHitboxManager : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            // 一度Islandの全ての方角ごとのHitBoxを非アクティブ化させる
-            DeactivateAllDirections();
-            // このスクリプトがアタッチされているオブジェクトの子オブジェクトのHitBoxのみ有効にする
-            hB.SetActive(true);
+            // Playerの向きとHalfwayPointの向きを確認し、正しい方角であるかを確認する
+            float angle = Vector3.Angle(collision.gameObject.transform.up, transform.up);
+
+            // 正しい方角である場合、以下の処理を実行する
+            if (angle <= 45)
+            {
+                // 一度Islandの全ての方角ごとのHitBoxを非アクティブ化させる
+                DeactivateAllDirections();
+
+                // このスクリプトがアタッチされているオブジェクトの子オブジェクトのHitBoxのみ有効にする
+                hB.SetActive(true);
+            }
         }
     }
     void DeactivateAllDirections()

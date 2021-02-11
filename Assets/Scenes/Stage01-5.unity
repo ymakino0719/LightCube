@@ -14476,7 +14476,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1023952808}
   m_Layer: 0
-  m_Name: Gates01
+  m_Name: B01_Gates
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -17874,7 +17874,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1210726158}
   m_Layer: 0
-  m_Name: B01HB_OFF
+  m_Name: B01_HBOFF
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

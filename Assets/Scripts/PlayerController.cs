@@ -187,13 +187,10 @@ public class PlayerController : MonoBehaviour
 	IEnumerator OpeningControlStopCoroutine()
 	{
 		// 開幕n秒間の操作を止める
-		//yield return new WaitForSeconds(2.0f);
+		yield return new WaitForSeconds(2.0f);
 
-		// ★仮措置
-		yield return null;
-
-		PausedUI pUI = GameObject.Find("UIDirector").GetComponent<PausedUI>();
-		if (pUI.FirstStage) pUI.HowToPlay();
+		StageUI sUI = GameObject.Find("UIDirector").GetComponent<StageUI>();
+		if (sUI.FirstStage) sUI.HowToPlay();
 		else control = true;
 	}
 

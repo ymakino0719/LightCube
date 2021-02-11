@@ -39,26 +39,14 @@ public class SwitchBehavior : MonoBehaviour
             // スイッチの番号が未入力の場合、エラーメッセージを表示させる
             Debug.Log("Error! SwitchNum does not input");
         }
-        if (switchNum == 1)
+        else if (switchNum == 1 || switchNum == 2 || switchNum == 3)
         {
-            b_Main = GameObject.Find("B01_Main");
-            bHB_OFF = GameObject.Find("B01HB_OFF");
-            b_Gate = GameObject.Find("Gates01");
-            b_Arrow = GameObject.Find("B01_Arrow");
-        }
-        else if (switchNum == 2)
-        {
-            b_Main = GameObject.Find("B02_Main");
-            bHB_OFF = GameObject.Find("B02HB_OFF");
-            b_Gate = GameObject.Find("Gates02");
-            b_Arrow = GameObject.Find("B02_Arrow");
-        }
-        else if (switchNum == 3)
-        {
-            b_Main = GameObject.Find("B03_Main");
-            bHB_OFF = GameObject.Find("B03HB_OFF");
-            b_Gate = GameObject.Find("Gates03");
-            b_Arrow = GameObject.Find("B03_Arrow");
+            string bNum = "B0" + switchNum;
+
+            b_Main = GameObject.Find(bNum + "_Main");
+            bHB_OFF = GameObject.Find(bNum + "_HBOFF");
+            b_Gate = GameObject.Find(bNum + "_Gates");
+            b_Arrow = GameObject.Find(bNum + "_Arrow");
         }
         else
         {
@@ -121,33 +109,12 @@ public class SwitchBehavior : MonoBehaviour
         b_Arrow.SetActive(true);
 
         // Materialの変更（色を付ける）
-        if (switchNum == 1)
-        {
-            foreach (MeshRenderer mR in b_Main_MRList)
-            {
-                mR.material = mat01;
-            }
-        }
-        else if(switchNum == 2)
-        {
-            foreach (MeshRenderer mR in b_Main_MRList)
-            {
-                mR.material = mat02;
-            }
-        }
-        else if (switchNum == 3)
-        {
-            foreach (MeshRenderer mR in b_Main_MRList)
-            {
-                mR.material = mat03;
-            }
-        }
+        if (switchNum == 1) foreach (MeshRenderer mR in b_Main_MRList) mR.material = mat01;
+        else if(switchNum == 2) foreach (MeshRenderer mR in b_Main_MRList) mR.material = mat02;
+        else if (switchNum == 3) foreach (MeshRenderer mR in b_Main_MRList) mR.material = mat03;
 
         // BoxColliderの切り替え（当たり判定を付ける）
-        foreach (BoxCollider bC in b_Main_BCList)
-        {
-            bC.enabled = true;
-        }
+        foreach (BoxCollider bC in b_Main_BCList) bC.enabled = true;
     }
     public void SwitchOFFProcess()
     {
@@ -156,16 +123,10 @@ public class SwitchBehavior : MonoBehaviour
         b_Arrow.SetActive(false);
 
         // Materialの変更（無色に）
-        foreach (MeshRenderer mR in b_Main_MRList)
-        {
-            mR.material = mat00;
-        }
+        foreach (MeshRenderer mR in b_Main_MRList) mR.material = mat00;
 
         // BoxColliderの切り替え（当たり判定をなくす）
-        foreach (BoxCollider bC in b_Main_BCList)
-        {
-            bC.enabled = false;
-        }
+        foreach (BoxCollider bC in b_Main_BCList) bC.enabled = false;
     }
     public bool SwitchBool
     {

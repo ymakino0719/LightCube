@@ -60,11 +60,8 @@ public class TransitionUI : MonoBehaviour
         // フェード時間中の時間を止める
         yield return new WaitForSeconds(transitionTime);
 
-        // ★仮措置
-        //yield return null;
-
-        PausedUI pUI = GameObject.Find("UIDirector").GetComponent<PausedUI>();
-        pUI.Restart_SceneChange();
+        StageUI sUI = GameObject.Find("UIDirector").GetComponent<StageUI>();
+        sUI.Restart_SceneChange();
     }
     IEnumerator ReturnToStageSelectCoroutine(float fTime, float tTime)
     {
@@ -75,10 +72,7 @@ public class TransitionUI : MonoBehaviour
         // フェード時間中の時間を止める
         yield return new WaitForSeconds(tTime);
 
-        // ★仮措置
-        //yield return null;
-
-        PausedUI pUI = GameObject.Find("UIDirector").GetComponent<PausedUI>();
-        pUI.ReturnToStageSelect_SceneChange();
+        StageUI sUI = GameObject.Find("UIDirector").GetComponent<StageUI>();
+        sUI.ReturnToStageSelect_SceneChange();
     }
 }

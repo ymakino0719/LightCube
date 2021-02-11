@@ -1807,7 +1807,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6214488476249195717}
   - component: {fileID: 6214488476249195714}
-  - component: {fileID: 6214488476249195715}
   - component: {fileID: 6214488476249195712}
   m_Layer: 0
   m_Name: UIDirector
@@ -1843,18 +1842,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   firstStage: 0
---- !u!114 &6214488476249195715
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6214488476249195716}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 721877fd1ff7ee84f8cfc8bb9ed66125, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &6214488476249195712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1966,7 +1953,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 1
+  m_progress: 0.22222221
   usePosition: 1
   useRotation: 0
   useScale: 0
@@ -2278,7 +2265,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 1
+  m_progress: 0.22222221
   usePosition: 1
   useRotation: 0
   useScale: 0
@@ -2510,7 +2497,7 @@ MonoBehaviour:
   delay: 3
   style: 1
   playOnAwake: 1
-  m_progress: 0.637529
+  m_progress: 0
   usePosition: 0
   useRotation: 0
   useScale: 0

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class PausedUI : MonoBehaviour
+public class StageUI : MonoBehaviour
 {
     GameObject pausedPanel;
     GameObject howToPlayPanel;
+    GameObject gameClearPanel;
+
     bool openHTP = false;
     // 最初のステージの開幕に限り、Howtoplayパネルを表示させる
     public bool firstStage = false;
@@ -15,6 +17,7 @@ public class PausedUI : MonoBehaviour
     {
         pausedPanel = GameObject.Find("PausedPanel");
         howToPlayPanel = GameObject.Find("HowToPlayPanel");
+        gameClearPanel = GameObject.Find("GameClearPanel");
         pC = GameObject.Find("Player").GetComponent<PlayerController>();
     }
 
@@ -23,6 +26,7 @@ public class PausedUI : MonoBehaviour
     {
         pausedPanel.SetActive(false);
         howToPlayPanel.SetActive(false);
+        gameClearPanel.SetActive(false);
     }
 
     void Update()
@@ -116,6 +120,10 @@ public class PausedUI : MonoBehaviour
     {
         pausedPanel.SetActive(false);
         pC.Control = true;
+    }
+    public void DisplayGameClear()
+    {
+        gameClearPanel.SetActive(true);
     }
     public bool FirstStage
     {

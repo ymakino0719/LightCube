@@ -29,22 +29,14 @@ public class AnimationController : MonoBehaviour
 	{
 		if (isGround)
 		{
-			if (jump) // 着地時且つジャンプ入力があるときjumpBoolを有効にする
-			{
-				animator.SetBool("jumpBool", true);
-			}
+			// 着地時且つジャンプ入力があるときjumpBoolを有効にする
+			if (jump) animator.SetBool("jumpBool", true);
 			else if (pick)
 			{
 				animator.SetTrigger("pickUpTrigger");
 
-				if (!holding)
-				{
-					animator.SetBool("holding", false);
-				}
-				else
-				{
-					animator.SetBool("holding", true);
-				}
+				if (!holding) animator.SetBool("holding", false);
+				else animator.SetBool("holding", true);
 			}
 			else
 			{
@@ -54,30 +46,19 @@ public class AnimationController : MonoBehaviour
 					animator.SetBool("jumpingBool", false);
 				}
 
-				//Debug.Log("RunSpeed : " + vel * runAnimSpeed);
-
 				// 縦のY要素は不要のため0を代入
 				vec.y = 0;
 				// RunのAnimationSpeedの上限を1.0fにする
 				float a = (vec.sqrMagnitude * runAnimSpeed <= 1.0f) ? vec.sqrMagnitude * runAnimSpeed : 1.0f;
 
-				if (a >= judgeMoving)
-				{
-					animator.SetFloat("movingSpeed", a);
-				}
-				else
-				{
-					animator.SetFloat("movingSpeed", 0);
-				}
+				if (a >= judgeMoving) animator.SetFloat("movingSpeed", a);
+				else animator.SetFloat("movingSpeed", 0);
 			}
 		}
 		else
 		{
 			// ジャンプしていない状態でIsGroundのみがfalseになった場合は、自由落下とみなし滞空モーションに移行する（jumpingBoolを有効にする）
-			if (lastGround)
-			{
-				animator.SetBool("jumpingBool", true);
-			}
+			if (lastGround) animator.SetBool("jumpingBool", true);
 		}
 	}
 
@@ -91,14 +72,9 @@ public class AnimationController : MonoBehaviour
 
 	void BringEvent() // PickUpアニメーションの最後と、PutDownアニメーションの手を放した瞬間に実行
 	{
-		if (!pC.Holding)
-		{
-			animator.SetBool("bring", true);
-		}
-		else
-		{
-			animator.SetBool("bring", false);
-		}
+		if (!pC.Holding) animator.SetBool("bring", true);
+		else animator.SetBool("bring", false);
+
 		pC.Holding = !pC.Holding;
 	}
 
@@ -122,10 +98,7 @@ public class AnimationController : MonoBehaviour
 	}
 	void CanMovingEvent()
 	{
-		if(!pC.GameOver)
-        {
-			pC.Control = true;
-		}
+		if(!pC.GameOver) pC.Control = true;
 	}
 
 	void StartPuttingDown()
@@ -136,7 +109,7 @@ public class AnimationController : MonoBehaviour
 
 	void DisplayGameClearPanel()
     {
-		GameObject.Find("UIDirector").GetComponent<GameClearUI>().DisplayGameClear();
+		GameObject.Find("UIDirector").GetComponent<StageUI>().DisplayGameClear();
 	}
 	void CompleteFlag()
 	{
