@@ -53,10 +53,6 @@ public class PlayerController : MonoBehaviour
 	float searchDis_Key = 1.0f;
 	float searchDis_Lock = 0.35f;
 
-	// ゲームクリア判定
-	bool gameOver = false;
-	// ゲームクリア判定: 遷移01
-	bool gameOver01 = false;
 	// ゲームクリア判定: 遷移01 での使用する回転方向先
 	Quaternion g01_Rot;
 
@@ -89,6 +85,9 @@ public class PlayerController : MonoBehaviour
 
 	// 衛星カメラへの切り替え禁止時間（追尾カメラに戻してからすぐには戻せないように）
 	bool prohibitCamSwitching = false;
+
+	// ゲーム終了判定（クリア条件を満たす最後のブロックが接触した時点でプレイヤーのコントロールを無効にする）
+	bool gameOver = false;
 
 	// Start is called before the first frame update
 	void Awake()
@@ -184,6 +183,19 @@ public class PlayerController : MonoBehaviour
 
         }
 	}
+	void FixedUpdate()
+	{
+		if (control)
+		{
+			// 仮想重力をかけ続ける
+			rBody.AddForce(-transform.up * gravity);
+		}
+
+		if (throughGate)
+		{
+			ThroughGateRotation();
+		}
+	}
 	IEnumerator OpeningControlStopCoroutine()
 	{
 		// 開幕n秒間の操作を止める
@@ -193,35 +205,6 @@ public class PlayerController : MonoBehaviour
 		if (sUI.FirstStage) sUI.HowToPlay();
 		else control = true;
 	}
-
-	void FixedUpdate()
-    {
-		if(control)
-        {
-			// 仮想重力をかけ続ける
-			rBody.AddForce(-transform.up * gravity);
-		}
-
-		if (gameOver01)
-        {
-			if (cJ.GameOver01)
-			{
-				// yagikun3DをStarLightの方向にゆっくり回転させる
-				LookAtStarLightSmoothly_Processing();
-			}
-			else
-            {
-				// 回転の強制終了、gameOver02に移行させる
-				LookAtStarLightSmoothly_End();
-			}
-		}
-
-		if(throughGate)
-        {
-			ThroughGateRotation();
-        }
-	}
-
 	bool TurnOnSatelliteCamMode()
     {
 		// カメラのサテライトモードをオンにする
@@ -389,10 +372,8 @@ public class PlayerController : MonoBehaviour
 
 		// yagikun3DをClearLightに向かって水平に方向転換させたときの回転を求める
 		g01_Rot = Quaternion.LookRotation(transform.TransformDirection(looking), transform.up);
-
-		gameOver01 = true;
 	}
-	void LookAtStarLightSmoothly_Processing()
+	public void LookAtStarLightSmoothly_Processing()
 	{
 		// 時間
 		timeSL += rotSpeedSL * Time.deltaTime;
@@ -405,13 +386,12 @@ public class PlayerController : MonoBehaviour
 			LookAtStarLightSmoothly_End();
 		}
 	}
-	void LookAtStarLightSmoothly_End()
+	public void LookAtStarLightSmoothly_End()
 	{
 		yagikun.transform.rotation = g01_Rot;
 		TurnTheOtherWay();
 
 		timeSL = 0.0f;
-		gameOver01 = false;
 	}
 
 	public void TurnTheOtherWay()
@@ -458,11 +438,6 @@ public class PlayerController : MonoBehaviour
 		set { holding = value; }
 		get { return holding; }
 	}
-	public bool GameOver
-	{
-		set { gameOver = value; }
-		get { return gameOver; }
-	}
 	public GameObject CurrentFace
 	{
 		set { currentFace = value; }
@@ -487,5 +462,10 @@ public class PlayerController : MonoBehaviour
 	{
 		set { prohibitCamSwitching = value; }
 		get { return prohibitCamSwitching; }
+	}
+	public bool GameOver
+	{
+		set { gameOver = value; }
+		get { return gameOver; }
 	}
 }

@@ -97,24 +97,70 @@ public class ClearJudgement : MonoBehaviour
     {
         if (beginning01)
         {
-            // TurnToStarLight
+            ////////////////////
+            ////// Player //////
+            ////////////////////
+
+            // yagikun3DをStarLightの方向にゆっくり回転させるための開幕処理
             pC.LookAtStarLightSmoothly_Beginning();
 
+            ////////////////////
+            ////// Camera //////
+            ////////////////////
+
+            cC.StartingOperation01();
+
             beginning01 = false;
+        }
+        else
+        {
+            ////////////////////
+            ////// Player //////
+            ////////////////////
+
+            // yagikun3DをStarLightの方向にゆっくり回転させる
+            pC.LookAtStarLightSmoothly_Processing();
+
+            ////////////////////
+            ////// Camera //////
+            ////////////////////
+
+            // ゆっくりStarLightの方を見る
+            cC.TurnAroundToStarLight();
+            // ゆっくりStarLightにカメラを近づける
+            cC.MoveCloserToStarLight();
         }
     }
     void GameOver02_Behavior()
     {
         if (beginning02)
         {
+            ////////////////////
+            ////// Player //////
+            ////////////////////
+
+            // yagikun3DをStarLightの方向にゆっくり回転させる処理の強制終了
+            pC.LookAtStarLightSmoothly_End();
+
             // VictoryAnimation
             aC.VictoryAnimation();
+
+            ////////////////////
+            ////// Camera //////
+            ////////////////////
+
+            // StarLightが背景になるようにカメラ移動する
+            cC.Move_StarLightBecomesBackground();
 
             beginning02 = false;
         }
     }
     void GameOver03_Behavior()
     {
+        ////////////////////
+        //////// UI ////////
+        ////////////////////
+
         if (beginning03)
         {
             StartCoroutine("GameOverScreenDisplayTime");
@@ -139,6 +185,7 @@ public class ClearJudgement : MonoBehaviour
         {
             gameOver = true;
             gameOver01 = true;
+            cC.GameOver = true;
             lighting.enabled = true;
         }
     }
@@ -148,7 +195,7 @@ public class ClearJudgement : MonoBehaviour
         {
             pressedAnyKey = true;
             TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
-            traUI.ReturnToStageSelect(5.0f, 5.1f);
+            traUI.ReturnToStageSelect(3.0f, 3.1f);
         }
     }
 
@@ -174,6 +221,11 @@ public class ClearJudgement : MonoBehaviour
     {
         set { keyNum = value; }
         get { return keyNum; }
+    }
+    public bool GameOver
+    {
+        set { gameOver = value; }
+        get { return gameOver; }
     }
     public bool GameOver01
     {

@@ -31,8 +31,6 @@ public class CameraControll : MonoBehaviour
     public float targetDis02_Height = 2.0f;
     // 接近停止閾値
     float minDis = 0.01f;
-    // 開幕処理
-    bool beginning = true;
     //　現在の移動の速度
     Vector3 moveVelocity;
     //　現在の移動の速度（回転）
@@ -64,6 +62,9 @@ public class CameraControll : MonoBehaviour
     // サテライトカメラを移動させるときの時間の調整パラメータ
     private float timeCoef = 2.0f;
 
+    // ゲーム終了判定（クリア条件を満たす最後のブロックが完全にはめ込まれた後にtrueにする）
+    bool gameOver = false;
+
     void Awake()
     {
         // playerの取得
@@ -83,32 +84,12 @@ public class CameraControll : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!cJ.GameOver01 && !cJ.GameOver02 && !cJ.GameOver03)
+        if (!gameOver)
         {
             if (satellite) SatelliteCamera();
             else ChasingCamera();
         }
     }
-
-    void FixedUpdate()
-    {
-        if (cJ.GameOver01)
-        {
-            if (beginning) StartingOperation01();
-
-            // ゆっくりStarLightの方を見る
-            TurnAroundToStarLight();
-            // ゆっくりStarLightにカメラを近づける
-            MoveCloserToStarLight();
-        }
-
-        if (cJ.GameOver02)
-        {
-            // StarLightが背景になるようにカメラ移動する
-            Move_StarLightBecomesBackground();
-        }
-    }
-
     void SatelliteCamera()
     {
         if (!openingMove)
@@ -357,7 +338,7 @@ public class CameraControll : MonoBehaviour
         transform.rotation = rotation;
     }
 
-    void StartingOperation01()
+    public void StartingOperation01()
     {
         // 移動先のtargetPosの取得
         Vector3 vec = (transform.position - clearLight.transform.position).normalized * targetDis01;
@@ -377,11 +358,9 @@ public class CameraControll : MonoBehaviour
         transform.rotation = startRot;
         // 最初の位置に戻す
         transform.position = startPos;
-
-        beginning = false;
     }
 
-    void TurnAroundToStarLight()
+    public void TurnAroundToStarLight()
     {
         //　カメラの角度をスムーズに動かす
         float xRotate = Mathf.SmoothDampAngle(transform.eulerAngles.x, targetAngle.x, ref rotVelocity.x, rotTime);
@@ -390,7 +369,7 @@ public class CameraControll : MonoBehaviour
         transform.eulerAngles = new Vector3(xRotate, yRotate, zRotate);
     }
 
-    void MoveCloserToStarLight()
+    public void MoveCloserToStarLight()
     {
         transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref moveVelocity, moveTime);
 
@@ -398,12 +377,11 @@ public class CameraControll : MonoBehaviour
         float checkDis = (targetPos - transform.position).sqrMagnitude;
         if(checkDis <= minDis)
         {
-            beginning = false;
             cJ.GameOver01 = false;
             cJ.GameOver02 = true;
         }
     }
-    void Move_StarLightBecomesBackground()
+    public void Move_StarLightBecomesBackground()
     {
         // 移動先のtargetPosの取得及び移動
         Vector3 vec = player.transform.position - clearLight.transform.position;
@@ -417,5 +395,10 @@ public class CameraControll : MonoBehaviour
     {
         set { satellite = value; }
         get { return satellite; }
+    }
+    public bool GameOver
+    {
+        set { gameOver = value; }
+        get { return gameOver; }
     }
 }
