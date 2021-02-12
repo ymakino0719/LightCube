@@ -17,8 +17,21 @@ public class PlayerController : MonoBehaviour
 	bool isGround = false;
 	// 1つ前のフレームで着地していたかどうか
 	bool lastGround = false;
-	// ジャンプの高さ
-	float jumpH = 9.5f;
+	// 地上ジャンプの高さ
+	float jumpH_G = 6.5f;
+	// 空中ジャンプの高さ
+	float jumpH_A = 6.5f;
+	// 最大ジャンプ回数（不変値※残りジャンプ回数と一致させる）
+	int jumpNum_Max = 2;
+	// 残りジャンプ回数（可変値）
+	int jumpNum = 2;
+	// 空中ジャンプ時の回転中かどうか
+	//bool aerialJumpRot = false;
+	// 空中ジャンプ時の回転時間
+	//float timeAJ = 0.0f;
+	// 空中ジャンプ時の回転速度
+	//float rotSpeedAJ = 4.0f;
+
 	// アイテムを持っているか
 	bool holding = false;
 	// 移動スピード
@@ -43,7 +56,7 @@ public class PlayerController : MonoBehaviour
 	// ClearJudgement
 	ClearJudgement cJ;
 	// CameraControl
-	CameraControll cC;
+	CameraController cC;
 
 	// 近くにあるitem, LockBlock
 	GameObject nearestItem, nearestLock;
@@ -98,7 +111,7 @@ public class PlayerController : MonoBehaviour
 		aC = yagikun.GetComponent<AnimationController>();
 		// ClearJudgementの取得
 		cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
-		cC = GameObject.Find("Camera").GetComponent<CameraControll>();
+		cC = GameObject.Find("Camera").GetComponent<CameraController>();
 	}
 	void Start()
 	{
@@ -124,9 +137,7 @@ public class PlayerController : MonoBehaviour
 			//////////// Jumping ////////////
 			/////////////////////////////////
 			
-			jump = false;
-			// 着地しているときジャンプを可能にする
-			if (isGround) jump = Input.GetButtonDown("Jump");
+			jump = Input.GetButtonDown("Jump");
 
 			/////////////////////////////////
 			///////// JudgeStopping /////////
@@ -172,7 +183,8 @@ public class PlayerController : MonoBehaviour
 			// プレイヤーのリギッドボディのローカル速度locVelを取得
 			locVel = transform.InverseTransformDirection(rBody.velocity);
 
-			aC.MoveAnimation(jump, pick, holding, isGround, lastGround, locVel);
+			UpdateJumpNum();
+			aC.MoveAnimation(jump, jumpNum, jumpNum_Max, pick, holding, isGround, lastGround, locVel);
 			MoveCharacter(hor, ver, jump, locVel);
 
 			// lastGround（直前に着地していたか）の更新
@@ -195,6 +207,13 @@ public class PlayerController : MonoBehaviour
 		{
 			ThroughGateRotation();
 		}
+
+		/*
+		if(aerialJumpRot)
+        {
+			AerialJumpRotation();
+        }
+		*/
 	}
 	IEnumerator OpeningControlStopCoroutine()
 	{
@@ -217,6 +236,21 @@ public class PlayerController : MonoBehaviour
 		bool tOSCM = true;
 		return tOSCM;
 	}
+
+	void UpdateJumpNum()
+    {
+		if(isGround && !lastGround)
+        {
+			// 着地時、ジャンプ回数を元に戻す
+			jumpNum = jumpNum_Max;
+		}
+
+		if (!isGround && lastGround)
+        {
+			// ジャンプあるいは落下時、ジャンプ回数を１減らす
+			jumpNum -= 1;
+		}
+	}
 	void MoveCharacter(float hor, float ver, bool jump, Vector3 locVel)
 	{
 		///////////////////////
@@ -227,14 +261,38 @@ public class PlayerController : MonoBehaviour
 		if ((hor > float.Epsilon && locVel.z < moveLimit_XZ) || (hor < float.Epsilon && locVel.z > -moveLimit_XZ))
 		{
 			// locVel.z：プレイヤーの左右移動
-			rBody.AddForce(transform.forward * hor * moveS);
+			locVel.z += hor * moveS;
+			//rBody.AddForce(transform.forward * hor * moveS);
 		}
 
 		// locVel.x：カメラから見てプレイヤーの奥行
 		if ((ver > float.Epsilon && locVel.x < moveLimit_XZ) || (ver < float.Epsilon && locVel.x > -moveLimit_XZ))
 		{
 			// locVel.x：プレイヤーの奥行移動
-			rBody.AddForce(-transform.right * ver * moveS);
+			locVel.x -= ver * moveS;
+			//rBody.AddForce(-transform.right * ver * moveS);
+		}
+
+		///////////////////////
+		//////// jump /////////
+		///////////////////////
+
+		if (jump)
+		{
+			if (isGround) // 地上にいるとき
+			{
+				// 地上ジャンプ
+				locVel.y = jumpH_G;
+			}
+			else if (jumpNum > 0 && jumpNum < jumpNum_Max) // 滞空中で、残りジャンプ回数が０より大きく最大数より小さい場合
+			{
+				// 空中ジャンプ
+				locVel.y = jumpH_A;
+				// ジャンプ回数を１減らす
+				jumpNum -= 1;
+				// 空中ジャンプの回転モーションの開始
+				//aerialJumpRot = true;
+			}
 		}
 
 		///////////////////////
@@ -248,31 +306,45 @@ public class PlayerController : MonoBehaviour
 		// Y軸方向は下降中にのみ制限をかける（ジャンプに制限をかけないようにするため）
 		if (locVel.y <= -moveLimit_Y)  locVel.y = -moveLimit_Y;
 
-		rBody.velocity = transform.TransformDirection(locVel);
-
-		///////////////////////
-		//////// jump /////////
-		///////////////////////
-
-		if (isGround && jump)
-		{
-			rBody.velocity += transform.up * jumpH;
-		}
-
 		///////////////////////
 		/////// rotate ////////
 		///////////////////////
 
-		// プレイヤーのリギッドボディのローカル速度locVel2を再取得
-		Vector3 locVel2 = transform.InverseTransformDirection(rBody.velocity);
-
 		// プレイヤーの速度の向きに方向転換する（X、Z軸方向のみ、Y軸は無効）
-		if (Mathf.Abs(locVel2.x) >= minimumSpeed || Mathf.Abs(locVel2.z) >= minimumSpeed)
+		if (Mathf.Abs(locVel.x) >= minimumSpeed || Mathf.Abs(locVel.z) >= minimumSpeed)
         {
-			Vector3 looking = new Vector3(locVel2.x, 0, locVel2.z);
+			Vector3 looking = new Vector3(locVel.x, 0, locVel.z);
 			yagikun.transform.rotation = Quaternion.LookRotation(transform.TransformDirection(looking), transform.up); // 向きを変更する
 		}
+
+		///////////////////////
+		///// integration /////
+		///////////////////////
+
+		// 上記で再計算されたlocVelをrigidbodyに反映させる
+		rBody.velocity = transform.TransformDirection(locVel);
 	}
+
+	/*
+	void AerialJumpRotation()
+    {
+		Debug.Log("Hello");
+		// 時間
+		timeAJ += rotSpeedAJ * Time.deltaTime;
+		// 回転
+		yagikun.transform.rotation *= Quaternion.Euler(0, rotSpeedAJ * Time.deltaTime * 360.0f, 0);
+
+		if (timeAJ >= 1.0f)
+		{
+			// 時間を超過したら初期回転方向に戻し、回転終了
+			float diff = timeAJ - 1.0f;
+			yagikun.transform.rotation *= Quaternion.Euler(0, -diff * 360.0f, 0);
+			
+			timeAJ = 0;
+			aerialJumpRot = false;
+		}
+	}
+	*/
 
 	void JudgePickUpItems(ref bool pick)
     {
@@ -467,5 +539,14 @@ public class PlayerController : MonoBehaviour
 	{
 		set { gameOver = value; }
 		get { return gameOver; }
+	}
+	public int JumpNum_Max
+	{
+		get { return jumpNum_Max; }
+	}
+	public int JumpNum
+	{
+		set { jumpNum = value; }
+		get { return jumpNum; }
 	}
 }

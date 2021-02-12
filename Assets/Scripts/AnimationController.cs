@@ -25,7 +25,7 @@ public class AnimationController : MonoBehaviour
 		pC = GameObject.Find("Player").GetComponent<PlayerController>();
 	}
 
-	public void MoveAnimation(bool jump, bool pick, bool holding, bool isGround, bool lastGround, Vector3 vec)
+	public void MoveAnimation(bool jump, int jumpNum, int jumpNum_Max, bool pick, bool holding, bool isGround, bool lastGround, Vector3 vec)
 	{
 		if (isGround)
 		{
@@ -42,7 +42,9 @@ public class AnimationController : MonoBehaviour
 			{
 				if (!lastGround)
 				{
+					// ジャンプboolを元に戻す
 					animator.SetBool("jumpBool", false);
+					animator.SetBool("doubleJumpBool", false);
 					animator.SetBool("jumpingBool", false);
 				}
 
@@ -57,8 +59,14 @@ public class AnimationController : MonoBehaviour
 		}
 		else
 		{
-			// ジャンプしていない状態でIsGroundのみがfalseになった場合は、自由落下とみなし滞空モーションに移行する（jumpingBoolを有効にする）
-			if (lastGround) animator.SetBool("jumpingBool", true);
+			if (jump && jumpNum > 0 && jumpNum < jumpNum_Max) // 滞空中にジャンプ入力があり、残りジャンプ回数が０より大きく最大数より小さい場合、空中ジャンプする
+			{
+				animator.SetBool("doubleJumpBool", true);
+			}
+			else if (lastGround) // ジャンプしていない状態でIsGroundのみがfalseになった場合は、自由落下とみなし滞空モーションに移行する（jumpingBoolを有効にする）
+			{
+				animator.SetBool("jumpingBool", true);
+			}
 		}
 	}
 
@@ -116,6 +124,10 @@ public class AnimationController : MonoBehaviour
 		var cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
 		cJ.GameOver02 = false;
 		cJ.GameOver03 = true;
+	}
+	void ResetDoubleJumpBool()
+	{
+		animator.SetBool("doubleJumpBool", false);
 	}
 	public GameObject NearestItem
 	{

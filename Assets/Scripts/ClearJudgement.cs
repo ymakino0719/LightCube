@@ -40,7 +40,7 @@ public class ClearJudgement : MonoBehaviour
     // Rangeの振幅開始時間
     float startTime;
     // カメラ制御
-    CameraControll cC;
+    CameraController cC;
     // アニメーション制御
     AnimationController aC;
     // プレイヤー制御
@@ -53,7 +53,7 @@ public class ClearJudgement : MonoBehaviour
         lighting.range = 0;
         lighting.enabled = false;
 
-        cC = GameObject.Find("Camera").GetComponent<CameraControll>();
+        cC = GameObject.Find("Camera").GetComponent<CameraController>();
         aC = GameObject.Find("Yagikun3D").GetComponent<AnimationController>();
         pC = GameObject.Find("Player").GetComponent<PlayerController>();
     }
