@@ -8,6 +8,10 @@ public class CameraController : MonoBehaviour
     GameObject player;
     // PlayerController
     PlayerController pC;
+    // Playerのスキン
+    SkinnedMeshRenderer pSkin;
+    // FacePos
+    GameObject facePos;
     // CamPosのGameObject
     GameObject camPos;
     // ClearJudgement
@@ -16,6 +20,8 @@ public class CameraController : MonoBehaviour
     FaceInformation face;
     // EdgeInformation
     EdgeInformation edge;
+    // InsideBoxのMeshRenderer
+    MeshRenderer insideBoxColor;
 
     // ClearLight
     GameObject clearLight;
@@ -40,10 +46,11 @@ public class CameraController : MonoBehaviour
     // ターゲットへの角度
     Vector3 targetAngle;
 
+    // 開幕処理
+    bool openingSequence = true;
+
     // サテライトモード
     bool satellite = false;
-    // サテライトモードの開幕移動判定
-    bool openingMove = false;
     // サテライトモード用の追跡ロボット（位置（現在属する面または辺の位置）及び方向（原点位置を正面とする）を記録させる）
     GameObject robot;
     // 追跡ロボットが現在属する面または辺のGameObject
@@ -62,6 +69,11 @@ public class CameraController : MonoBehaviour
     // サテライトカメラを移動させるときの時間の調整パラメータ
     private float timeCoef = 2.0f;
 
+    // 一人称カメラモード
+    bool firstPerson = false;
+    // マウス感度
+    float mouseSensitivity = 3.0f;
+
     // ゲーム終了判定（クリア条件を満たす最後のブロックが完全にはめ込まれた後にtrueにする）
     bool gameOver = false;
 
@@ -71,6 +83,10 @@ public class CameraController : MonoBehaviour
         player = GameObject.Find("Player");
         // PlayerControllerの取得
         pC = player.GetComponent<PlayerController>();
+        // Playerのスキンの取得
+        pSkin = GameObject.FindWithTag("PlayerTexture").GetComponent<SkinnedMeshRenderer>();
+        // facePosの取得
+        facePos = GameObject.Find("FacePos");
         // camPosの取得
         camPos = GameObject.Find("CamPos");
         // ClearLightの取得
@@ -79,6 +95,8 @@ public class CameraController : MonoBehaviour
         cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
         // 追跡用ロボットの取得
         robot = GameObject.Find("TrackingRobot");
+        // InsideBoxのMeshRendererの取得
+        insideBoxColor = GameObject.FindWithTag("InsideBox").GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
@@ -87,26 +105,28 @@ public class CameraController : MonoBehaviour
         if (!gameOver)
         {
             if (satellite) SatelliteCamera();
+            else if (firstPerson) FirstPersonCamera();
             else ChasingCamera();
         }
     }
     void SatelliteCamera()
     {
-        if (!openingMove)
+        if (openingSequence)
         {
             // カメラ切り替えボタン入力制限
             StartCoroutine("ProhibitCamSwitchingTime");
 
             // 初期カメラ位置への移動
             OpeningSatelliteCamMovement();
+
+            openingSequence = false;
         }
 
         if (!rolling) SatelliteCamMovement_Input();
         else SatelliteCamMovement_Rotate();
 
         // サテライトモードの終了条件
-        bool endCondition = EndConditionOfSatelliteMode();
-        if (endCondition) return;
+        EndConditionOfSatelliteMode();
     }
     void OpeningSatelliteCamMovement()
     {
@@ -119,8 +139,6 @@ public class CameraController : MonoBehaviour
         transform.rotation = rotation;
 
         UpdateRobotInfo_First();
-
-        openingMove = true;
     }
 
     void UpdateRobotInfo_First()
@@ -183,7 +201,6 @@ public class CameraController : MonoBehaviour
             rolling = true;
         }
     }
-
     int ZeroOne(float num)
     {
         int a = 0;
@@ -192,7 +209,6 @@ public class CameraController : MonoBehaviour
 
         return a;
     }
-
     void FindNearestFaceOrEdge()
     {
         // 直前までカメラが面していたのは面か辺か
@@ -292,10 +308,8 @@ public class CameraController : MonoBehaviour
             rolling = false;
         }
     }
-
-    bool EndConditionOfSatelliteMode()
+    void EndConditionOfSatelliteMode()
     {
-        bool eC = false;
         // サテライトモード時に対応するボタンをもう一度押された場合、サテライトモードを終了する
         // ただし、カメラ切り替え後の再切替え禁止時間、またはカメラ回転中の入力は無効とする
         bool satelliteCam = false;
@@ -312,12 +326,78 @@ public class CameraController : MonoBehaviour
             vertical = false;
             horizontal = false;
 
-            openingMove = false;
+            openingSequence = true;
             satellite = false;
-            eC = true;
+        }
+    }
+    void FirstPersonCamera()
+    {
+        if(openingSequence)
+        {
+            // カメラ切り替えボタン入力制限
+            StartCoroutine("ProhibitCamSwitchingTime");
+
+            // カメラの移動
+            transform.position = facePos.transform.position;
+            transform.rotation = facePos.transform.rotation;
+
+            // Playerのスキンの非表示
+            pSkin.enabled = false;
+
+            // InsideBoxのMeshRendererの非表示
+            insideBoxColor.enabled = false;
+
+            openingSequence = false;
         }
 
-        return eC;
+        FirstPersonCamMovement();
+
+        // 一人称カメラモードの終了条件
+        EndConditionOfFirstPersonMode();
+    }
+    void FirstPersonCamMovement()
+    {
+        float x_Mouse = Input.GetAxis("Mouse X");
+        float y_Mouse = Input.GetAxis("Mouse Y");
+
+        Vector3 newRotation = transform.localEulerAngles;
+
+        // 縦方向に回転限界を設定
+        float lastAngleX = newRotation.x;
+        float nextAngleX = newRotation.x - y_Mouse * mouseSensitivity;
+        if (nextAngleX > 280.0f || nextAngleX < 80.0f) newRotation.x = nextAngleX;
+        
+        // 横方向はそのまま
+        newRotation.y += x_Mouse * mouseSensitivity;
+
+        Debug.Log("newRotation: " + newRotation);
+
+        transform.localEulerAngles = newRotation;
+    }
+    void EndConditionOfFirstPersonMode()
+    {
+        // 一人称カメラモード時に対応するボタンをもう一度押された場合、一人称カメラモードを終了する
+        // ただし、カメラ切り替え後の再切替え禁止時間中の入力は無効とする
+        bool firstPersonCam = false;
+        if (!pC.ProhibitCamSwitching) firstPersonCam = Input.GetButtonDown("FirstPersonCam");
+
+        if (firstPersonCam)
+        {
+            // Playerのスキンの再表示
+            pSkin.enabled = true;
+
+            // InsideBoxのMeshRendererの再表示
+            insideBoxColor.enabled = true;
+
+            ChasingCamera(); // 追尾カメラに戻す
+            // 追尾カメラに戻した後、0.5秒間は衛星カメラ入力を受け付けない
+            StartCoroutine("ProhibitCamSwitchingTime");
+            pC.Control = true;
+
+            // 初期化
+            openingSequence = true;
+            firstPerson = false;
+        }
     }
     IEnumerator ProhibitCamSwitchingTime()
     {
@@ -328,7 +408,6 @@ public class CameraController : MonoBehaviour
 
         pC.ProhibitCamSwitching = false;
     }
-
     void ChasingCamera()
     {
         // カメラの移動
@@ -337,7 +416,6 @@ public class CameraController : MonoBehaviour
         Quaternion rotation = Quaternion.LookRotation(player.transform.position - camPos.transform.position, player.transform.up);
         transform.rotation = rotation;
     }
-
     public void StartingOperation01()
     {
         // 移動先のtargetPosの取得
@@ -395,6 +473,11 @@ public class CameraController : MonoBehaviour
     {
         set { satellite = value; }
         get { return satellite; }
+    }
+    public bool FirstPerson
+    {
+        set { firstPerson = value; }
+        get { return firstPerson; }
     }
     public bool GameOver
     {

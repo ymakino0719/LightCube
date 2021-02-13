@@ -5959,6 +5959,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4944752474963196595, guid: b2f74612ffa3efe4a82ac8fd0d268578,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5214644987572194001, guid: b2f74612ffa3efe4a82ac8fd0d268578,
         type: 3}
       propertyPath: m_Name
@@ -6018,6 +6023,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6078202410417179552, guid: b2f74612ffa3efe4a82ac8fd0d268578,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6589568915798643593, guid: b2f74612ffa3efe4a82ac8fd0d268578,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6598224283893438353, guid: b2f74612ffa3efe4a82ac8fd0d268578,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b2f74612ffa3efe4a82ac8fd0d268578, type: 3}
@@ -20420,7 +20440,7 @@ GameObject:
   - component: {fileID: 5210594762119180761}
   m_Layer: 0
   m_Name: InsideBox01
-  m_TagString: HitBox
+  m_TagString: InsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

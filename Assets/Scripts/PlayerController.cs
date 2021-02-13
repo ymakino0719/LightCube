@@ -163,15 +163,23 @@ public class PlayerController : MonoBehaviour
 			if (stopping && !prohibitCamSwitching) satelliteCam = Input.GetButtonDown("SatelliteCam");
 
 			/////////////////////////////////
+			/////// First Person Cam ////////
+			/////////////////////////////////
+
+			bool firstPersonCam = false;
+			// 静止、着地状態かつカメラの切り替えを禁止していないとき、satelliteCamを可能にする
+			if (stopping && !prohibitCamSwitching) firstPersonCam = Input.GetButtonDown("FirstPersonCam");
+
+			/////////////////////////////////
 			/////////// Functions ///////////
 			/////////////////////////////////
 
 			// 静止状態で衛星カメラへの切り替えがあった場合、優先的に処理する（他処理は無視する）
-			bool turnOnSCM = false;
-			if (satelliteCam) turnOnSCM = TurnOnSatelliteCamMode();
+			bool inputNewCamMode = false;
+			if (satelliteCam || firstPersonCam) inputNewCamMode = SwitchCamMode(satelliteCam, firstPersonCam);
 
 			// 衛星カメラへ切り替える場合、他処理は無視する
-			if (turnOnSCM) return;
+			if (inputNewCamMode) return;
 
 			// アイテムを持っていないときに拾うかどうか、またはアイテムを持っているときに置くかどうか判定する
 			if (pick) 
@@ -224,17 +232,18 @@ public class PlayerController : MonoBehaviour
 		if (sUI.FirstStage) sUI.HowToPlay();
 		else control = true;
 	}
-	bool TurnOnSatelliteCamMode()
+	bool SwitchCamMode(bool satelliteCam, bool firstPersonCam)
     {
 		// カメラのサテライトモードをオンにする
-		cC.Satellite = true;
+		if (satelliteCam) cC.Satellite = true;
+		else if(firstPersonCam) cC.FirstPerson = true;
 
 		// プレイヤーの操作を無効にする
 		control = false;
 
 		// 以下の処理の終了用
-		bool tOSCM = true;
-		return tOSCM;
+		bool iNCM = true;
+		return iNCM;
 	}
 
 	void UpdateJumpNum()
