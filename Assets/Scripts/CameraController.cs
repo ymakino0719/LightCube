@@ -313,14 +313,14 @@ public class CameraController : MonoBehaviour
         // サテライトモード時に対応するボタンをもう一度押された場合、サテライトモードを終了する
         // ただし、カメラ切り替え後の再切替え禁止時間、またはカメラ回転中の入力は無効とする
         bool satelliteCam = false;
-        if (!pC.ProhibitCamSwitching && !rolling) satelliteCam = Input.GetButtonDown("SatelliteCam");
+        if (!pC.ProhibitCamSwitching && !rolling) satelliteCam = Input.GetButtonDown("SwitchCamMode");
 
         if (satelliteCam)
         {
-            ChasingCamera(); // 追尾カメラに戻す
+            //ChasingCamera(); // 追尾カメラに戻す
             // 追尾カメラに戻した後、0.5秒間は衛星カメラ入力を受け付けない
-            StartCoroutine("ProhibitCamSwitchingTime");
-            pC.Control = true;
+            //StartCoroutine("ProhibitCamSwitchingTime");
+            //pC.Control = true;
 
             // 初期化
             vertical = false;
@@ -328,6 +328,9 @@ public class CameraController : MonoBehaviour
 
             openingSequence = true;
             satellite = false;
+
+            // FirstPersonCameraへの移行
+            firstPerson = true;
         }
     }
     void FirstPersonCamera()
@@ -370,8 +373,6 @@ public class CameraController : MonoBehaviour
         // 横方向はそのまま
         newRotation.y += x_Mouse * mouseSensitivity;
 
-        Debug.Log("newRotation: " + newRotation);
-
         transform.localEulerAngles = newRotation;
     }
     void EndConditionOfFirstPersonMode()
@@ -379,7 +380,7 @@ public class CameraController : MonoBehaviour
         // 一人称カメラモード時に対応するボタンをもう一度押された場合、一人称カメラモードを終了する
         // ただし、カメラ切り替え後の再切替え禁止時間中の入力は無効とする
         bool firstPersonCam = false;
-        if (!pC.ProhibitCamSwitching) firstPersonCam = Input.GetButtonDown("FirstPersonCam");
+        if (!pC.ProhibitCamSwitching) firstPersonCam = Input.GetButtonDown("SwitchCamMode");
 
         if (firstPersonCam)
         {

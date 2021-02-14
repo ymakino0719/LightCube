@@ -160,15 +160,16 @@ public class PlayerController : MonoBehaviour
 
 			bool satelliteCam = false;
 			// 静止、着地状態かつカメラの切り替えを禁止していないとき、satelliteCamを可能にする
-			if (stopping && !prohibitCamSwitching) satelliteCam = Input.GetButtonDown("SatelliteCam");
+			//if (stopping && !prohibitCamSwitching) satelliteCam = Input.GetButtonDown("SatelliteCam");
+			if (stopping && !prohibitCamSwitching) satelliteCam = Input.GetButtonDown("SwitchCamMode");
 
 			/////////////////////////////////
 			/////// First Person Cam ////////
 			/////////////////////////////////
 
-			bool firstPersonCam = false;
-			// 静止、着地状態かつカメラの切り替えを禁止していないとき、satelliteCamを可能にする
-			if (stopping && !prohibitCamSwitching) firstPersonCam = Input.GetButtonDown("FirstPersonCam");
+			//bool firstPersonCam = false;
+			// 静止、着地状態かつカメラの切り替えを禁止していないとき、firstPersonCamを可能にする
+			//if (stopping && !prohibitCamSwitching) firstPersonCam = Input.GetButtonDown("FirstPersonCam");
 
 			/////////////////////////////////
 			/////////// Functions ///////////
@@ -176,7 +177,8 @@ public class PlayerController : MonoBehaviour
 
 			// 静止状態で衛星カメラへの切り替えがあった場合、優先的に処理する（他処理は無視する）
 			bool inputNewCamMode = false;
-			if (satelliteCam || firstPersonCam) inputNewCamMode = SwitchCamMode(satelliteCam, firstPersonCam);
+			//if (satelliteCam || firstPersonCam) inputNewCamMode = SwitchCamMode(satelliteCam, firstPersonCam);
+			if (satelliteCam) inputNewCamMode = SwitchCamMode(satelliteCam);
 
 			// 衛星カメラへ切り替える場合、他処理は無視する
 			if (inputNewCamMode) return;
@@ -232,11 +234,11 @@ public class PlayerController : MonoBehaviour
 		if (sUI.FirstStage) sUI.HowToPlay();
 		else control = true;
 	}
-	bool SwitchCamMode(bool satelliteCam, bool firstPersonCam)
+	bool SwitchCamMode(bool satelliteCam)
     {
 		// カメラのサテライトモードをオンにする
 		if (satelliteCam) cC.Satellite = true;
-		else if(firstPersonCam) cC.FirstPerson = true;
+		//else if(firstPersonCam) cC.FirstPerson = true;
 
 		// プレイヤーの操作を無効にする
 		control = false;
