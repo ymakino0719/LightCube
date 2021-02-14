@@ -21,6 +21,7 @@ TagManager:
   - SwitchHub03
   - PlayerTexture
   - InsideBox
+  - InsideColorBox
   layers:
   - Default
   - TransparentFX

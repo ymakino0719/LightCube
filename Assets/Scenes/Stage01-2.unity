@@ -20439,8 +20439,8 @@ GameObject:
   - component: {fileID: 5210594762119180760}
   - component: {fileID: 5210594762119180761}
   m_Layer: 0
-  m_Name: InsideBox01
-  m_TagString: InsideBox
+  m_Name: InsideColorBox01
+  m_TagString: InsideColorBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -20508,7 +20508,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5210594762175790562}
   m_Layer: 0
-  m_Name: InsideBox
+  m_Name: InsideColorBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

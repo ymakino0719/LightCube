@@ -20,8 +20,8 @@ public class CameraController : MonoBehaviour
     FaceInformation face;
     // EdgeInformation
     EdgeInformation edge;
-    // InsideBoxのMeshRenderer
-    MeshRenderer insideBoxColor;
+    // InsideColorBoxのMeshRenderer
+    MeshRenderer insideColorBox;
 
     // ClearLight
     GameObject clearLight;
@@ -95,8 +95,8 @@ public class CameraController : MonoBehaviour
         cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
         // 追跡用ロボットの取得
         robot = GameObject.Find("TrackingRobot");
-        // InsideBoxのMeshRendererの取得
-        insideBoxColor = GameObject.FindWithTag("InsideBox").GetComponent<MeshRenderer>();
+        // InsideColorBoxのMeshRendererの取得
+        insideColorBox = GameObject.FindWithTag("InsideColorBox").GetComponent<MeshRenderer>();
     }
 
     // Update is called once per frame
@@ -344,8 +344,8 @@ public class CameraController : MonoBehaviour
             // Playerのスキンの非表示
             pSkin.enabled = false;
 
-            // InsideBoxのMeshRendererの非表示
-            insideBoxColor.enabled = false;
+            // InsideColorBoxのMeshRendererの非表示
+            insideColorBox.enabled = false;
 
             openingSequence = false;
         }
@@ -386,8 +386,8 @@ public class CameraController : MonoBehaviour
             // Playerのスキンの再表示
             pSkin.enabled = true;
 
-            // InsideBoxのMeshRendererの再表示
-            insideBoxColor.enabled = true;
+            // InsideColorBoxのMeshRendererの再表示
+            insideColorBox.enabled = true;
 
             ChasingCamera(); // 追尾カメラに戻す
             // 追尾カメラに戻した後、0.5秒間は衛星カメラ入力を受け付けない
