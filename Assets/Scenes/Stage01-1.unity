@@ -32619,6 +32619,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 3593446773629305852, guid: 1d6ed5727744aa04ea6576d759d04bfc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4764240206341698970, guid: 1d6ed5727744aa04ea6576d759d04bfc,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5654515402263931565, guid: 1d6ed5727744aa04ea6576d759d04bfc,
+        type: 3}
+      propertyPath: EmissionModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d6ed5727744aa04ea6576d759d04bfc, type: 3}
 --- !u!1001 &8485329409434689669

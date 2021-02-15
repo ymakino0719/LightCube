@@ -72,7 +72,11 @@ public class CameraController : MonoBehaviour
     // 一人称カメラモード
     bool firstPerson = false;
     // マウス感度
-    float mouseSensitivity = 3.0f;
+    float mouseSensitivity = 0.1f;
+    // BringingPos（Yagikun3Dの手の位置）
+    GameObject bringingPos;
+    // 直前のマウス座標
+    Vector2 lastMousePosition;
 
     // ゲーム終了判定（クリア条件を満たす最後のブロックが完全にはめ込まれた後にtrueにする）
     bool gameOver = false;
@@ -97,6 +101,8 @@ public class CameraController : MonoBehaviour
         robot = GameObject.Find("TrackingRobot");
         // InsideColorBoxのMeshRendererの取得
         insideColorBox = GameObject.FindWithTag("InsideColorBox").GetComponent<MeshRenderer>();
+        // BringingPosの取得
+        bringingPos = GameObject.FindWithTag("BringingPos");
     }
 
     // Update is called once per frame
@@ -344,11 +350,11 @@ public class CameraController : MonoBehaviour
             transform.position = facePos.transform.position;
             transform.rotation = facePos.transform.rotation;
 
-            // Playerのスキンの非表示
-            pSkin.enabled = false;
+            // Playerとその周りのオブジェクトの非表示
+            FirstPersonCam_HideObjects();
 
-            // InsideColorBoxのMeshRendererの非表示
-            insideColorBox.enabled = false;
+            // 直前のマウス座標の初期化
+            lastMousePosition = Input.mousePosition;
 
             openingSequence = false;
         }
@@ -358,22 +364,55 @@ public class CameraController : MonoBehaviour
         // 一人称カメラモードの終了条件
         EndConditionOfFirstPersonMode();
     }
+
+    void FirstPersonCam_HideObjects()
+    {
+        // Playerのスキンの非表示
+        pSkin.enabled = false;
+
+        // InsideColorBoxのMeshRendererの非表示
+        insideColorBox.enabled = false;
+
+        // 手に持っているアイテムの非表示
+        // ①全てのMeshRendererをOFFにする
+        var childMeshRenderers = bringingPos.GetComponentsInChildren<MeshRenderer>();
+        foreach (var item in childMeshRenderers) item.GetComponent<MeshRenderer>().enabled = false;
+
+        // ②全てのParticleSystemを停止する
+        var childParticleSystems = bringingPos.GetComponentsInChildren<ParticleSystem>();
+        foreach (var item in childParticleSystems) item.GetComponent<ParticleSystem>().Stop(true, ParticleSystemStopBehavior.StopEmitting);
+
+        // ③全てのLightをOFFにする
+        var childLights = bringingPos.GetComponentsInChildren<Light>();
+        foreach (var item in childLights) item.GetComponent<Light>().enabled = false;
+    }
     void FirstPersonCamMovement()
     {
-        float x_Mouse = Input.GetAxis("Mouse X");
-        float y_Mouse = Input.GetAxis("Mouse Y");
+        // 新しいマウス座標と直前のマウス座標との差分を取得
+        float x_Mouse = Input.mousePosition.x - lastMousePosition.x;
+        float y_Mouse = Input.mousePosition.y - lastMousePosition.y;
+        // マウス座標をlastMousePositionに格納
+        lastMousePosition = Input.mousePosition;
 
-        Vector3 newRotation = transform.localEulerAngles;
+        //Debug.Log("x_Mouse, y_Mouse: " + x_Mouse + ", " + y_Mouse);
+
+        //float x_Mouse = Input.GetAxis("Mouse X");
+        //float y_Mouse = Input.GetAxis("Mouse Y");
+
+        Vector3 newRotation = transform.eulerAngles;
+
+        
 
         // 縦方向に回転限界を設定
-        float lastAngleX = newRotation.x;
-        float nextAngleX = newRotation.x - y_Mouse * mouseSensitivity;
-        if (nextAngleX > 280.0f || nextAngleX < 80.0f) newRotation.x = nextAngleX;
+        if (newRotation.y - y_Mouse * mouseSensitivity > 280.0f || newRotation.y - y_Mouse * mouseSensitivity < 80.0f)
+        {
+            newRotation.y -= y_Mouse * mouseSensitivity;
+        } 
         
         // 横方向はそのまま
-        newRotation.y += x_Mouse * mouseSensitivity;
+        newRotation.x += x_Mouse * mouseSensitivity;
 
-        transform.localEulerAngles = newRotation;
+        transform.eulerAngles = newRotation;
     }
     void EndConditionOfFirstPersonMode()
     {
@@ -384,11 +423,8 @@ public class CameraController : MonoBehaviour
 
         if (firstPersonCam)
         {
-            // Playerのスキンの再表示
-            pSkin.enabled = true;
-
-            // InsideColorBoxのMeshRendererの再表示
-            insideColorBox.enabled = true;
+            // Playerとその周りのオブジェクトの再表示
+            FirstPersonCam_RedisplayObjects();
 
             ChasingCamera(); // 追尾カメラに戻す
             // 追尾カメラに戻した後、0.5秒間は衛星カメラ入力を受け付けない
@@ -400,12 +436,34 @@ public class CameraController : MonoBehaviour
             firstPerson = false;
         }
     }
+
+    void FirstPersonCam_RedisplayObjects()
+    {
+        // Playerのスキンの再表示
+        pSkin.enabled = true;
+
+        // InsideColorBoxのMeshRendererの再表示
+        insideColorBox.enabled = true;
+
+        // 手に持っているアイテムの再表示
+        // ①全てのMeshRendererをONにする
+        var childMeshRenderers = bringingPos.GetComponentsInChildren<MeshRenderer>();
+        foreach (var item in childMeshRenderers) item.GetComponent<MeshRenderer>().enabled = true;
+
+        // ②全てのParticleSystemを再開する
+        var childParticleSystems = bringingPos.GetComponentsInChildren<ParticleSystem>();
+        foreach (var item in childParticleSystems) item.GetComponent<ParticleSystem>().Play(true);
+
+        // ③全てのLightをOFFにする
+        var childLights = bringingPos.GetComponentsInChildren<Light>();
+        foreach (var item in childLights) item.GetComponent<Light>().enabled = true;
+    }
     IEnumerator ProhibitCamSwitchingTime()
     {
         pC.ProhibitCamSwitching = true;
 
         // カメラ入力受け付け禁止時間
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.1f);
 
         pC.ProhibitCamSwitching = false;
     }

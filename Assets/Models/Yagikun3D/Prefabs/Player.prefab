@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 5214644986182339759}
   m_Layer: 0
   m_Name: BringingPos
-  m_TagString: Untagged
+  m_TagString: BringingPos
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

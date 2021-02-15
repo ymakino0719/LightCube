@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 2385894360120698438}
   m_Layer: 0
   m_Name: lootblock_block_1_LOD1
-  m_TagString: Untagged
+  m_TagString: KeyBlock_Lightning
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -168,7 +168,7 @@ GameObject:
   - component: {fileID: 2386115635099497582}
   m_Layer: 0
   m_Name: lootblock_lightning_LOD1
-  m_TagString: Untagged
+  m_TagString: KeyBlock_Lightning
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -247,7 +247,7 @@ GameObject:
   - component: {fileID: 2385440099336109220}
   m_Layer: 0
   m_Name: lootblock_lightning_LOD2
-  m_TagString: Untagged
+  m_TagString: KeyBlock_Lightning
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -387,7 +387,7 @@ GameObject:
   - component: {fileID: 2385264921756765336}
   m_Layer: 0
   m_Name: lootblock_lightning_LOD0
-  m_TagString: Untagged
+  m_TagString: KeyBlock_Lightning
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -466,7 +466,7 @@ GameObject:
   - component: {fileID: 2386222846097881634}
   m_Layer: 0
   m_Name: lootblock_block_1_LOD2
-  m_TagString: Untagged
+  m_TagString: KeyBlock_Lightning
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -545,7 +545,7 @@ GameObject:
   - component: {fileID: 2386117349548261568}
   m_Layer: 0
   m_Name: lootblock_block_1_LOD0
-  m_TagString: Untagged
+  m_TagString: KeyBlock_Lightning
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 120329459652015677}
   m_Layer: 0
   m_Name: Particle System
-  m_TagString: Untagged
+  m_TagString: KeyBlock_LightPack
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

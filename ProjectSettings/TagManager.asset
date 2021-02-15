@@ -22,6 +22,9 @@ TagManager:
   - PlayerTexture
   - InsideBox
   - InsideColorBox
+  - BringingPos
+  - KeyBlock_Lightning
+  - KeyBlock_LightPack
   layers:
   - Default
   - TransparentFX
