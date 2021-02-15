@@ -72,7 +72,7 @@ public class CameraController : MonoBehaviour
     // 一人称カメラモード
     bool firstPerson = false;
     // マウス感度
-    float mouseSensitivity = 0.1f;
+    float mouseSensitivity = 0.2f;
     // BringingPos（Yagikun3Dの手の位置）
     GameObject bringingPos;
     // 直前のマウス座標
@@ -391,28 +391,29 @@ public class CameraController : MonoBehaviour
         // 新しいマウス座標と直前のマウス座標との差分を取得
         float x_Mouse = Input.mousePosition.x - lastMousePosition.x;
         float y_Mouse = Input.mousePosition.y - lastMousePosition.y;
+
         // マウス座標をlastMousePositionに格納
         lastMousePosition = Input.mousePosition;
 
-        //Debug.Log("x_Mouse, y_Mouse: " + x_Mouse + ", " + y_Mouse);
+        // カメラの正面方向（forward）の決定
+        Quaternion local = transform.localRotation;
+        Quaternion rot = Quaternion.Euler(-y_Mouse * mouseSensitivity, x_Mouse * mouseSensitivity, 0);
+        transform.localRotation = local * rot;
 
-        //float x_Mouse = Input.GetAxis("Mouse X");
-        //float y_Mouse = Input.GetAxis("Mouse Y");
+        // 縦方向の角度制限（カメラが垂直方向を向くとぐるぐるするため）
+        float angle = Vector3.Angle(player.transform.up, transform.forward);
 
-        Vector3 newRotation = transform.eulerAngles;
-
-        
-
-        // 縦方向に回転限界を設定
-        if (newRotation.y - y_Mouse * mouseSensitivity > 280.0f || newRotation.y - y_Mouse * mouseSensitivity < 80.0f)
+        if (angle >= 10.0f && angle <= 170.0f) // 10度以上170度以下の場合はそのまま次の処理
         {
-            newRotation.y -= y_Mouse * mouseSensitivity;
-        } 
-        
-        // 横方向はそのまま
-        newRotation.x += x_Mouse * mouseSensitivity;
-
-        transform.eulerAngles = newRotation;
+            // カメラの上方向（up）の決定
+            // プレイヤーのplayer.transform.upからカメラのtransform.forwardに下ろした垂線がカメラの上方向になる
+            Vector3 upward = player.transform.up - Vector3.Project(player.transform.up, transform.forward);
+            transform.rotation = Quaternion.LookRotation(transform.forward, upward);
+        }
+        else // 10度以下あるいは170度以上の場合は、回転を元に戻す
+        {
+            transform.localRotation = local;
+        }
     }
     void EndConditionOfFirstPersonMode()
     {
