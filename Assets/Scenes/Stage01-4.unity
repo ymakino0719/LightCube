@@ -1002,7 +1002,7 @@ GameObject:
   - component: {fileID: 179495792}
   m_Layer: 0
   m_Name: hitbox01 (8)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1622,7 +1622,7 @@ GameObject:
   - component: {fileID: 295040453}
   m_Layer: 0
   m_Name: Outside06
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5809,7 +5809,7 @@ GameObject:
   - component: {fileID: 661025912}
   m_Layer: 0
   m_Name: Outside05
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6108,7 +6108,7 @@ GameObject:
   - component: {fileID: 675367857}
   m_Layer: 0
   m_Name: hitbox01 (3)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6413,7 +6413,7 @@ GameObject:
   - component: {fileID: 700734812}
   m_Layer: 0
   m_Name: Outside02
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7737,7 +7737,7 @@ GameObject:
   - component: {fileID: 852893983}
   m_Layer: 0
   m_Name: hitbox01 (5)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8629,7 +8629,7 @@ GameObject:
   - component: {fileID: 956950225}
   m_Layer: 0
   m_Name: Outside03
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9704,7 +9704,7 @@ GameObject:
   - component: {fileID: 1051881773}
   m_Layer: 0
   m_Name: hitbox01 (10)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11016,6 +11016,21 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3860518580476390397, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3860518580476390397, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3860518580476390397, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4029680052579531237, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
         type: 3}
       propertyPath: m_progress
@@ -11264,7 +11279,7 @@ GameObject:
   - component: {fileID: 1261629659}
   m_Layer: 0
   m_Name: hitbox01
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -11428,7 +11443,7 @@ GameObject:
   - component: {fileID: 1278533212}
   m_Layer: 0
   m_Name: hitbox01 (4)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -12793,7 +12808,7 @@ GameObject:
   - component: {fileID: 1473611405}
   m_Layer: 0
   m_Name: Outside04
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13331,7 +13346,7 @@ GameObject:
   - component: {fileID: 1547806797}
   m_Layer: 0
   m_Name: hitbox01 (7)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13493,7 +13508,7 @@ GameObject:
   - component: {fileID: 1550922532}
   m_Layer: 0
   m_Name: hitbox01 (11)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15359,7 +15374,7 @@ GameObject:
   - component: {fileID: 1805441524}
   m_Layer: 0
   m_Name: hitbox01 (2)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17114,7 +17129,7 @@ GameObject:
   - component: {fileID: 2018403338}
   m_Layer: 0
   m_Name: hitbox01 (1)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17282,7 +17297,7 @@ GameObject:
   - component: {fileID: 2043929083}
   m_Layer: 0
   m_Name: hitbox01 (9)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17610,7 +17625,7 @@ GameObject:
   - component: {fileID: 2083029591}
   m_Layer: 0
   m_Name: hitbox01 (6)
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

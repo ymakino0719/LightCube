@@ -25,6 +25,7 @@ TagManager:
   - BringingPos
   - KeyBlock_Lightning
   - KeyBlock_LightPack
+  - OutsideBox
   layers:
   - Default
   - TransparentFX

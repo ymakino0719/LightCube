@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    // Camera
+    Camera cam;
     // PlayerのGameObject
     GameObject player;
     // PlayerController
@@ -46,8 +48,12 @@ public class CameraController : MonoBehaviour
     // ターゲットへの角度
     Vector3 targetAngle;
 
+    // カメラのズーム倍率の初期値
+    float initialFieldOfView = 60.0f;
     // 開幕処理
     bool openingSequence = true;
+    // スクロールの感度
+    float scrollSensitivity = 30.0f;
 
     // サテライトモード
     bool satellite = false;
@@ -65,14 +71,20 @@ public class CameraController : MonoBehaviour
     // ロボットの移動距離（※大きすぎないように！）
     float moveDis = 1.0f;
     // サテライトカメラを移動させるときの時間（0～1）
-    private float time = 0;
+    float time = 0;
     // サテライトカメラを移動させるときの時間の調整パラメータ
-    private float timeCoef = 2.0f;
+    float timeCoef = 2.0f;
+    // rayの長さ
+    public float rayDis = 100.0f;
+    // カメラの水平移動を行うための条件
+    bool slide = false;
 
     // 一人称カメラモード
     bool firstPerson = false;
-    // マウス感度
-    float mouseSensitivity = 0.2f;
+    // マウス感度：SatelliteCamについて
+    float mouseSensitivity_S = 0.02f;
+    // マウス感度：FirstPersonCamについて
+    float mouseSensitivity_FP = 0.2f;
     // BringingPos（Yagikun3Dの手の位置）
     GameObject bringingPos;
     // 直前のマウス座標
@@ -83,6 +95,8 @@ public class CameraController : MonoBehaviour
 
     void Awake()
     {
+        // Cameraの取得
+        cam = this.GetComponent<Camera>();
         // playerの取得
         player = GameObject.Find("Player");
         // PlayerControllerの取得
@@ -103,6 +117,12 @@ public class CameraController : MonoBehaviour
         insideColorBox = GameObject.FindWithTag("InsideColorBox").GetComponent<MeshRenderer>();
         // BringingPosの取得
         bringingPos = GameObject.FindWithTag("BringingPos");
+    }
+
+    void Start()
+    {
+        // 初期値
+        cam.fieldOfView = initialFieldOfView;
     }
 
     // Update is called once per frame
@@ -128,11 +148,68 @@ public class CameraController : MonoBehaviour
             openingSequence = false;
         }
 
-        if (!rolling) SatelliteCamMovement_Input();
+        if (!rolling)
+        {
+            SatelliteCamMovement_Input();
+            ZoomInAndOut();
+            HorizontalMovementOfViewpoint();
+        }
         else SatelliteCamMovement_Rotate();
 
         // サテライトモードの終了条件
         EndConditionOfSatelliteMode();
+    }
+    void ZoomInAndOut()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+        float view = cam.fieldOfView - scroll * scrollSensitivity;
+
+        cam.fieldOfView = Mathf.Clamp(view, 20f, 60f);
+    }
+    void HorizontalMovementOfViewpoint()
+    {
+        if (Input.GetMouseButtonDown(0)) // 押したとき
+        {
+            // 押し込んだ時、ステージ上にポインタがあるかどうか
+            slide = CheckHorizontalMovementPossibilities();
+
+            // スライド可能な時、マウス座標をlastMousePositionに格納する
+            if (slide) lastMousePosition = Input.mousePosition;
+        }
+        else if (Input.GetMouseButton(0) && slide) // 押しこんでいるとき、且つスライド可能な時
+        {
+            // 新しいマウス座標と直前のマウス座標との差分を取得
+            float x_Mouse = Input.mousePosition.x - lastMousePosition.x;
+            float y_Mouse = Input.mousePosition.y - lastMousePosition.y;
+
+            // カメラの水平移動
+            transform.position -= transform.right * x_Mouse * mouseSensitivity_S + transform.up * y_Mouse * mouseSensitivity_S;
+
+            // マウス座標をlastMousePositionに格納
+            lastMousePosition = Input.mousePosition;
+        }
+    }
+    bool CheckHorizontalMovementPossibilities()
+    {
+        bool slide = false;
+        // カメラからタッチした場所まで光線を作成
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit[] hits = Physics.RaycastAll(ray, rayDis);
+        // 長さrayDisの光線を作成しオブジェクトを取得
+        if (hits.Length > 0)
+        {
+            for(int i = 0; i < hits.Length; i++)
+            {
+                if(hits[i].transform.gameObject.CompareTag("OutsideBox")) 
+                {
+                    // OutsideBoxが１つでもあればtrueを返して処理終了
+                    slide = true;
+                    break;
+                }
+            }
+        }
+
+        return slide;
     }
     void OpeningSatelliteCamMovement()
     {
@@ -183,6 +260,9 @@ public class CameraController : MonoBehaviour
             // horizontal の入力を切り替える
             horizontal = !horizontal;
 
+            // fieldOfViewの初期化
+            cam.fieldOfView = initialFieldOfView;
+
             // 回転処理に移行する
             rolling = true;
         }
@@ -202,6 +282,9 @@ public class CameraController : MonoBehaviour
 
             // vertical の入力を切り替える
             vertical = !vertical;
+
+            // fieldOfViewの初期化
+            cam.fieldOfView = initialFieldOfView;
 
             // 回転処理に移行する
             rolling = true;
@@ -334,6 +417,7 @@ public class CameraController : MonoBehaviour
 
             openingSequence = true;
             satellite = false;
+            cam.fieldOfView = initialFieldOfView;
 
             // FirstPersonCameraへの移行
             firstPerson = true;
@@ -360,6 +444,7 @@ public class CameraController : MonoBehaviour
         }
 
         FirstPersonCamMovement();
+        ZoomInAndOut();
 
         // 一人称カメラモードの終了条件
         EndConditionOfFirstPersonMode();
@@ -397,7 +482,7 @@ public class CameraController : MonoBehaviour
 
         // カメラの正面方向（forward）の決定
         Quaternion local = transform.localRotation;
-        Quaternion rot = Quaternion.Euler(-y_Mouse * mouseSensitivity, x_Mouse * mouseSensitivity, 0);
+        Quaternion rot = Quaternion.Euler(-y_Mouse * mouseSensitivity_FP, x_Mouse * mouseSensitivity_FP, 0);
         transform.localRotation = local * rot;
 
         // 縦方向の角度制限（カメラが垂直方向を向くとぐるぐるするため）
@@ -434,6 +519,9 @@ public class CameraController : MonoBehaviour
 
             // 初期化
             openingSequence = true;
+            cam.fieldOfView = initialFieldOfView;
+
+            // ChasingCameraへの移行
             firstPerson = false;
         }
     }

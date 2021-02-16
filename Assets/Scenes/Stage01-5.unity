@@ -3468,7 +3468,7 @@ GameObject:
   - component: {fileID: 295040453}
   m_Layer: 0
   m_Name: Outside06
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3831,7 +3831,7 @@ GameObject:
   - component: {fileID: 326438546}
   m_Layer: 0
   m_Name: Outside01
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3999,7 +3999,7 @@ GameObject:
   - component: {fileID: 338689784}
   m_Layer: 0
   m_Name: Outside05
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8860,7 +8860,7 @@ GameObject:
   - component: {fileID: 700734812}
   m_Layer: 0
   m_Name: Outside02
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -13628,7 +13628,7 @@ GameObject:
   - component: {fileID: 956950225}
   m_Layer: 0
   m_Name: Outside03
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16005,6 +16005,21 @@ PrefabInstance:
     - target: {fileID: 3860518580476390397, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
         type: 3}
       propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3860518580476390397, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3860518580476390397, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3860518580476390397, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
+        type: 3}
+      propertyPath: m_LocalScale.z
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4029680052579531237, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
@@ -21325,7 +21340,7 @@ GameObject:
   - component: {fileID: 1473611405}
   m_Layer: 0
   m_Name: Outside04
-  m_TagString: HitBox
+  m_TagString: OutsideBox
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
