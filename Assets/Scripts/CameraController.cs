@@ -24,6 +24,8 @@ public class CameraController : MonoBehaviour
     EdgeInformation edge;
     // InsideColorBoxのMeshRenderer
     MeshRenderer insideColorBox;
+    // StageUI
+    StageUI sUI;
 
     // ClearLight
     GameObject clearLight;
@@ -117,6 +119,8 @@ public class CameraController : MonoBehaviour
         insideColorBox = GameObject.FindWithTag("InsideColorBox").GetComponent<MeshRenderer>();
         // BringingPosの取得
         bringingPos = GameObject.FindWithTag("BringingPos");
+        // StageUIの取得
+        sUI = GameObject.Find("UIDirector").GetComponent<StageUI>();
     }
 
     void Start()
@@ -401,27 +405,35 @@ public class CameraController : MonoBehaviour
     {
         // サテライトモード時に対応するボタンをもう一度押された場合、サテライトモードを終了する
         // ただし、カメラ切り替え後の再切替え禁止時間、またはカメラ回転中の入力は無効とする
-        bool satelliteCam = false;
-        if (!pC.ProhibitCamSwitching && !rolling) satelliteCam = Input.GetButtonDown("SwitchCamMode");
+        bool switchCam = false;
+        if (!pC.ProhibitCamSwitching && !rolling) switchCam = Input.GetButtonDown("SwitchCamMode");
 
-        if (satelliteCam)
-        {
-            //ChasingCamera(); // 追尾カメラに戻す
-            // 追尾カメラに戻した後、0.5秒間は衛星カメラ入力を受け付けない
-            //StartCoroutine("ProhibitCamSwitchingTime");
-            //pC.Control = true;
+        if (switchCam) SwitchSatelliteToFirstPersonCam();
+    }
+    void SwitchSatelliteToFirstPersonCam()
+    {
+        //ChasingCamera(); // 追尾カメラに戻す
+        // 追尾カメラに戻した後、0.5秒間は衛星カメラ入力を受け付けない
+        //StartCoroutine("ProhibitCamSwitchingTime");
+        //pC.Control = true;
 
-            // 初期化
-            vertical = false;
-            horizontal = false;
+        // 初期化
+        vertical = false;
+        horizontal = false;
 
-            openingSequence = true;
-            satellite = false;
-            cam.fieldOfView = initialFieldOfView;
+        openingSequence = true;
+        satellite = false;
+        cam.fieldOfView = initialFieldOfView;
 
-            // FirstPersonCameraへの移行
-            firstPerson = true;
-        }
+        // CamTypeUIの切り替え
+        sUI.SwitchCamTypeUI_ToFirstPerson();
+
+        // FirstPersonCameraへの移行
+        firstPerson = true;
+    }
+    public void SwitchToFirstPersonCamMode_PressedButton()
+    {
+        if (!pC.ProhibitCamSwitching && !rolling) SwitchSatelliteToFirstPersonCam();
     }
     void FirstPersonCamera()
     {
@@ -504,28 +516,35 @@ public class CameraController : MonoBehaviour
     {
         // 一人称カメラモード時に対応するボタンをもう一度押された場合、一人称カメラモードを終了する
         // ただし、カメラ切り替え後の再切替え禁止時間中の入力は無効とする
-        bool firstPersonCam = false;
-        if (!pC.ProhibitCamSwitching) firstPersonCam = Input.GetButtonDown("SwitchCamMode");
+        bool switchCam = false;
+        if (!pC.ProhibitCamSwitching) switchCam = Input.GetButtonDown("SwitchCamMode");
 
-        if (firstPersonCam)
-        {
-            // Playerとその周りのオブジェクトの再表示
-            FirstPersonCam_RedisplayObjects();
-
-            ChasingCamera(); // 追尾カメラに戻す
-            // 追尾カメラに戻した後、0.5秒間は衛星カメラ入力を受け付けない
-            StartCoroutine("ProhibitCamSwitchingTime");
-            pC.Control = true;
-
-            // 初期化
-            openingSequence = true;
-            cam.fieldOfView = initialFieldOfView;
-
-            // ChasingCameraへの移行
-            firstPerson = false;
-        }
+        if (switchCam) SwitchFirstPersonToNormalCam();
     }
+    void SwitchFirstPersonToNormalCam()
+    {
+        // Playerとその周りのオブジェクトの再表示
+        FirstPersonCam_RedisplayObjects();
 
+        ChasingCamera(); // 追尾カメラに戻す
+                         // 追尾カメラに戻した後、0.5秒間は衛星カメラ入力を受け付けない
+        StartCoroutine("ProhibitCamSwitchingTime");
+        pC.Control = true;
+
+        // 初期化
+        openingSequence = true;
+        cam.fieldOfView = initialFieldOfView;
+
+        // CamTypeUIの切り替え
+        sUI.SwitchCamTypeUI_ToNormal();
+
+        // ChasingCameraへの移行
+        firstPerson = false;
+    }
+    public void SwitchToNormalCamMode_PressedButton()
+    {
+        if (!pC.ProhibitCamSwitching) SwitchFirstPersonToNormalCam();
+    }
     void FirstPersonCam_RedisplayObjects()
     {
         // Playerのスキンの再表示

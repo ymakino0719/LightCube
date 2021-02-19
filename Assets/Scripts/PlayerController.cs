@@ -57,6 +57,8 @@ public class PlayerController : MonoBehaviour
 	ClearJudgement cJ;
 	// CameraControl
 	CameraController cC;
+	// StageUI
+	StageUI sUI;
 
 	// 近くにあるitem, LockBlock
 	GameObject nearestItem, nearestLock;
@@ -112,6 +114,8 @@ public class PlayerController : MonoBehaviour
 		// ClearJudgementの取得
 		cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
 		cC = GameObject.Find("Camera").GetComponent<CameraController>();
+		// StageUIの取得
+		sUI = GameObject.Find("UIDirector").GetComponent<StageUI>();
 	}
 	void Start()
 	{
@@ -225,6 +229,15 @@ public class PlayerController : MonoBehaviour
         }
 		*/
 	}
+	public void SwitchToSatelliteCamMode_PressedButton()
+    {
+		// カメラのサテライトモードをオンにする
+		cC.Satellite = true;
+		// プレイヤーの操作を無効にする
+		control = false;
+		// CamTypeUIの切り替え
+		sUI.SwitchCamTypeUI_ToSatellite();
+	}
 	IEnumerator OpeningControlStopCoroutine()
 	{
 		// 開幕n秒間の操作を止める
@@ -236,12 +249,7 @@ public class PlayerController : MonoBehaviour
 	}
 	bool SwitchCamMode(bool satelliteCam)
     {
-		// カメラのサテライトモードをオンにする
-		if (satelliteCam) cC.Satellite = true;
-		//else if(firstPersonCam) cC.FirstPerson = true;
-
-		// プレイヤーの操作を無効にする
-		control = false;
+		SwitchToSatelliteCamMode_PressedButton();
 
 		// 以下の処理の終了用
 		bool iNCM = true;

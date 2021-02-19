@@ -9,6 +9,8 @@ public class StageUI : MonoBehaviour
     GameObject pausedPanel;
     GameObject howToPlayPanel;
     GameObject gameClearPanel;
+    GameObject stageUIButtons;
+    GameObject camType01, camType02, camType03;
 
     bool openHTP = false;
     // HowToPlayパネルの現在のページ番号（０から）
@@ -18,12 +20,19 @@ public class StageUI : MonoBehaviour
     // 最初のステージの開幕に限り、HowToPlayパネルを表示させる
     public bool firstStage = false;
     PlayerController pC;
+    CameraController cC;
     void Awake()
     {
         pausedPanel = GameObject.Find("PausedPanel");
         howToPlayPanel = GameObject.Find("HowToPlayPanel");
         gameClearPanel = GameObject.Find("GameClearPanel");
+        stageUIButtons = GameObject.Find("StageUIButtons");
+        camType01 = GameObject.Find("CamType01");
+        camType02 = GameObject.Find("CamType02");
+        camType03 = GameObject.Find("CamType03");
+
         pC = GameObject.Find("Player").GetComponent<PlayerController>();
+        cC = GameObject.Find("Camera").GetComponent<CameraController>();
     }
 
     // Start is called before the first frame update
@@ -39,6 +48,8 @@ public class StageUI : MonoBehaviour
         pausedPanel.SetActive(false);
         howToPlayPanel.SetActive(false);
         gameClearPanel.SetActive(false);
+        camType02.SetActive(false);
+        camType03.SetActive(false);
     }
 
     void Update()
@@ -46,8 +57,7 @@ public class StageUI : MonoBehaviour
         // Pausedに対応するPボタンが押されるか、Escキーが押されたらPausedパネルを開く（ただしプレイヤーが操作可能な状態で停止している場合に限り、HowToPlayパネルが表示中も無効）
         if (pC.Control && pC.Stopping && !openHTP && (Input.GetButtonDown("Paused") || Input.GetKeyDown(KeyCode.Escape)))
         {
-            pausedPanel.SetActive(true);
-            pC.Control = false;
+            OpenPausedPanel();
         }
 
         // HowToPlayパネル表示中に左クリックまたはエンターキーが押された場合、ページを１枚目めくる
@@ -62,6 +72,12 @@ public class StageUI : MonoBehaviour
             if (pageHTP_Current == pageHTP_Max) CloseHowToPlay();
             else howToPlayPanel.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true;
         } 
+    }
+
+    public void OpenPausedPanel()
+    {
+        pausedPanel.SetActive(true);
+        pC.Control = false;
     }
     void CloseHowToPlay()
     {
@@ -151,6 +167,33 @@ public class StageUI : MonoBehaviour
     public void DisplayGameClear()
     {
         gameClearPanel.SetActive(true);
+    }
+    public void SwitchToSatelliteCamMode_PressedButton()
+    {
+        pC.SwitchToSatelliteCamMode_PressedButton();
+    }
+    public void SwitchToFirstPersonCamMode_PressedButton()
+    {
+        cC.SwitchToFirstPersonCamMode_PressedButton();
+    }
+    public void SwitchToNormalCamMode_PressedButton()
+    {
+        cC.SwitchToNormalCamMode_PressedButton();
+    }
+    public void SwitchCamTypeUI_ToSatellite()
+    {
+        camType01.SetActive(false);
+        camType02.SetActive(true);
+    }
+    public void SwitchCamTypeUI_ToFirstPerson()
+    {
+        camType02.SetActive(false);
+        camType03.SetActive(true);
+    }
+    public void SwitchCamTypeUI_ToNormal()
+    {
+        camType03.SetActive(false);
+        camType01.SetActive(true);
     }
     public bool FirstStage
     {
