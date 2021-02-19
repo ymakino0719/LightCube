@@ -4302,6 +4302,7 @@ MonoBehaviour:
   targetDis01: 7
   targetDis02_Depth: 4
   targetDis02_Height: 2.5
+  rayDis: 100
 --- !u!1001 &968898453
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14920,6 +14921,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1123737634}
     m_Modifications:
+    - target: {fileID: 640594927112913575, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3860518580476390393, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
         type: 3}
       propertyPath: m_Name
@@ -15048,17 +15054,22 @@ PrefabInstance:
     - target: {fileID: 4029680052579531237, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
         type: 3}
       propertyPath: m_progress
-      value: 0.09205621
+      value: 0.0066731
       objectReference: {fileID: 0}
     - target: {fileID: 4251877505375420003, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
         type: 3}
       propertyPath: m_progress
-      value: 0.09205621
+      value: 0.0066731
       objectReference: {fileID: 0}
     - target: {fileID: 5451067561167900452, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
         type: 3}
       propertyPath: m_progress
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7676221464237579555, guid: eef1d2a1d26d4cf41b9f3ad1aad99997,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eef1d2a1d26d4cf41b9f3ad1aad99997, type: 3}

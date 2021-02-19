@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class StageUI : MonoBehaviour
@@ -10,7 +11,11 @@ public class StageUI : MonoBehaviour
     GameObject gameClearPanel;
 
     bool openHTP = false;
-    // 最初のステージの開幕に限り、Howtoplayパネルを表示させる
+    // HowToPlayパネルの現在のページ番号（０から）
+    int pageHTP_Current = 0;
+    // HowToPlayパネルの最大ページ番号（不変値）
+    int pageHTP_Max = 2;
+    // 最初のステージの開幕に限り、HowToPlayパネルを表示させる
     public bool firstStage = false;
     PlayerController pC;
     void Awake()
@@ -24,6 +29,13 @@ public class StageUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // HowToPlayパネルの子スライドを全て非表示にしておく
+        foreach (Transform child in howToPlayPanel.transform)
+        {
+            child.gameObject.GetComponent<Image>().enabled = false;
+        }
+
+        // 全て非表示にしておく
         pausedPanel.SetActive(false);
         howToPlayPanel.SetActive(false);
         gameClearPanel.SetActive(false);
@@ -38,23 +50,35 @@ public class StageUI : MonoBehaviour
             pC.Control = false;
         }
 
-        // HowToPlayパネル表示中に左クリック、エンターキーまたはエスケープキーが押された場合、HowToPlayパネルを閉じ、Pausedパネルを開く
-        if (openHTP && (Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.Return) || Input.GetKeyDown(KeyCode.Escape)))
+        // HowToPlayパネル表示中に左クリックまたはエンターキーが押された場合、ページを１枚目めくる
+        if (openHTP && (Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.Return)))
         {
-            howToPlayPanel.SetActive(false);
-            openHTP = false;
+            pageHTP_Current++;
 
-            // 最初のステージの開幕に限り、Pausedパネルを開かない
-            // また、プレイヤーのコントロールも有効にする
-            if (!firstStage)
-            {
-                pausedPanel.SetActive(true);
-            }
-            else
-            {
-                firstStage = false;
-                pC.Control = true;
-            }
+            // 現在のページを非表示（透過）にする
+            howToPlayPanel.transform.GetChild(pageHTP_Current - 1).GetComponent<Image>().enabled = false;
+
+            // 最終ページで押されたとき、HowToPlayパネルを閉じ、Pausedパネルを開く。そうでないときは、次のページを表示する
+            if (pageHTP_Current == pageHTP_Max) CloseHowToPlay();
+            else howToPlayPanel.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true;
+        } 
+    }
+    void CloseHowToPlay()
+    {
+        howToPlayPanel.SetActive(false);
+        pageHTP_Current = 0;
+        openHTP = false;
+
+        // 最初のステージの開幕に限り、Pausedパネルを開かない
+        // また、プレイヤーのコントロールも有効にする
+        if (!firstStage)
+        {
+            pausedPanel.SetActive(true);
+        }
+        else
+        {
+            firstStage = false;
+            pC.Control = true;
         }
     }
 
@@ -113,6 +137,9 @@ public class StageUI : MonoBehaviour
         // Pausedパネルを閉じ、HowToPlayパネルを開く
         pausedPanel.SetActive(false);
         howToPlayPanel.SetActive(true);
+
+        // １枚目のスライドの表示
+        howToPlayPanel.transform.GetChild(0).GetComponent<Image>().enabled = true;
 
         openHTP = true;
     }
