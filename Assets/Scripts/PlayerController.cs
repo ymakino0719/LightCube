@@ -164,16 +164,7 @@ public class PlayerController : MonoBehaviour
 
 			bool satelliteCam = false;
 			// 静止、着地状態かつカメラの切り替えを禁止していないとき、satelliteCamを可能にする
-			//if (stopping && !prohibitCamSwitching) satelliteCam = Input.GetButtonDown("SatelliteCam");
 			if (stopping && !prohibitCamSwitching) satelliteCam = Input.GetButtonDown("SwitchCamMode");
-
-			/////////////////////////////////
-			/////// First Person Cam ////////
-			/////////////////////////////////
-
-			//bool firstPersonCam = false;
-			// 静止、着地状態かつカメラの切り替えを禁止していないとき、firstPersonCamを可能にする
-			//if (stopping && !prohibitCamSwitching) firstPersonCam = Input.GetButtonDown("FirstPersonCam");
 
 			/////////////////////////////////
 			/////////// Functions ///////////
@@ -181,7 +172,6 @@ public class PlayerController : MonoBehaviour
 
 			// 静止状態で衛星カメラへの切り替えがあった場合、優先的に処理する（他処理は無視する）
 			bool inputNewCamMode = false;
-			//if (satelliteCam || firstPersonCam) inputNewCamMode = SwitchCamMode(satelliteCam, firstPersonCam);
 			if (satelliteCam) inputNewCamMode = SwitchCamMode(satelliteCam);
 
 			// 衛星カメラへ切り替える場合、他処理は無視する
@@ -229,22 +219,13 @@ public class PlayerController : MonoBehaviour
         }
 		*/
 	}
-	public void SwitchToSatelliteCamMode_PressedButton()
-    {
-		// カメラのサテライトモードをオンにする
-		cC.Satellite = true;
-		// プレイヤーの操作を無効にする
-		control = false;
-		// CamTypeUIの切り替え
-		sUI.SwitchCamTypeUI_ToSatellite();
-	}
 	IEnumerator OpeningControlStopCoroutine()
 	{
 		// 開幕n秒間の操作を止める
 		yield return new WaitForSeconds(2.0f);
 
 		StageUI sUI = GameObject.Find("UIDirector").GetComponent<StageUI>();
-		if (sUI.FirstStage) sUI.HowToPlay();
+		if (sUI.FirstStage) sUI.HowToPlay01();
 		else control = true;
 	}
 	bool SwitchCamMode(bool satelliteCam)
@@ -254,6 +235,17 @@ public class PlayerController : MonoBehaviour
 		// 以下の処理の終了用
 		bool iNCM = true;
 		return iNCM;
+	}
+	public void SwitchToSatelliteCamMode_PressedButton()
+	{
+		// カメラのサテライトモードをオンにする
+		cC.Satellite = true;
+		// プレイヤーの操作を無効にする
+		control = false;
+		// CamTypeUIの切り替え
+		sUI.SwitchCamTypeUI_ToSatellite();
+		// HelpButtonの表示
+		sUI.DisplayHelpButton();
 	}
 
 	void UpdateJumpNum()

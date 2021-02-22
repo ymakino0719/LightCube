@@ -7,16 +7,26 @@ using UnityEngine.SceneManagement;
 public class StageUI : MonoBehaviour
 {
     GameObject pausedPanel;
-    GameObject howToPlayPanel;
+    GameObject howToPlayPanel01;
+    GameObject howToPlayPanel02;
+    GameObject howToPlayPanel03;
     GameObject gameClearPanel;
     GameObject stageUIButtons;
     GameObject camType01, camType02, camType03;
+    GameObject helpButton;
+    GameObject hideStageUIPanel;
 
-    bool openHTP = false;
+    bool openHTP01 = false;
+    bool openHTP02 = false;
+    bool openHTP03 = false;
     // HowToPlayパネルの現在のページ番号（０から）
     int pageHTP_Current = 0;
-    // HowToPlayパネルの最大ページ番号（不変値）
-    int pageHTP_Max = 2;
+    // HowToPlayPanel01～03のページ枚数
+    int pageNum01 = 0;
+    int pageNum02 = 0;
+    int pageNum03 = 0;
+    // 現在開いているHowToPlayPanelのページ枚数
+    int openingHTPPageNum = 0;
     // 最初のステージの開幕に限り、HowToPlayパネルを表示させる
     public bool firstStage = false;
     PlayerController pC;
@@ -24,12 +34,16 @@ public class StageUI : MonoBehaviour
     void Awake()
     {
         pausedPanel = GameObject.Find("PausedPanel");
-        howToPlayPanel = GameObject.Find("HowToPlayPanel");
+        howToPlayPanel01 = GameObject.Find("HowToPlayPanel01");
+        howToPlayPanel02 = GameObject.Find("HowToPlayPanel02");
+        howToPlayPanel03 = GameObject.Find("HowToPlayPanel03");
         gameClearPanel = GameObject.Find("GameClearPanel");
         stageUIButtons = GameObject.Find("StageUIButtons");
         camType01 = GameObject.Find("CamType01");
         camType02 = GameObject.Find("CamType02");
         camType03 = GameObject.Find("CamType03");
+        helpButton = GameObject.Find("HelpButton");
+        hideStageUIPanel = GameObject.Find("HideStageUIPanel");
 
         pC = GameObject.Find("Player").GetComponent<PlayerController>();
         cC = GameObject.Find("Camera").GetComponent<CameraController>();
@@ -38,64 +52,117 @@ public class StageUI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // HowToPlayパネルの子スライドを全て非表示にしておく
-        foreach (Transform child in howToPlayPanel.transform)
-        {
-            child.gameObject.GetComponent<Image>().enabled = false;
-        }
+        // HowToPlayPanel01～3の子スライドのページ枚数を数えておく
+        foreach (Transform child in howToPlayPanel01.transform) pageNum01++;
+        foreach (Transform child in howToPlayPanel02.transform) pageNum02++;
+        foreach (Transform child in howToPlayPanel03.transform) pageNum03++;
 
         // 全て非表示にしておく
         pausedPanel.SetActive(false);
-        howToPlayPanel.SetActive(false);
+        howToPlayPanel01.SetActive(false);
+        howToPlayPanel02.SetActive(false);
+        howToPlayPanel03.SetActive(false);
         gameClearPanel.SetActive(false);
         camType02.SetActive(false);
         camType03.SetActive(false);
+        helpButton.SetActive(false);
     }
 
     void Update()
     {
+        // Playerが静止状態かつ着地している場合のみ、画面上のUI操作が可能となる
+        if(pC.Stopping) hideStageUIPanel.SetActive(false);
+        else hideStageUIPanel.SetActive(true);
+
         // Pausedに対応するPボタンが押されるか、Escキーが押されたらPausedパネルを開く（ただしプレイヤーが操作可能な状態で停止している場合に限り、HowToPlayパネルが表示中も無効）
-        if (pC.Control && pC.Stopping && !openHTP && (Input.GetButtonDown("Paused") || Input.GetKeyDown(KeyCode.Escape)))
+        if (pC.Control && pC.Stopping && (!openHTP01 && !openHTP02 && !openHTP03) && (Input.GetButtonDown("Paused") || Input.GetKeyDown(KeyCode.Escape)))
         {
             OpenPausedPanel();
         }
 
-        // HowToPlayパネル表示中に左クリックまたはエンターキーが押された場合、ページを１枚目めくる
-        if (openHTP && (Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.Return)))
+        // HowToPlayパネル表示中に左クリックまたはエンターキーが押された場合、ページを１枚目めくる、またはHowToPlayパネルを閉じる
+        if ((Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.Return)))
         {
-            pageHTP_Current++;
-
-            // 現在のページを非表示（透過）にする
-            howToPlayPanel.transform.GetChild(pageHTP_Current - 1).GetComponent<Image>().enabled = false;
-
-            // 最終ページで押されたとき、HowToPlayパネルを閉じ、Pausedパネルを開く。そうでないときは、次のページを表示する
-            if (pageHTP_Current == pageHTP_Max) CloseHowToPlay();
-            else howToPlayPanel.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true;
+            TurnPagesORCloseHTP();
         } 
     }
-
     public void OpenPausedPanel()
     {
         pausedPanel.SetActive(true);
+        // カメラのコントロールを無効にする
+        cC.CamControl = false;
+        // プレイヤーのコントロールを無効にする（※カメラがSatelliteモード、FirstPersonモードの時は既に無効になっているが念のため）
         pC.Control = false;
     }
-    void CloseHowToPlay()
+    void TurnPagesORCloseHTP()
     {
-        howToPlayPanel.SetActive(false);
-        pageHTP_Current = 0;
-        openHTP = false;
+        if (openHTP01) TurnPagesORCloseHTP01();
+        else if (openHTP02) TurnPagesORCloseHTP02();
+        else if (openHTP03) TurnPagesORCloseHTP03();
+    }
+    void TurnPagesORCloseHTP01()
+    {
+        pageHTP_Current++;
 
-        // 最初のステージの開幕に限り、Pausedパネルを開かない
-        // また、プレイヤーのコントロールも有効にする
-        if (!firstStage)
+        // 現在のページを非表示（透過）にする
+        howToPlayPanel01.transform.GetChild(pageHTP_Current - 1).GetComponent<Image>().enabled = false;
+
+        // 最終ページで押されたとき、HowToPlayパネルを閉じ、Pausedパネルを開く。
+        if (pageHTP_Current == pageNum01)
         {
-            pausedPanel.SetActive(true);
+            howToPlayPanel01.SetActive(false);
+            pageHTP_Current = 0;
+            openHTP01 = false;
+
+            // 最初のステージの開幕に限り、Pausedパネルを開かない
+            // また、プレイヤーのコントロールも有効にする
+            if (!firstStage)
+            {
+                pausedPanel.SetActive(true);
+            }
+            else
+            {
+                firstStage = false;
+                pC.Control = true;
+            }
         }
-        else
+        else howToPlayPanel01.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true; // 最終ページではないときは、次のページを表示する
+    }
+    void TurnPagesORCloseHTP02()
+    {
+        pageHTP_Current++;
+
+        // 現在のページを非表示（透過）にする
+        howToPlayPanel02.transform.GetChild(pageHTP_Current - 1).GetComponent<Image>().enabled = false;
+
+        // 最終ページで押されたとき、HowToPlayパネルを閉じる
+        if (pageHTP_Current == pageNum02)
         {
-            firstStage = false;
-            pC.Control = true;
+            howToPlayPanel02.SetActive(false);
+            pageHTP_Current = 0;
+            cC.CamControl = true;
+
+            openHTP02 = false;
         }
+        else howToPlayPanel02.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true; // 最終ページではないときは、次のページを表示する
+    }
+    void TurnPagesORCloseHTP03()
+    {
+        pageHTP_Current++;
+
+        // 現在のページを非表示（透過）にする
+        howToPlayPanel03.transform.GetChild(pageHTP_Current - 1).GetComponent<Image>().enabled = false;
+
+        // 最終ページで押されたとき、HowToPlayパネルを閉じる
+        if (pageHTP_Current == pageNum03)
+        {
+            howToPlayPanel03.SetActive(false);
+            pageHTP_Current = 0;
+            cC.CamControl = true;
+
+            openHTP03 = false;
+        }
+        else howToPlayPanel03.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true; // 最終ページではないときは、次のページを表示する
     }
 
     public void Restart()
@@ -148,21 +215,54 @@ public class StageUI : MonoBehaviour
         // イベントから削除
         SceneManager.sceneLoaded -= SceneLoaded_StageSelect;
     }
-    public void HowToPlay()
+    public void HowToPlay01()
     {
         // Pausedパネルを閉じ、HowToPlayパネルを開く
         pausedPanel.SetActive(false);
-        howToPlayPanel.SetActive(true);
+        howToPlayPanel01.SetActive(true);
 
         // １枚目のスライドの表示
-        howToPlayPanel.transform.GetChild(0).GetComponent<Image>().enabled = true;
+        howToPlayPanel01.transform.GetChild(0).GetComponent<Image>().enabled = true;
 
-        openHTP = true;
+        // 開くHowToPlayパネルの全枚数（openingHTPPageNum）の更新
+        openingHTPPageNum = pageNum01;
+
+        openHTP01 = true;
+    }
+    public void HowToPlay02or03()
+    {
+        cC.CamControl = false;
+
+        if (cC.Satellite) // Satelliteモードの時
+        {
+            // HowToPlayPanel02を開く
+            howToPlayPanel02.SetActive(true);
+            // １枚目のスライドの表示
+            howToPlayPanel02.transform.GetChild(0).GetComponent<Image>().enabled = true;
+            // 開くHowToPlayパネルの全枚数（openingHTPPageNum）の更新
+            openingHTPPageNum = pageNum02;
+
+            openHTP02 = true;
+        }
+        else if (cC.FirstPerson) // FirstPersonモードの時
+        {
+            // HowToPlayPanel03を開く
+            howToPlayPanel03.SetActive(true);
+            // １枚目のスライドの表示
+            howToPlayPanel03.transform.GetChild(0).GetComponent<Image>().enabled = true;
+            // 開くHowToPlayパネルの全枚数（openingHTPPageNum）の更新
+            openingHTPPageNum = pageNum03;
+
+            openHTP03 = true;
+        } 
     }
     public void BackToGame()
     {
         pausedPanel.SetActive(false);
-        pC.Control = true;
+        // カメラのコントロールを有効に戻す
+        cC.CamControl = true;
+        // カメラが通常カメラモードの場合のみ、プレイヤーのコントロールを有効に戻す
+        if(!cC.Satellite && !cC.FirstPerson) pC.Control = true;
     }
     public void DisplayGameClear()
     {
@@ -194,6 +294,18 @@ public class StageUI : MonoBehaviour
     {
         camType03.SetActive(false);
         camType01.SetActive(true);
+    }
+    public void DisplayHelpButton()
+    {
+        helpButton.SetActive(true);
+    }
+    public void HideHelpButton()
+    {
+        helpButton.SetActive(false);
+    }
+    public void HideStageUIButtons()
+    {
+        stageUIButtons.SetActive(false);
     }
     public bool FirstStage
     {

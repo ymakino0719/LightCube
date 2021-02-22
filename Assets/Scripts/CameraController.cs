@@ -56,6 +56,8 @@ public class CameraController : MonoBehaviour
     bool openingSequence = true;
     // スクロールの感度
     float scrollSensitivity = 30.0f;
+    // カメラ操作入力受付が可能かどうか
+    bool camControl = true;
 
     // サテライトモード
     bool satellite = false;
@@ -152,16 +154,16 @@ public class CameraController : MonoBehaviour
             openingSequence = false;
         }
 
-        if (!rolling)
+        if (rolling) SatelliteCamMovement_Rotate();
+        else if(camControl) // 回転中でない時且つカメラの操作が可能な時
         {
             SatelliteCamMovement_Input();
             ZoomInAndOut();
             HorizontalMovementOfViewpoint();
-        }
-        else SatelliteCamMovement_Rotate();
 
-        // サテライトモードの終了条件
-        EndConditionOfSatelliteMode();
+            // サテライトモードの終了条件
+            EndConditionOfSatelliteMode();
+        }
     }
     void ZoomInAndOut()
     {
@@ -455,11 +457,14 @@ public class CameraController : MonoBehaviour
             openingSequence = false;
         }
 
-        FirstPersonCamMovement();
-        ZoomInAndOut();
+        if(camControl) // カメラの操作が可能な時
+        {
+            FirstPersonCamMovement();
+            ZoomInAndOut();
 
-        // 一人称カメラモードの終了条件
-        EndConditionOfFirstPersonMode();
+            // 一人称カメラモードの終了条件
+            EndConditionOfFirstPersonMode();
+        }
     }
 
     void FirstPersonCam_HideObjects()
@@ -537,6 +542,9 @@ public class CameraController : MonoBehaviour
 
         // CamTypeUIの切り替え
         sUI.SwitchCamTypeUI_ToNormal();
+
+        // HelpButtonの非表示
+        sUI.HideHelpButton();
 
         // ChasingCameraへの移行
         firstPerson = false;
@@ -650,5 +658,10 @@ public class CameraController : MonoBehaviour
     {
         set { gameOver = value; }
         get { return gameOver; }
+    }
+    public bool CamControl
+    {
+        set { camControl = value; }
+        get { return camControl; }
     }
 }
