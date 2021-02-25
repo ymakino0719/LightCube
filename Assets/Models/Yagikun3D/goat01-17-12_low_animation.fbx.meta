@@ -72,7 +72,12 @@ ModelImporter:
   - first:
       74: 4859470207336704588
     second: "rig|\u30A2\u30AF\u30B7\u30E7\u30F3"
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 53f917f6939150f4f850fdfbb9b50930, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -151,7 +156,7 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     globalScale: 1
-    rootMotionBoneName: 
+    rootMotionBoneName: Root
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
@@ -159,7 +164,7 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

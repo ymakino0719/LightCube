@@ -600,6 +600,11 @@ PrefabInstance:
       propertyPath: m_TagString
       value: PlayerTexture
       objectReference: {fileID: 0}
+    - target: {fileID: -4267425209909500052, guid: 6dbf162d984649e47b6bb89cb38e3ab8,
+        type: 3}
+      propertyPath: m_TagString
+      value: Armature
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 6dbf162d984649e47b6bb89cb38e3ab8,
         type: 3}
       propertyPath: m_Name

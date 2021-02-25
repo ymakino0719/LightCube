@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour
 
 	// Yagikun3D
 	GameObject yagikun;
+	// Yagikun3DのArmature
+	GameObject armature;
 
 	//Animator animator;
 	// 着地しているかどうか（CheckIsGroundからの判定結果）
@@ -26,11 +28,15 @@ public class PlayerController : MonoBehaviour
 	// 残りジャンプ回数（可変値）
 	int jumpNum = 2;
 	// 空中ジャンプ時の回転中かどうか
-	//bool aerialJumpRot = false;
-	// 空中ジャンプ時の回転時間
-	//float timeAJ = 0.0f;
-	// 空中ジャンプ時の回転速度
-	//float rotSpeedAJ = 4.0f;
+	bool aerialJumpRot = false;
+	// 空中ジャンプ時の現在の回転角度
+	float rotAJ = 0.0f;
+	// 空中ジャンプ時の目標回転角度
+	float rotTargetAJ = 540.0f;
+	// 空中ジャンプ時の残りの回転角度
+	float rotRemainingAJ;
+	// 空中ジャンプ時の回転率（逆数）
+	float rotRateAJ = 50.0f;
 
 	// アイテムを持っているか
 	bool holding = false;
@@ -110,6 +116,9 @@ public class PlayerController : MonoBehaviour
         rBody = GetComponent<Rigidbody>();
 		// Playerの直下の一番上に配置しているYagikun3DにアタッチされているAnimationControllerを取得する
 		yagikun = transform.GetChild(0).gameObject;
+		// Yagikun3DのArmatureの取得
+		armature = GameObject.FindWithTag("Armature");
+		// AnimationControllerの取得
 		aC = yagikun.GetComponent<AnimationController>();
 		// ClearJudgementの取得
 		cJ = GameObject.Find("GameDirector").GetComponent<ClearJudgement>();
@@ -119,6 +128,8 @@ public class PlayerController : MonoBehaviour
 	}
 	void Start()
 	{
+		rotRemainingAJ = rotTargetAJ;
+
 		latestPos = transform.position;
 		// 開幕n秒間の操作を止める
 		StartCoroutine("OpeningControlStopCoroutine");
@@ -212,12 +223,10 @@ public class PlayerController : MonoBehaviour
 			ThroughGateRotation();
 		}
 
-		/*
-		if(aerialJumpRot)
+		if(aerialJumpRot && control)
         {
 			AerialJumpRotation();
         }
-		*/
 	}
 	IEnumerator OpeningControlStopCoroutine()
 	{
@@ -335,27 +344,26 @@ public class PlayerController : MonoBehaviour
 		// 上記で再計算されたlocVelをrigidbodyに反映させる
 		rBody.velocity = transform.TransformDirection(locVel);
 	}
-
-	/*
 	void AerialJumpRotation()
     {
-		Debug.Log("Hello");
-		// 時間
-		timeAJ += rotSpeedAJ * Time.deltaTime;
-		// 回転
-		yagikun.transform.rotation *= Quaternion.Euler(0, rotSpeedAJ * Time.deltaTime * 360.0f, 0);
+		rotAJ = rotRemainingAJ / rotRateAJ;
+		rotRemainingAJ -= rotAJ;
 
-		if (timeAJ >= 1.0f)
+		if (rotTargetAJ - rotRemainingAJ <= 360.0f) // 一回転したかどうか
 		{
-			// 時間を超過したら初期回転方向に戻し、回転終了
-			float diff = timeAJ - 1.0f;
-			yagikun.transform.rotation *= Quaternion.Euler(0, -diff * 360.0f, 0);
-			
-			timeAJ = 0;
+			// 回転
+			armature.transform.rotation *= Quaternion.Euler(0, 0, rotAJ);
+		}
+		else
+        {
+			// 回転が超過する場合は初期回転方向に戻し、回転終了
+			float diff = rotAJ - ((rotTargetAJ - rotRemainingAJ) - 360.0f);
+			armature.transform.rotation *= Quaternion.Euler(0, 0, diff);
+
+			rotRemainingAJ = rotTargetAJ;
 			aerialJumpRot = false;
 		}
 	}
-	*/
 
 	void JudgePickUpItems(ref bool pick)
     {
@@ -476,7 +484,6 @@ public class PlayerController : MonoBehaviour
 
 		timeSL = 0.0f;
 	}
-
 	public void TurnTheOtherWay()
 	{
 		// yagikun3Dを180度回転させる
@@ -559,5 +566,10 @@ public class PlayerController : MonoBehaviour
 	{
 		set { jumpNum = value; }
 		get { return jumpNum; }
+	}
+	public bool AerialJumpRot
+	{
+		set { aerialJumpRot = value; }
+		get { return aerialJumpRot; }
 	}
 }

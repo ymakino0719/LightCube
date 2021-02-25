@@ -129,6 +129,10 @@ public class AnimationController : MonoBehaviour
 	{
 		animator.SetBool("doubleJumpBool", false);
 	}
+	void StartAerialJumpRot()
+    {
+		pC.AerialJumpRot = true;
+	}
 	public GameObject NearestItem
 	{
 		set { nearestItem = value; }

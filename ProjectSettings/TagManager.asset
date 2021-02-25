@@ -26,6 +26,7 @@ TagManager:
   - KeyBlock_Lightning
   - KeyBlock_LightPack
   - OutsideBox
+  - Armature
   layers:
   - Default
   - TransparentFX
