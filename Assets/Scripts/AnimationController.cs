@@ -131,6 +131,9 @@ public class AnimationController : MonoBehaviour
 	}
 	void StartAerialJumpRot()
     {
+		// 既に回転中の場合は初期化する
+		if (pC.AerialJumpRot) pC.ResetAerialJumpRotation();
+
 		pC.AerialJumpRot = true;
 	}
 	public GameObject NearestItem

@@ -356,13 +356,19 @@ public class PlayerController : MonoBehaviour
 		}
 		else
         {
-			// 回転が超過する場合は初期回転方向に戻し、回転終了
-			float diff = rotAJ - ((rotTargetAJ - rotRemainingAJ) - 360.0f);
-			armature.transform.rotation *= Quaternion.Euler(0, 0, diff);
-
-			rotRemainingAJ = rotTargetAJ;
-			aerialJumpRot = false;
+			// 初期化
+			ResetAerialJumpRotation();
 		}
+	}
+	public void ResetAerialJumpRotation()
+    {
+		// 直前の回転の初期化；最初の回転量に戻す
+		float diff = rotAJ - ((rotTargetAJ - rotRemainingAJ) - 360.0f);
+		armature.transform.rotation *= Quaternion.Euler(0, 0, diff);
+
+		rotRemainingAJ = rotTargetAJ;
+
+		aerialJumpRot = false;
 	}
 
 	void JudgePickUpItems(ref bool pick)
