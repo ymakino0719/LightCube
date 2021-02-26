@@ -15,8 +15,8 @@ public class ClearJudgement : MonoBehaviour
     bool gameOver02 = false;
     // ゲームクリア判定: 遷移03
     bool gameOver03 = false;
-    // ステージセレクト画面へ戻るための入力
-    bool pressedAnyKey = false;
+    // ステージセレクト画面へ戻るためのAnyKeyの入力受付開始
+    bool startAcceptingInput_AnyKey = false;
     // 現在の鍵の数
     int keyNum = 0;
     // ゲームクリアに必要な鍵の数
@@ -61,35 +61,29 @@ public class ClearJudgement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if(!gameOver)
-        {
-            JudgeClearConditions();
-        }
+        if(!gameOver) JudgeClearConditions();
         else
         {
-            if(gameOver01)
-            {
-                GameOver01_Behavior();
-            }
-            else if(gameOver02)
-            {
-                GameOver02_Behavior();
-            }
-            else if(gameOver03)
-            {
-                GameOver03_Behavior();
-            }
+            if     (gameOver01) GameOver01_Behavior();
+            else if(gameOver02) GameOver02_Behavior();
+            else if(gameOver03) GameOver03_Behavior();
 
-            if (startingOperation01)
-            {
-                // StarLight
-                ScalingLightBeginningRange();
-            }
-            else
-            {
-                // StarLight
-                ScalingLightAfterRange();
-            }
+            if (startingOperation01) ScalingLightBeginningRange();
+            else                     ScalingLightAfterRange();
+        }
+    }
+    void Update()
+    {
+        if(startAcceptingInput_AnyKey) ReturnToStageSelect();
+    }
+    void JudgeClearConditions()
+    {
+        if (keyNum == clearNum)
+        {
+            gameOver = true;
+            gameOver01 = true;
+            cC.GameOver = true;
+            lighting.enabled = true;
         }
     }
 
@@ -165,35 +159,24 @@ public class ClearJudgement : MonoBehaviour
         {
             StartCoroutine("GameOverScreenDisplayTime");
         }
-        else
-        {
-            ReturnToStageSelect();
-        }
     }
 
     IEnumerator GameOverScreenDisplayTime()
     {
+        beginning03 = false;
+
         // 勝利画面でn秒間待機する
         yield return new WaitForSeconds(4);
 
-        beginning03 = false;
-    }
-
-    void JudgeClearConditions()
-    {
-        if (keyNum == clearNum)
-        {
-            gameOver = true;
-            gameOver01 = true;
-            cC.GameOver = true;
-            lighting.enabled = true;
-        }
+        // AnyKeyの入力受付開始
+        startAcceptingInput_AnyKey = true;
     }
     void ReturnToStageSelect()
     {
-        if (Input.anyKey && !pressedAnyKey)
+        if (Input.anyKey)
         {
-            pressedAnyKey = true;
+            startAcceptingInput_AnyKey = false;
+
             TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
             traUI.ReturnToStageSelect(3.0f, 3.1f);
         }
