@@ -108,6 +108,9 @@ public class AroundEdgeController : MonoBehaviour
 			// 当たり判定の無効化
 			GetComponent<CapsuleCollider>().enabled = false;
 			transform.Find("HitBox_side").GetComponent<CapsuleCollider>().enabled = false;
+
+			// 一部アニメーションのスロー化（Yagikun3DにアタッチされているAnimationControllerの取得）
+			transform.GetChild(0).gameObject.GetComponent<AnimationController>().SlowAnimation();
 		}
 		else if (transform.GetChild(0).gameObject.CompareTag("Item")) // Itemは当たり判定のある子オブジェクトにItemのタグ付けがされている
 		{
@@ -129,6 +132,9 @@ public class AroundEdgeController : MonoBehaviour
 
 			// 当たり判定を再度入れなおした瞬間に同じEdgeに再衝突してしまう場合に備え、その入れなおした１フレームだけ接触判定を無効化し回転を禁止する
 			StartCoroutine("ReCollisionInhibitionTime");
+
+			// 一部アニメーションの再生速度正常化（Yagikun3DにアタッチされているAnimationControllerの取得）
+			transform.GetChild(0).gameObject.GetComponent<AnimationController>().RestartAnimation();
 		}
 		else if (transform.GetChild(0).gameObject.CompareTag("Item")) // Itemは当たり判定のある子オブジェクトにItemのタグ付けがされている
 		{

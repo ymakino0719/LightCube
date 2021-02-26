@@ -136,6 +136,14 @@ public class AnimationController : MonoBehaviour
 
 		pC.AerialJumpRot = true;
 	}
+	public void SlowAnimation()
+    {
+		animator.SetFloat("animationSpeed", 0.15f); // スロー
+	}
+	public void RestartAnimation()
+	{
+		animator.SetFloat("animationSpeed", 1.0f); // 再開
+	}
 	public GameObject NearestItem
 	{
 		set { nearestItem = value; }
