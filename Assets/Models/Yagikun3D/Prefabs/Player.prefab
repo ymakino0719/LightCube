@@ -360,8 +360,8 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: 2b78c2ed8384a37419c8e9a8f7be7ccf, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.23
-  m_Height: 0.98
+  m_Radius: 0.2
+  m_Height: 0.99
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &5214644987572194001
@@ -454,7 +454,7 @@ CapsuleCollider:
   m_Material: {fileID: 13400000, guid: fca22e46cf93b5c418a628337370cc98, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.2
+  m_Radius: 0.18
   m_Height: 1
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
@@ -629,6 +629,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_CullingMode
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6110038813433990548, guid: 6dbf162d984649e47b6bb89cb38e3ab8,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6110038813433990548, guid: 6dbf162d984649e47b6bb89cb38e3ab8,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6110038813433990548, guid: 6dbf162d984649e47b6bb89cb38e3ab8,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 6110038813433990548, guid: 6dbf162d984649e47b6bb89cb38e3ab8,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6dbf162d984649e47b6bb89cb38e3ab8, type: 3}

@@ -27,6 +27,8 @@ public class PlayerController : MonoBehaviour
 	int jumpNum_Max = 2;
 	// 残りジャンプ回数（可変値）
 	int jumpNum = 2;
+	// Armatureの初期回転角度（ローカル）
+	Quaternion armature_InitialRot;
 	// 空中ジャンプ時の回転中かどうか
 	bool aerialJumpRot = false;
 	// 空中ジャンプ時の現在の回転角度
@@ -118,6 +120,8 @@ public class PlayerController : MonoBehaviour
 		yagikun = transform.GetChild(0).gameObject;
 		// Yagikun3DのArmatureの取得
 		armature = GameObject.FindWithTag("Armature");
+		// Armatureの初期回転角度の取得
+		armature_InitialRot = armature.transform.localRotation;
 		// AnimationControllerの取得
 		aC = yagikun.GetComponent<AnimationController>();
 		// ClearJudgementの取得
@@ -363,8 +367,7 @@ public class PlayerController : MonoBehaviour
 	public void ResetAerialJumpRotation()
     {
 		// 直前の回転の初期化；最初の回転量に戻す
-		float diff = rotAJ - ((rotTargetAJ - rotRemainingAJ) - 360.0f);
-		armature.transform.rotation *= Quaternion.Euler(0, 0, diff);
+		armature.transform.localRotation = armature_InitialRot;
 
 		rotRemainingAJ = rotTargetAJ;
 
