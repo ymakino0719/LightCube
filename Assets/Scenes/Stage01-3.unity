@@ -4369,7 +4369,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetDis01: 7
   targetDis02_Depth: 4
-  targetDis02_Height: 1.5
+  targetDis02_Height: 1
+  rayDis: 100
 --- !u!1001 &967789376
 PrefabInstance:
   m_ObjectHideFlags: 0

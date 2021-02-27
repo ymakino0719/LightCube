@@ -4301,7 +4301,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetDis01: 7
   targetDis02_Depth: 4
-  targetDis02_Height: 2.5
+  targetDis02_Height: 2
   rayDis: 100
 --- !u!1001 &968898453
 PrefabInstance:
@@ -5970,6 +5970,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5214644987572194001, guid: b2f74612ffa3efe4a82ac8fd0d268578,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5214644987572194005, guid: b2f74612ffa3efe4a82ac8fd0d268578,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5978,7 +5983,7 @@ PrefabInstance:
     - target: {fileID: 5214644987572194005, guid: b2f74612ffa3efe4a82ac8fd0d268578,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.5
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 5214644987572194005, guid: b2f74612ffa3efe4a82ac8fd0d268578,
         type: 3}

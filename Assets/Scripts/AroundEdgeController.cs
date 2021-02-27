@@ -39,9 +39,6 @@ public class AroundEdgeController : MonoBehaviour
 
 	private Rigidbody rBody;
 
-	// プレイヤーの中心位置のTransform（nextFaceの判定に使用する）
-	private Transform middlePosTra;
-
 	// Edgeの接触判定を無効化し回転を禁止する
 	bool stopEdgeEntering = false;
 
@@ -50,8 +47,6 @@ public class AroundEdgeController : MonoBehaviour
 	void Awake()
 	{
 		rBody = GetComponent<Rigidbody>();
-		// プレイヤーの中心位置のTransformの取得（nextFaceの判定に使用する）
-		middlePosTra = GameObject.Find("MiddlePos").transform;
 	}
 
 	void Update()
@@ -156,9 +151,8 @@ public class AroundEdgeController : MonoBehaviour
 	void CheckCloserFace(Vector3 edge, Vector3 face01, Vector3 face02)
 	{
 		// Edgeを中心とした各２面とPlayerの位置から形成される角度を調べる
-		// （原点位置（足元）からの角度計算の場合、プレイヤーの速度と関数処理のタイミング上エラーが起きる場合があったので、プレイヤーの中心位置（middlePosTra）からの角度計算に変更した）、
-		float angle01 = Vector3.Angle(middlePosTra.position - edge, face01 - edge);
-		float angle02 = Vector3.Angle(middlePosTra.position - edge, face02 - edge);
+		float angle01 = Vector3.Angle(transform.position - edge, face01 - edge);
+		float angle02 = Vector3.Angle(transform.position - edge, face02 - edge);
 
 		//Debug.Log("angle01: " + angle01);
 		//Debug.Log("angle02: " + angle02);
@@ -182,8 +176,8 @@ public class AroundEdgeController : MonoBehaviour
 		transform.RotateAround(edge, axis, angle);
 		// angle度で軸回転後のこのオブジェクトの座標を取得しておく
 		Vector3 nextPos01 = transform.position;
-		// 辺の原点位置を中心とした、移動後のこのオブジェクト（の中心；middlePosTra）とnextFaceの角度を調べる
-		float angle01 = Vector3.Angle(middlePosTra.position - edge, nextFace - edge);
+		// 辺の原点位置を中心とした、移動後のこのオブジェクトとnextFaceの角度を調べる
+		float angle01 = Vector3.Angle(transform.position - edge, nextFace - edge);
 		// 更にRotateAroundで180度回転させたあとのEulerAngleを取得する
 		Vector3 afterR01 = CheckRotation(edge, axis);
 
@@ -191,8 +185,8 @@ public class AroundEdgeController : MonoBehaviour
 		transform.RotateAround(edge, axis, -2 * angle);
 		// -angle度で軸回転後のこのオブジェクトの座標を取得しておく
 		Vector3 nextPos02 = transform.position;
-		// 辺の原点位置を中心とした、移動後のこのオブジェクト（の中心；middlePosTra）とnextFaceの角度を調べる
-		float angle02 = Vector3.Angle(middlePosTra.position - edge, nextFace - edge);
+		// 辺の原点位置を中心とした、移動後のこのオブジェクトとnextFaceの角度を調べる
+		float angle02 = Vector3.Angle(transform.position - edge, nextFace - edge);
 		// 更にRotateAroundで180度回転させたあとのEulerAngleを取得する
 		Vector3 afterR02 = CheckRotation(edge, axis);
 
@@ -279,7 +273,6 @@ public class AroundEdgeController : MonoBehaviour
 		// 射出の際、その方向にベクトルを加算する（1.2fでEdge側にめり込まないようになったため、安全を見て1.35fとした）
 		Vector3 addedVec = vec + injectionUnitVec * 1.35f;
 		rBody.velocity = addedVec;
-		
 	}
 	public bool StopEdgeEntering
 	{

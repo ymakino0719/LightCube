@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
 	GameObject yagikun;
 	// Yagikun3DのArmature
 	GameObject armature;
+	// プレイヤーの足元位置のTransform
+	Transform footPosTra;
 
 	//Animator animator;
 	// 着地しているかどうか（CheckIsGroundからの判定結果）
@@ -43,7 +45,7 @@ public class PlayerController : MonoBehaviour
 	// アイテムを持っているか
 	bool holding = false;
 	// 移動スピード
-	float moveS = 15.0f;
+	float moveS = 18.0f;
 	// 平面方向（XとZ方向）に対する移動上限速度
 	float moveLimit_XZ = 2.0f;
 	// 上下方向（Y方向）に対する移動上限速度
@@ -122,6 +124,8 @@ public class PlayerController : MonoBehaviour
 		armature = GameObject.FindWithTag("Armature");
 		// Armatureの初期回転角度の取得
 		armature_InitialRot = armature.transform.localRotation;
+		// プレイヤーの足元位置のTransformの取得（nextFaceの判定に使用する）
+		footPosTra = GameObject.Find("FootPos").transform;
 		// AnimationControllerの取得
 		aC = yagikun.GetComponent<AnimationController>();
 		// ClearJudgementの取得
@@ -413,8 +417,8 @@ public class PlayerController : MonoBehaviour
 	}
 	GameObject FindTargetsNearby(string tag, float searchDis)
     {
-		// プレイヤーの原点位置を中心にオブジェクト探索
-		colList = Physics.OverlapSphere(transform.position, searchDis);
+		// プレイヤーの足元位置を中心にオブジェクト探索
+		colList = Physics.OverlapSphere(footPosTra.position, searchDis);
 
 		// 近くのゲームオブジェクト
 		GameObject target = null;
@@ -430,8 +434,8 @@ public class PlayerController : MonoBehaviour
 				}
 				else // 近くのオブジェクトが複数ある場合、一番距離が近いitemを特定、nItemを更新する
 				{
-					float disA = (transform.position - colList[i].transform.parent.gameObject.transform.position).sqrMagnitude;
-					float disB = (transform.position - target.transform.position).sqrMagnitude;
+					float disA = (footPosTra.position - colList[i].transform.parent.gameObject.transform.position).sqrMagnitude;
+					float disB = (footPosTra.position - target.transform.position).sqrMagnitude;
 
 					if(disA < disB)
                     {
