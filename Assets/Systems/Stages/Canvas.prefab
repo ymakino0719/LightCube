@@ -2417,7 +2417,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.24705882, g: 0.25882354, b: 0.30980393, a: 0.84705883}
+  m_Color: {r: 0.24705882, g: 0.25882354, b: 0.30980393, a: 0.9254902}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -2598,7 +2598,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.24705882, g: 0.25882354, b: 0.30980393, a: 0.84705883}
+  m_Color: {r: 0.24705882, g: 0.25882354, b: 0.30980393, a: 0.9254902}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3734,7 +3734,7 @@ MonoBehaviour:
   delay: 3
   style: 1
   playOnAwake: 1
-  m_progress: 0.20542333
+  m_progress: 0.7004782
   usePosition: 0
   useRotation: 0
   useScale: 0
@@ -4254,7 +4254,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.24705882, g: 0.25882354, b: 0.30980393, a: 0.84705883}
+  m_Color: {r: 0.24705882, g: 0.25882354, b: 0.30980393, a: 0.9254902}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:

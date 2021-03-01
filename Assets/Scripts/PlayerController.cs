@@ -45,7 +45,7 @@ public class PlayerController : MonoBehaviour
 	// アイテムを持っているか
 	bool holding = false;
 	// 移動スピード
-	float moveS = 0.25f;
+	float moveS = 0.3f;
 	// 平面方向（XとZ方向）に対する移動上限速度
 	float moveLimit_XZ = 2.0f;
 	// 上下方向（Y方向）に対する移動上限速度
@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
 	// Playerが動いているかどうかの閾値
 	float minimumSpeed = 0.01f;
 	// Yagikun3Dの1フレームごとの回転割合
-	float rateOfRot = 0.03f;
+	float rateOfRot = 0.1f;
 
 	// 操作可能な状態かどうか
 	bool control = false;
