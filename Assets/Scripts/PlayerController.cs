@@ -57,6 +57,8 @@ public class PlayerController : MonoBehaviour
 	Vector3 latestPos;
 	// Playerが動いているかどうかの閾値
 	float minimumSpeed = 0.01f;
+	// Yagikun3Dの1フレームごとの回転割合
+	float rateOfRot = 0.03f;
 
 	// 操作可能な状態かどうか
 	bool control = false;
@@ -341,8 +343,14 @@ public class PlayerController : MonoBehaviour
 		// プレイヤーの速度の向きに方向転換する（X、Z軸方向のみ、Y軸は無効）
 		if (Mathf.Abs(locVel.x) >= minimumSpeed || Mathf.Abs(locVel.z) >= minimumSpeed)
         {
+			//Vector3 looking = new Vector3(locVel.x, 0, locVel.z);
+			//yagikun.transform.rotation = Quaternion.LookRotation(transform.TransformDirection(looking), transform.up); // 向きを変更する
+
 			Vector3 looking = new Vector3(locVel.x, 0, locVel.z);
-			yagikun.transform.rotation = Quaternion.LookRotation(transform.TransformDirection(looking), transform.up); // 向きを変更する
+			Quaternion targetRot = Quaternion.LookRotation(transform.TransformDirection(looking), transform.up); // 目標方向
+
+			targetRot = Quaternion.Slerp(yagikun.transform.rotation, targetRot, rateOfRot); // 目標方向に対する割合回転
+			yagikun.transform.rotation = targetRot;
 		}
 
 		///////////////////////

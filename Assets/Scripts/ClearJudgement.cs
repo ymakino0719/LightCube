@@ -28,7 +28,7 @@ public class ClearJudgement : MonoBehaviour
     // Rangeの拡大率
     float magnification = 1.5f;
     // Rangeを動かすスピード
-    float speed = 2.5f;
+    float speed = 0.8f;
     // 光りはじめ（trueのとき、Range = 0 からlowerまで拡大する）
     bool startingOperation01 = true;
     // キャラクターのStarLight方面への振り向き
@@ -198,7 +198,7 @@ public class ClearJudgement : MonoBehaviour
     void ScalingLightAfterRange()
     {
         float currentTime = Time.time - startTime;
-        lighting.range = lower + Mathf.Sin(currentTime * speed) * magnification;
+        lighting.range = lower + Mathf.Sin(currentTime * speed * Mathf.PI) * magnification;
     }
     public int KeyNum
     {

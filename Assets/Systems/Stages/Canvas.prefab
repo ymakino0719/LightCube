@@ -3007,7 +3007,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 0.0066666664
+  m_progress: 1
   usePosition: 1
   useRotation: 0
   useScale: 0
@@ -3502,7 +3502,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 0.0066666664
+  m_progress: 1
   usePosition: 1
   useRotation: 0
   useScale: 0
@@ -3734,7 +3734,7 @@ MonoBehaviour:
   delay: 3
   style: 1
   playOnAwake: 1
-  m_progress: 0
+  m_progress: 0.20542333
   usePosition: 0
   useRotation: 0
   useScale: 0
@@ -4663,7 +4663,7 @@ ParticleSystem:
   startDelay:
     serializedVersion: 2
     minMaxState: 0
-    scalar: 2
+    scalar: 0.8
     minScalar: 0
     maxCurve:
       serializedVersion: 2
