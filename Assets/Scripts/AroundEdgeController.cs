@@ -16,6 +16,8 @@ public class AroundEdgeController : MonoBehaviour
 	private Vector3 nextPos;
 	// 次にこのオブジェクトが移動する座標へ向かうための中間点
 	private Vector3 middlePos;
+	// 遷移後の距離の倍率
+	private float distanceMagnification = 1.6f;
 
 	// このオブジェクトの面移動前後の回転情報
 	private Vector3 beforeR, afterR;
@@ -87,8 +89,8 @@ public class AroundEdgeController : MonoBehaviour
 		rBody.velocity = Vector3.zero;
 
 		CheckCloserFace(edge, face01, face02); // ２面の内、Playerからより遠い面を調べる（それがこのオブジェクトが次に移動する面となる）
-		CheckNextPlayerPos(edge, vertex01, vertex02, face01, face02); // 軸回転を行い、このオブジェクトが次に移動する座標nextPosを調べ、取得する
-		CheckMiddlePos(vertex01, vertex02); // このオブジェクトがnextPosまで移動するときの中間点middlePos（経由するEdgeあたりの座標）を調べる
+		CheckMiddleAndNextPos(edge, vertex01, vertex02); // このオブジェクトが移動するときの中間点middlePosと終着点nextPosを調べる
+		CheckDirectionOfRotation(edge, vertex01, vertex02, face01, face02); // 正しい回転方向を調べ、取得する
 
 		moving = true;
 	}
@@ -154,18 +156,23 @@ public class AroundEdgeController : MonoBehaviour
 		float angle01 = Vector3.Angle(transform.position - edge, face01 - edge);
 		float angle02 = Vector3.Angle(transform.position - edge, face02 - edge);
 
-		//Debug.Log("angle01: " + angle01);
-		//Debug.Log("angle02: " + angle02);
-
 		// 角度がより大きい面を次に移動する面と定義する
 		nextFace = (angle01 > angle02) ? face01 : face02;
-		//Debug.Log("nextFace = " + nextFace);
 
 		// 射出単位ベクトルの算出（ResetPlayerVelocity()で用いる）
 		injectionUnitVec = (nextFace - edge).normalized;
 	}
+	void CheckMiddleAndNextPos(Vector3 edge, Vector3 vertex01, Vector3 vertex02)
+	{
+		// このオブジェクトの移動は、一度中間点のmiddlePosをを経由して、最終地点nextPosへ向かう処理とする
 
-	void CheckNextPlayerPos(Vector3 edge, Vector3 vertex01, Vector3 vertex02, Vector3 face01, Vector3 face02)
+		// 回転軸に対しこのオブジェクトの初期位置から垂線を引き、交点をmiddlePosとして採用する
+		middlePos = vertex01 + Vector3.Project(transform.position - vertex01, vertex02 - vertex01);
+
+		// nextPosの取得（nextFaceへの水平な正規化ベクトルに、Playerの位置とmiddlePosとの距離（に割り増しした値）を掛ける）
+		nextPos = middlePos + (nextFace - edge).normalized * (transform.position - middlePos).magnitude * distanceMagnification;
+	}
+	void CheckDirectionOfRotation(Vector3 edge, Vector3 vertex01, Vector3 vertex02, Vector3 face01, Vector3 face02)
 	{
 		// このオブジェクトをRotateAroundさせる（中心：辺の原点、軸：２つの頂点のベクトル、角度：辺を中心とした２面の原点が成す角度
 		Vector3 axis = vertex01 - vertex02; // 回転軸
@@ -174,18 +181,14 @@ public class AroundEdgeController : MonoBehaviour
 		// 回転角度の正負が不明なため、両方試し、最終位置が次の面により近い方（織りなす角度がより小さい方）を採用する
 		// まずangle度で回転させる
 		transform.RotateAround(edge, axis, angle);
-		// angle度で軸回転後のこのオブジェクトの座標を取得しておく
-		Vector3 nextPos01 = transform.position;
-		// 辺の原点位置を中心とした、移動後のこのオブジェクトとnextFaceの角度を調べる
+		// middlePosを中心とした、移動後のこのオブジェクトとnextPosの角度を調べる
 		float angle01 = Vector3.Angle(transform.position - edge, nextFace - edge);
 		// 更にRotateAroundで180度回転させたあとのEulerAngleを取得する
 		Vector3 afterR01 = CheckRotation(edge, axis);
 
 		// 次に-angle度で回転させる（一旦移動前の場所に戻すために-2 * angle度としている）
 		transform.RotateAround(edge, axis, -2 * angle);
-		// -angle度で軸回転後のこのオブジェクトの座標を取得しておく
-		Vector3 nextPos02 = transform.position;
-		// 辺の原点位置を中心とした、移動後のこのオブジェクトとnextFaceの角度を調べる
+		// middlePosを中心とした、移動後のこのオブジェクトとnextPosの角度を調べる
 		float angle02 = Vector3.Angle(transform.position - edge, nextFace - edge);
 		// 更にRotateAroundで180度回転させたあとのEulerAngleを取得する
 		Vector3 afterR02 = CheckRotation(edge, axis);
@@ -196,8 +199,7 @@ public class AroundEdgeController : MonoBehaviour
 		// このオブジェクトを初期位置に戻す（angle度で回転させる）
 		transform.RotateAround(edge, axis, angle);
 
-		// angle01と02を比較し、より小さい値の方のnextPosをこのオブジェクトが移動する座標先として採用する
-		nextPos = (angle01 < angle02) ? nextPos01 : nextPos02;
+		// angle01と02を比較し、より小さい値の方のafterRを正しい回転量として採用する
 		afterR = (angle01 < angle02) ? afterR01 : afterR02;		
 	}
 
@@ -210,15 +212,6 @@ public class AroundEdgeController : MonoBehaviour
 		transform.RotateAround(edge, axis, -180);
 
 		return vec;
-	}
-
-	void CheckMiddlePos(Vector3 vertex01, Vector3 vertex02)
-	{
-		// このオブジェクトはEdgeのTriggerに接触した際、一度Edgeを経由して、最終地点nextPosへ向かう処理とする
-		// そのため、ここでは経由する中間点middlePosを取得する
-
-		// 回転軸に対しこのオブジェクトの初期位置から垂線を引き、交点をmiddlePosとして採用する
-		middlePos = vertex01 + Vector3.Project(transform.position - vertex01, vertex02 - vertex01);
 	}
 
 	void MoveAndRotatePlayer()

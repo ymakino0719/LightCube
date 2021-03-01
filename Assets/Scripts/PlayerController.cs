@@ -40,12 +40,12 @@ public class PlayerController : MonoBehaviour
 	// 空中ジャンプ時の残りの回転角度
 	float rotRemainingAJ;
 	// 空中ジャンプ時の回転率（逆数）
-	float rotRateAJ = 50.0f;
+	float rotRateAJ = 40.0f;
 
 	// アイテムを持っているか
 	bool holding = false;
 	// 移動スピード
-	float moveS = 18.0f;
+	float moveS = 0.25f;
 	// 平面方向（XとZ方向）に対する移動上限速度
 	float moveLimit_XZ = 2.0f;
 	// 上下方向（Y方向）に対する移動上限速度

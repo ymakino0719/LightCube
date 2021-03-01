@@ -81,7 +81,7 @@ public class StageUI : MonoBehaviour
         }
 
         // HowToPlayパネル表示中に左クリックまたはエンターキーが押された場合、ページを１枚目めくる、またはHowToPlayパネルを閉じる
-        if ((Input.GetMouseButtonDown(0) || Input.GetKey(KeyCode.Return)))
+        if ((Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Return)))
         {
             TurnPagesORCloseHTP();
         } 

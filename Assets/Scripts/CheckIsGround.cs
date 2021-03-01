@@ -34,8 +34,8 @@ public class CheckIsGround : MonoBehaviour
 	// 着地判定
 	void OnTriggerEnter(Collider collision)
 	{
-		// 着地判定
-		if (!rising && !collision.gameObject.CompareTag("Face") && !collision.gameObject.CompareTag("Edge") && !collision.gameObject.CompareTag("Gate")) pC.IsGround = true;
+		// 着地判定（上昇中は着地できない）
+		if (!rising && JudgeGroundOrNot(collision.gameObject)) pC.IsGround = true;
 
 		// スイッチを踏んだ時
 		if (!rising && collision.gameObject.CompareTag("Switch")) collision.transform.parent.gameObject.GetComponent<SwitchBehavior>().CheckSwitchAndPlayerDir(collision.gameObject);
@@ -43,13 +43,22 @@ public class CheckIsGround : MonoBehaviour
 
 	void OnTriggerStay(Collider collision)
 	{
-		// 着地判定
-		if (!rising && !collision.gameObject.CompareTag("Face") && !collision.gameObject.CompareTag("Edge") && !collision.gameObject.CompareTag("Gate")) pC.IsGround = true;
+		// 着地判定（上昇中は着地できない）
+		if (!rising && JudgeGroundOrNot(collision.gameObject)) pC.IsGround = true;
 	}
 
 	void OnTriggerExit(Collider collision)
 	{
 		// 着地判定
-		if (!collision.gameObject.CompareTag("Face") && !collision.gameObject.CompareTag("Edge") && !collision.gameObject.CompareTag("Gate")) pC.IsGround = false;
+		if (JudgeGroundOrNot(collision.gameObject)) pC.IsGround = false;
+	}
+	bool JudgeGroundOrNot(GameObject gao)
+    {
+		bool isGround;
+
+		if (gao.CompareTag("Face") || gao.CompareTag("Edge") || gao.CompareTag("Gate") || gao.CompareTag("MiddlePoint")) isGround = false;
+		else isGround = true;
+
+		return isGround;
 	}
 }
