@@ -42,7 +42,7 @@ public class CamRotCheckPoint : MonoBehaviour
     void CheckThroughGate()
     {
         // 差が45度以下の場合（橋を通ったが元の面に帰ってきた場合）は、カメラの回転を実行しない
-        // Playerの前方方向の向きとmidpointの前方方向の向きの角度を確認する（前方はx軸のためtransform.rightとなる）
+        // Playerの前方方向の向きとチェックポイントの前方方向の向きの角度を確認する（前方はx軸のためtransform.rightとなる）
         float angle = Vector3.Angle(player.transform.right, transform.right);
         if (angle > 45)
         {
