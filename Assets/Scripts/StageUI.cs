@@ -122,8 +122,8 @@ public class StageUI : MonoBehaviour
             }
             else
             {
+                pC.PlayMusicAndPlayer();
                 firstStage = false;
-                pC.Control = true;
             }
         }
         else howToPlayPanel01.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true; // 最終ページではないときは、次のページを表示する

@@ -245,7 +245,15 @@ public class PlayerController : MonoBehaviour
 
 		StageUI sUI = GameObject.Find("UIDirector").GetComponent<StageUI>();
 		if (sUI.FirstStage) sUI.HowToPlay01();
-		else control = true;
+		else PlayMusicAndPlayer();
+	}
+	public void PlayMusicAndPlayer()
+    {
+		// Playerの動き出し
+		control = true;
+
+		// 曲の再生
+		GameObject.FindWithTag("Music").GetComponent<MusicPlayer>().PlayMusic();
 	}
 	bool SwitchCamMode(bool satelliteCam)
     {
