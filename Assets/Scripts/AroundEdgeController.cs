@@ -228,28 +228,34 @@ public class AroundEdgeController : MonoBehaviour
 
 		if (toMiddle)
 		{
-			// ①このオブジェクトをcurrentPosからmiddlePosまで移動させる
-			transform.position = Vector3.Slerp(currentPos, middlePos, time);
+			if (time < 1)
+            {
+				// ①このオブジェクトをcurrentPosからmiddlePosまで移動させる
+				transform.position = Vector3.Slerp(currentPos, middlePos, time);
 
-			// このオブジェクトを回転量の半分だけ回転させる
-			transform.rotation = Quaternion.Slerp(bR, aR, time / 2);
-
-			if (time >= 1)
+				// ①このオブジェクトを回転量の半分だけ回転させる
+				transform.rotation = Quaternion.Slerp(bR, aR, time / 2);
+			}
+			else
 			{
-				transform.position = middlePos;
-				time = 0;
+				//transform.position = middlePos;
+				//transform.rotation = Quaternion.Slerp(bR, aR, 0.5f);
+				time -= 1;
 				toMiddle = false;
 			}
 		}
-		else
+
+		if(!toMiddle)
 		{
-			// ②このオブジェクトをmiddlePosからnextPosまで移動させる
-			transform.position = Vector3.Slerp(middlePos, nextPos, time);
+			if (time < 1)
+            {
+				// ②このオブジェクトをmiddlePosからnextPosまで移動させる
+				transform.position = Vector3.Slerp(middlePos, nextPos, time);
 
-			// このオブジェクトを回転量のもう半分だけ回転させる
-			transform.rotation = Quaternion.Slerp(bR, aR, 0.5f + time / 2);
-
-			if (time >= 1)
+				// ②このオブジェクトを回転量のもう半分だけ回転させる
+				transform.rotation = Quaternion.Slerp(bR, aR, 0.5f + time / 2);
+			}
+			else
 			{
 				transform.position = nextPos;
 				transform.eulerAngles = afterR;

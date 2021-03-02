@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour
 	bool holding = false;
 	// 移動スピード
 	float moveS = 0.5f;
+	// 減速率
+	float decRate = 0.985f;
 	// 平面方向（XとZ方向）に対する移動上限速度
 	float moveLimit_XZ = 2.0f;
 	// 上下方向（Y方向）に対する移動上限速度
@@ -300,7 +302,6 @@ public class PlayerController : MonoBehaviour
 		{
 			// locVel.z：プレイヤーの左右移動
 			locVel.z += hor * moveS;
-			//rBody.AddForce(transform.forward * hor * moveS);
 		}
 
 		// locVel.x：カメラから見てプレイヤーの奥行
@@ -308,7 +309,6 @@ public class PlayerController : MonoBehaviour
 		{
 			// locVel.x：プレイヤーの奥行移動
 			locVel.x -= ver * moveS;
-			//rBody.AddForce(-transform.right * ver * moveS);
 		}
 
 		///////////////////////
@@ -332,6 +332,14 @@ public class PlayerController : MonoBehaviour
 				//aerialJumpRot = true;
 			}
 		}
+
+		///////////////////////
+		///// deceleration ////
+		///////////////////////
+
+		// 平面方向に対する減速処理
+		locVel.x *= decRate;
+		locVel.z *= decRate;
 
 		///////////////////////
 		////// movelimit //////
