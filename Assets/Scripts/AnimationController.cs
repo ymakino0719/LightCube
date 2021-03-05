@@ -16,13 +16,20 @@ public class AnimationController : MonoBehaviour
 	// 近くにあるitem
 	GameObject nearestItem;
 
+	// オーディオソース
+	AudioSource audioSource;
+
 	// Start is called before the first frame update
 	void Awake()
 	{
 		// Yagikun3DにアタッチされているAnimatorを取得する
 		animator = GetComponent<Animator>();
+		GameObject player = transform.parent.gameObject;
 		// PlayerControllerの取得
-		pC = GameObject.Find("Player").GetComponent<PlayerController>();
+		pC = player.GetComponent<PlayerController>();
+
+		// オーディオソースの取得
+		audioSource = player.GetComponent<AudioSource>();
 	}
 
 	public void MoveAnimation(bool jump, int jumpNum, int jumpNum_Max, bool pick, bool holding, bool isGround, bool lastGround, Vector3 vec)
@@ -143,6 +150,11 @@ public class AnimationController : MonoBehaviour
 	public void RestartAnimation()
 	{
 		animator.SetFloat("animationSpeed", 1.0f); // 再開
+	}
+	public void PlaySFX(AudioClip sfx)
+	{
+		// セットされた効果音を流す
+		audioSource.PlayOneShot(sfx);
 	}
 	public GameObject NearestItem
 	{

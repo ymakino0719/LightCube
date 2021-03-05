@@ -25957,6 +25957,14 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0.033333335
+    functionName: PlaySFX
+    data: 
+    objectReferenceParameter: {fileID: 8300000, guid: 28cea78d827b752479ae513cf3d4f0c1,
+      type: 3}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.1
     functionName: StartAerialJumpRot
     data: 

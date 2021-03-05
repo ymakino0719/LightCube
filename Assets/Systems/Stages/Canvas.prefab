@@ -2862,6 +2862,8 @@ GameObject:
   - component: {fileID: 6214488476249195717}
   - component: {fileID: 6214488476249195714}
   - component: {fileID: 6214488476249195712}
+  - component: {fileID: 3883745829382049318}
+  - component: {fileID: 1508930324179964013}
   m_Layer: 0
   m_Name: UIDirector
   m_TagString: Untagged
@@ -2910,6 +2912,127 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tex_S: {fileID: 2800000, guid: f1228aac1e4c73546a570c402e2a4946, type: 3}
   tex_N: {fileID: 0}
+--- !u!114 &3883745829382049318
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6214488476249195716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dff7d1cda869da45a426e2fddb008cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sfxList:
+  - {fileID: 8300000, guid: be8e3632ccc8fd04184c672a1c310b69, type: 3}
+  - {fileID: 8300000, guid: ded1870b854515d4cb12923a51fec34d, type: 3}
+  - {fileID: 8300000, guid: a8aad72c97e6241408f4b5789faeac58, type: 3}
+  - {fileID: 8300000, guid: f56d6bf855f0c1847b24b8462f901e51, type: 3}
+  - {fileID: 8300000, guid: 01216a7642dd52547a37691fed337d06, type: 3}
+  - {fileID: 8300000, guid: c2adef5803d1805458b04e64ca71ede6, type: 3}
+  - {fileID: 8300000, guid: 755854395d18bae469f5978be6b89cad, type: 3}
+  - {fileID: 8300000, guid: a763b61265b0baf459a3f43f43dca6d2, type: 3}
+  - {fileID: 8300000, guid: 3ee96d62dffd8cc43a8dc5ef3e820749, type: 3}
+  - {fileID: 8300000, guid: b55e8053bb2f6794996ee3300ee3fa37, type: 3}
+  - {fileID: 8300000, guid: 0c5a43f24d9ade84d850e372ce4f74e9, type: 3}
+  - {fileID: 8300000, guid: 6b53deae4db8e1343b45a36a266c4a54, type: 3}
+--- !u!82 &1508930324179964013
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6214488476249195716}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.3
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6316200368188119345
 GameObject:
   m_ObjectHideFlags: 0
@@ -3007,7 +3130,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 1
+  m_progress: 0.13356453
   usePosition: 1
   useRotation: 0
   useScale: 0
@@ -3502,7 +3625,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 1
+  m_progress: 0.13356453
   usePosition: 1
   useRotation: 0
   useScale: 0
@@ -3734,7 +3857,7 @@ MonoBehaviour:
   delay: 3
   style: 1
   playOnAwake: 1
-  m_progress: 0.7004782
+  m_progress: 0
   usePosition: 0
   useRotation: 0
   useScale: 0

@@ -16,11 +16,16 @@ public class CheckIsGround : MonoBehaviour
 	// 上昇速度閾値
 	float risingSpeedThreshold = 0.01f;
 
+	// SFXPlayer
+	SFXPlayer sfx_P;
 	void Awake()
 	{
 		player = transform.parent.gameObject;
 		pC = player.GetComponent<PlayerController>();
 		rBody = player.GetComponent<Rigidbody>();
+
+		// SFXPlayerの取得
+		sfx_P = player.GetComponent<SFXPlayer>();
 	}
 	void Update()
     {
@@ -38,7 +43,11 @@ public class CheckIsGround : MonoBehaviour
 		if (!rising && JudgeGroundOrNot(collision.gameObject)) pC.IsGround = true;
 
 		// スイッチを踏んだ時
-		if (!rising && collision.gameObject.CompareTag("Switch")) collision.transform.parent.gameObject.GetComponent<SwitchBehavior>().CheckSwitchAndPlayerDir(collision.gameObject);
+		if (!rising && collision.gameObject.CompareTag("Switch"))
+		{
+			sfx_P.PlaySFX(0); // スイッチを踏んだ時の音を鳴らす
+			collision.transform.parent.gameObject.GetComponent<SwitchBehavior>().CheckSwitchAndPlayerDir(collision.gameObject);
+		} 
 	}
 
 	void OnTriggerStay(Collider collision)

@@ -246,7 +246,11 @@ public class PlayerController : MonoBehaviour
 		yield return new WaitForSeconds(2.0f);
 
 		StageUI sUI = GameObject.Find("UIDirector").GetComponent<StageUI>();
-		if (sUI.FirstStage) sUI.HowToPlay01();
+		if (sUI.FirstStage)
+		{
+
+			sUI.HowToPlay01();
+		}
 		else PlayMusicAndPlayer();
 	}
 	public void PlayMusicAndPlayer()

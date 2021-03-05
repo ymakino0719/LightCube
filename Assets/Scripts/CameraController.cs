@@ -26,6 +26,8 @@ public class CameraController : MonoBehaviour
     MeshRenderer insideColorBox;
     // StageUI
     StageUI sUI;
+    // SFXPlayer
+    SFXPlayer sfx_UI;
 
     // ClearLight
     GameObject clearLight;
@@ -121,8 +123,12 @@ public class CameraController : MonoBehaviour
         insideColorBox = GameObject.FindWithTag("InsideColorBox").GetComponent<MeshRenderer>();
         // BringingPosの取得
         bringingPos = GameObject.FindWithTag("BringingPos");
+
+        GameObject uiD = GameObject.Find("UIDirector");
         // StageUIの取得
-        sUI = GameObject.Find("UIDirector").GetComponent<StageUI>();
+        sUI = uiD.GetComponent<StageUI>();
+        // SFXPlayerの取得
+        sfx_UI = uiD.GetComponent<SFXPlayer>();
     }
 
     void Start()
@@ -269,6 +275,9 @@ public class CameraController : MonoBehaviour
             // fieldOfViewの初期化
             cam.fieldOfView = initialFieldOfView;
 
+            // 回転の効果音を鳴らす
+            sfx_UI.PlaySFX(9);
+
             // 回転処理に移行する
             rolling = true;
         }
@@ -291,6 +300,9 @@ public class CameraController : MonoBehaviour
 
             // fieldOfViewの初期化
             cam.fieldOfView = initialFieldOfView;
+
+            // 回転の効果音を鳴らす
+            sfx_UI.PlaySFX(10);
 
             // 回転処理に移行する
             rolling = true;

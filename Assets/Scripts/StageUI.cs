@@ -31,6 +31,10 @@ public class StageUI : MonoBehaviour
     public bool firstStage = false;
     PlayerController pC;
     CameraController cC;
+
+    // SFXPlayer
+    SFXPlayer sfx_UI;
+
     void Awake()
     {
         pausedPanel = GameObject.Find("PausedPanel");
@@ -47,6 +51,9 @@ public class StageUI : MonoBehaviour
 
         pC = GameObject.Find("Player").GetComponent<PlayerController>();
         cC = GameObject.Find("Camera").GetComponent<CameraController>();
+
+        // SFXPlayerの取得
+        sfx_UI = GetComponent<SFXPlayer>();
     }
 
     // Start is called before the first frame update
@@ -89,6 +96,8 @@ public class StageUI : MonoBehaviour
     public void OpenPausedPanel()
     {
         pausedPanel.SetActive(true);
+        // パネルを開いたときの効果音を鳴らす
+        sfx_UI.PlaySFX(4);
         // カメラのコントロールを無効にする
         cC.CamControl = false;
         // プレイヤーのコントロールを無効にする（※カメラがSatelliteモード、FirstPersonモードの時は既に無効になっているが念のため）
@@ -111,6 +120,7 @@ public class StageUI : MonoBehaviour
         if (pageHTP_Current == pageNum01)
         {
             howToPlayPanel01.SetActive(false);
+            sfx_UI.PlaySFX(0); // 閉じるときの効果音を鳴らす
             pageHTP_Current = 0;
             openHTP01 = false;
 
@@ -126,7 +136,11 @@ public class StageUI : MonoBehaviour
                 firstStage = false;
             }
         }
-        else howToPlayPanel01.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true; // 最終ページではないときは、次のページを表示する
+        else
+        {
+            howToPlayPanel01.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true; // 最終ページではないときは、次のページを表示する
+            sfx_UI.PlaySFX(1); // ページをめくるときの効果音を鳴らす
+        } 
     }
     void TurnPagesORCloseHTP02()
     {
@@ -139,12 +153,17 @@ public class StageUI : MonoBehaviour
         if (pageHTP_Current == pageNum02)
         {
             howToPlayPanel02.SetActive(false);
+            sfx_UI.PlaySFX(0); // 閉じるときの効果音を鳴らす
             pageHTP_Current = 0;
             cC.CamControl = true;
 
             openHTP02 = false;
         }
-        else howToPlayPanel02.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true; // 最終ページではないときは、次のページを表示する
+        else
+        {
+            howToPlayPanel02.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true; // 最終ページではないときは、次のページを表示する
+            sfx_UI.PlaySFX(1); // ページをめくるときの効果音を鳴らす
+        } 
     }
     void TurnPagesORCloseHTP03()
     {
@@ -157,16 +176,22 @@ public class StageUI : MonoBehaviour
         if (pageHTP_Current == pageNum03)
         {
             howToPlayPanel03.SetActive(false);
+            sfx_UI.PlaySFX(0); // 閉じるときの効果音を鳴らす
             pageHTP_Current = 0;
             cC.CamControl = true;
 
             openHTP03 = false;
         }
-        else howToPlayPanel03.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true; // 最終ページではないときは、次のページを表示する
+        else
+        {
+            howToPlayPanel03.transform.GetChild(pageHTP_Current).GetComponent<Image>().enabled = true; // 最終ページではないときは、次のページを表示する
+            sfx_UI.PlaySFX(1); // ページをめくるときの効果音を鳴らす
+        } 
     }
 
     public void Restart()
     {
+        sfx_UI.PlaySFX(5); // 効果音を鳴らす
         TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
         traUI.RestartFade();
     }
@@ -192,8 +217,9 @@ public class StageUI : MonoBehaviour
 
     public void ReturnToStageSelect()
     {
+        sfx_UI.PlaySFX(6); // 効果音を鳴らす
         TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
-        traUI.ReturnToStageSelect(1.5f, 1.6f);
+        traUI.ReturnToStageSelect(2.0f, 2.1f);
     }
 
     public void ReturnToStageSelect_SceneChange()
@@ -220,6 +246,9 @@ public class StageUI : MonoBehaviour
         // Pausedパネルを閉じ、HowToPlayパネルを開く
         pausedPanel.SetActive(false);
         howToPlayPanel01.SetActive(true);
+        // パネルを開いたときの効果音を鳴らす
+        if (firstStage) sfx_UI.PlaySFX(2);
+        else sfx_UI.PlaySFX(3);
 
         // １枚目のスライドの表示
         howToPlayPanel01.transform.GetChild(0).GetComponent<Image>().enabled = true;
@@ -237,6 +266,8 @@ public class StageUI : MonoBehaviour
         {
             // HowToPlayPanel02を開く
             howToPlayPanel02.SetActive(true);
+            // パネルを開いたときの効果音を鳴らす
+            sfx_UI.PlaySFX(3);
             // １枚目のスライドの表示
             howToPlayPanel02.transform.GetChild(0).GetComponent<Image>().enabled = true;
             // 開くHowToPlayパネルの全枚数（openingHTPPageNum）の更新
@@ -248,6 +279,8 @@ public class StageUI : MonoBehaviour
         {
             // HowToPlayPanel03を開く
             howToPlayPanel03.SetActive(true);
+            // パネルを開いたときの効果音を鳴らす
+            sfx_UI.PlaySFX(3);
             // １枚目のスライドの表示
             howToPlayPanel03.transform.GetChild(0).GetComponent<Image>().enabled = true;
             // 開くHowToPlayパネルの全枚数（openingHTPPageNum）の更新
@@ -259,6 +292,7 @@ public class StageUI : MonoBehaviour
     public void BackToGame()
     {
         pausedPanel.SetActive(false);
+        sfx_UI.PlaySFX(0); // 閉じるときの効果音を鳴らす
         // カメラのコントロールを有効に戻す
         cC.CamControl = true;
         // カメラが通常カメラモードの場合のみ、プレイヤーのコントロールを有効に戻す
@@ -284,16 +318,22 @@ public class StageUI : MonoBehaviour
     {
         camType01.SetActive(false);
         camType02.SetActive(true);
+
+        sfx_UI.PlaySFX(7); // 効果音を鳴らす
     }
     public void SwitchCamTypeUI_ToFirstPerson()
     {
         camType02.SetActive(false);
         camType03.SetActive(true);
+
+        sfx_UI.PlaySFX(7); // 効果音を鳴らす
     }
     public void SwitchCamTypeUI_ToNormal()
     {
         camType03.SetActive(false);
         camType01.SetActive(true);
+
+        sfx_UI.PlaySFX(8); // 効果音を鳴らす
     }
     public void DisplayHelpButton()
     {

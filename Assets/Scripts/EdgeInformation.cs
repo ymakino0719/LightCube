@@ -17,6 +17,13 @@ public class EdgeInformation : MonoBehaviour
 	// 辺の原点位置のtransform
 	private Vector3 edge;
 
+	// SFXPlayer
+	SFXPlayer sfx_P;
+
+	void Awake()
+    {
+		sfx_P = GameObject.FindWithTag("Player").GetComponent<SFXPlayer>();
+	}
 	void Start()
 	{
 		// 辺の原点位置のtransformを取得
@@ -30,6 +37,7 @@ public class EdgeInformation : MonoBehaviour
 
 			if(!aEC.StopEdgeEntering)
             {
+				sfx_P.PlaySFX(1); // 効果音を鳴らす
 				aEC.FromEdgesInformation(edge, vertex[0].transform.position, vertex[1].transform.position, face[0].transform.position, face[1].transform.position);
 			}
 		}
