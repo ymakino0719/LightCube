@@ -46,12 +46,26 @@ public class ClearJudgement : MonoBehaviour
     // プレイヤー制御
     PlayerController pC;
 
+    // ClearLightのAudioSource
+    AudioSource audio_CL;
+    // 音量の加算率
+    float addVol = 0.02f;
+    // 音量の減算率
+    float subVol = 0.02f;
+    // 最大音量
+    float maxVol = 0.1f;
+    // 最終的な設定音量
+    float endVol = 0.02f;
+    // ゲームオーバー後の遷移時の音量のフェードアウト
+    bool fadeOutSounds = false;
+
     void Awake()
     {
         clearLight = GameObject.Find("ClearLight");
         lighting = clearLight.GetComponent<Light>();
         lighting.range = 0;
         lighting.enabled = false;
+        audio_CL = clearLight.GetComponent<AudioSource>();
 
         cC = GameObject.Find("Camera").GetComponent<CameraController>();
         aC = GameObject.Find("Yagikun3D").GetComponent<AnimationController>();
@@ -70,6 +84,8 @@ public class ClearJudgement : MonoBehaviour
 
             if (startingOperation01) ScalingLightBeginningRange();
             else                     ScalingLightAfterRange();
+
+            if (fadeOutSounds) FadeOutAllSounds();
         }
     }
     void Update()
@@ -109,7 +125,7 @@ public class ClearJudgement : MonoBehaviour
             ////////////////////
 
             // StarLightが輝く効果音を鳴らす
-            GameObject.Find("ClearLight").GetComponent<AudioSource>().Play();
+            audio_CL.Play();
 
             // Musicにフェードアウトをかける
             GameObject.FindWithTag("Music").GetComponent<MusicPlayer>().FadeOutV = true;
@@ -133,6 +149,14 @@ public class ClearJudgement : MonoBehaviour
             cC.TurnAroundToStarLight();
             // ゆっくりStarLightにカメラを近づける
             cC.MoveCloserToStarLight();
+
+            ////////////////////
+            /////// SFX ////////
+            ////////////////////
+
+            // StarLightが輝く効果音を徐々に大きくする
+            if (audio_CL.volume + Time.deltaTime * addVol < maxVol) audio_CL.volume += Time.deltaTime * addVol;
+            else audio_CL.volume = maxVol;
         }
     }
     void GameOver02_Behavior()
@@ -155,6 +179,16 @@ public class ClearJudgement : MonoBehaviour
 
             // StarLightが背景になるようにカメラ移動する
             cC.Move_StarLightBecomesBackground();
+
+            ////////////////////
+            /////// SFX ////////
+            ////////////////////
+
+            // ゲームオーバーのジングルをかける
+            GameObject.FindWithTag("Music").GetComponent<MusicPlayer>().PlayJingle(0);
+
+            // StarLightが輝く効果音の大きさを変更する
+            audio_CL.volume = endVol;
 
             beginning02 = false;
         }
@@ -186,10 +220,17 @@ public class ClearJudgement : MonoBehaviour
         if (Input.anyKey)
         {
             startAcceptingInput_AnyKey = false;
+            fadeOutSounds = true;
 
             TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
             traUI.ReturnToStageSelect(3.0f, 3.1f);
         }
+    }
+    void FadeOutAllSounds()
+    {
+        // StarLightが輝く効果音を徐々に小さくする
+        if (audio_CL.volume - Time.deltaTime * subVol > 0) audio_CL.volume -= Time.deltaTime * subVol;
+        else audio_CL.volume = 0;
     }
 
     void ScalingLightBeginningRange()

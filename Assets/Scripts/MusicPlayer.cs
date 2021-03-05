@@ -7,6 +7,9 @@ public class MusicPlayer : MonoBehaviour
     // inspector上でセットする曲のリスト
     public AudioClip[] musicList = new AudioClip[4];
 
+    // inspector上でセットするジングルのリスト
+    public AudioClip[] jingleList = new AudioClip[1];
+
     // 曲の合計本数
     int totalNum = 0;
 
@@ -21,7 +24,7 @@ public class MusicPlayer : MonoBehaviour
     // 初期の音量
     float initialVol;
     // 音量の低減率
-    float reduction = 0.02f;
+    float reduction = 0.015f;
     // 音量を徐々に小さくする（※0まで）
     bool fadeOutV;
     // 最低音量（※Paused画面中など）
@@ -85,6 +88,14 @@ public class MusicPlayer : MonoBehaviour
     public void RestoreMusicVolume()
     {
         audioSource.volume = initialVol;
+    }
+    public void PlayJingle(int num)
+    {
+        audioSource.clip = jingleList[num];
+        // 音量を元に戻す
+        RestoreMusicVolume();
+        // ジングルを流す
+        audioSource.Play();
     }
     public bool FadeOutV
     {
