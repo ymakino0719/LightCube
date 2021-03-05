@@ -18,10 +18,20 @@ public class MusicPlayer : MonoBehaviour
 
     AudioSource audioSource;
 
+    // 初期の音量
+    float initialVol;
+    // 音量の低減率
+    float reduction = 0.02f;
+    // 音量を徐々に小さくする（※0まで）
+    bool fadeOutV;
+    // 最低音量（※Paused画面中など）
+    float minVol;
+
     // Start is called before the first frame update
     void Awake()
     {
         audioSource = GetComponent<AudioSource>();
+        initialVol = audioSource.volume;
     }
     void Start()
     {
@@ -29,6 +39,12 @@ public class MusicPlayer : MonoBehaviour
         totalNum = musicList.Length;
         // 先頭の曲をセットする
         audioSource.clip = musicList[0];
+        // 最低音量の代入
+        minVol = initialVol / 3.0f;
+    }
+    void FixedUpdate()
+    {
+        if (fadeOutV) FadeOutMusicVolume();
     }
     public void PlayMusic()
     {
@@ -51,5 +67,28 @@ public class MusicPlayer : MonoBehaviour
 
         // 次の曲を流す
         PlayMusic();
+    }
+    void FadeOutMusicVolume()
+    {
+        float vol = audioSource.volume - Time.deltaTime * reduction;
+        if (vol > 0) audioSource.volume = vol;
+        else
+        {
+            audioSource.volume = 0;
+            fadeOutV = false;
+        }
+    }
+    public void TurnDownMusicVolume()
+    {
+        audioSource.volume = minVol;
+    }
+    public void RestoreMusicVolume()
+    {
+        audioSource.volume = initialVol;
+    }
+    public bool FadeOutV
+    {
+        set { fadeOutV = value; }
+        get { return fadeOutV; }
     }
 }

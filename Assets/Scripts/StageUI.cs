@@ -34,7 +34,8 @@ public class StageUI : MonoBehaviour
 
     // SFXPlayer
     SFXPlayer sfx_UI;
-
+    // MusicPlayer
+    MusicPlayer mP;
     void Awake()
     {
         pausedPanel = GameObject.Find("PausedPanel");
@@ -54,6 +55,8 @@ public class StageUI : MonoBehaviour
 
         // SFXPlayerの取得
         sfx_UI = GetComponent<SFXPlayer>();
+        // MusicPlayerの取得
+        mP = GameObject.FindWithTag("Music").GetComponent<MusicPlayer>();
     }
 
     // Start is called before the first frame update
@@ -98,6 +101,8 @@ public class StageUI : MonoBehaviour
         pausedPanel.SetActive(true);
         // パネルを開いたときの効果音を鳴らす
         sfx_UI.PlaySFX(4);
+        // Musicの音量を小さくする
+        mP.TurnDownMusicVolume();
         // カメラのコントロールを無効にする
         cC.CamControl = false;
         // プレイヤーのコントロールを無効にする（※カメラがSatelliteモード、FirstPersonモードの時は既に無効になっているが念のため）
@@ -153,7 +158,11 @@ public class StageUI : MonoBehaviour
         if (pageHTP_Current == pageNum02)
         {
             howToPlayPanel02.SetActive(false);
-            sfx_UI.PlaySFX(0); // 閉じるときの効果音を鳴らす
+            // 閉じるときの効果音を鳴らす
+            sfx_UI.PlaySFX(0);
+            // Musicの音量を元に戻す
+            mP.RestoreMusicVolume();
+
             pageHTP_Current = 0;
             cC.CamControl = true;
 
@@ -176,7 +185,11 @@ public class StageUI : MonoBehaviour
         if (pageHTP_Current == pageNum03)
         {
             howToPlayPanel03.SetActive(false);
-            sfx_UI.PlaySFX(0); // 閉じるときの効果音を鳴らす
+            // 閉じるときの効果音を鳴らす
+            sfx_UI.PlaySFX(0);
+            // Musicの音量を元に戻す
+            mP.RestoreMusicVolume();
+
             pageHTP_Current = 0;
             cC.CamControl = true;
 
@@ -268,6 +281,8 @@ public class StageUI : MonoBehaviour
             howToPlayPanel02.SetActive(true);
             // パネルを開いたときの効果音を鳴らす
             sfx_UI.PlaySFX(3);
+            // Musicの音量を小さくする
+            mP.TurnDownMusicVolume();
             // １枚目のスライドの表示
             howToPlayPanel02.transform.GetChild(0).GetComponent<Image>().enabled = true;
             // 開くHowToPlayパネルの全枚数（openingHTPPageNum）の更新
@@ -281,6 +296,8 @@ public class StageUI : MonoBehaviour
             howToPlayPanel03.SetActive(true);
             // パネルを開いたときの効果音を鳴らす
             sfx_UI.PlaySFX(3);
+            // Musicの音量を小さくする
+            mP.TurnDownMusicVolume();
             // １枚目のスライドの表示
             howToPlayPanel03.transform.GetChild(0).GetComponent<Image>().enabled = true;
             // 開くHowToPlayパネルの全枚数（openingHTPPageNum）の更新
@@ -292,7 +309,10 @@ public class StageUI : MonoBehaviour
     public void BackToGame()
     {
         pausedPanel.SetActive(false);
-        sfx_UI.PlaySFX(0); // 閉じるときの効果音を鳴らす
+        // 閉じるときの効果音を鳴らす
+        sfx_UI.PlaySFX(0);
+        // Musicの音量を元に戻す
+        mP.RestoreMusicVolume();
         // カメラのコントロールを有効に戻す
         cC.CamControl = true;
         // カメラが通常カメラモードの場合のみ、プレイヤーのコントロールを有効に戻す

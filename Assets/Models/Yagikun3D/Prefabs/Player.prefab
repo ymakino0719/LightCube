@@ -475,6 +475,7 @@ MonoBehaviour:
   sfxList:
   - {fileID: 8300000, guid: 1e8ae2ab4ad78954d8bf4abeaf7542e3, type: 3}
   - {fileID: 8300000, guid: fce2f91b7de3fe948a68ac03a46ae849, type: 3}
+  - {fileID: 8300000, guid: e8de8a36182956f41949ba2de62bc335, type: 3}
 --- !u!82 &2619550313297932862
 AudioSource:
   m_ObjectHideFlags: 0
