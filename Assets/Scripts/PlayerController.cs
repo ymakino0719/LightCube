@@ -259,7 +259,7 @@ public class PlayerController : MonoBehaviour
 		control = true;
 
 		// 曲の再生
-		GameObject.FindWithTag("Music").GetComponent<MusicPlayer>().PlayMusic();
+		GameObject.FindWithTag("Music").GetComponent<MusicPlayer>().InitialPlayMusic();
 	}
 	bool SwitchCamMode(bool satelliteCam)
     {

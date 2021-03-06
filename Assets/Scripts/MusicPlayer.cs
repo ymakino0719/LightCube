@@ -16,6 +16,8 @@ public class MusicPlayer : MonoBehaviour
     // 現在流している曲の番号
     int musicNum = 0;
 
+    // 開幕の曲を流し始めるまでの時間
+    float initial = 2.0f;
     // 前の曲が終わってから次の曲を流し始めるまでの時間
     float interval = 10.0f;
 
@@ -48,6 +50,17 @@ public class MusicPlayer : MonoBehaviour
     void FixedUpdate()
     {
         if (fadeOutV) FadeOutMusicVolume();
+    }
+    public void InitialPlayMusic()
+    {
+        StartCoroutine("InitialPlayMusicCoroutine");
+    }
+    IEnumerator InitialPlayMusicCoroutine()
+    {
+        // 開幕の曲を流すまでの間隔を設ける
+        yield return new WaitForSeconds(initial);
+
+        PlayMusic();
     }
     public void PlayMusic()
     {

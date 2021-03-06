@@ -51,7 +51,7 @@ public class ClearJudgement : MonoBehaviour
     // 音量の加算率
     float addVol = 0.02f;
     // 音量の減算率
-    float subVol = 0.02f;
+    float subVol = 0.01f;
     // 最大音量
     float maxVol = 0.1f;
     // 最終的な設定音量
@@ -210,7 +210,7 @@ public class ClearJudgement : MonoBehaviour
         beginning03 = false;
 
         // 勝利画面でn秒間待機する
-        yield return new WaitForSeconds(4);
+        yield return new WaitForSeconds(5);
 
         // AnyKeyの入力受付開始
         startAcceptingInput_AnyKey = true;

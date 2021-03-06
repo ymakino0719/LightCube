@@ -76,6 +76,9 @@ public class StageUI : MonoBehaviour
         camType02.SetActive(false);
         camType03.SetActive(false);
         helpButton.SetActive(false);
+
+        // 開幕の効果音を鳴らす
+        sfx_UI.PlaySFX(12);
     }
 
     void Update()
@@ -205,6 +208,7 @@ public class StageUI : MonoBehaviour
     public void Restart()
     {
         sfx_UI.PlaySFX(5); // 効果音を鳴らす
+        mP.FadeOutV = true; // 音楽の音量を徐々に下げ始める
         TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
         traUI.RestartFade();
     }
@@ -231,6 +235,7 @@ public class StageUI : MonoBehaviour
     public void ReturnToStageSelect()
     {
         sfx_UI.PlaySFX(6); // 効果音を鳴らす
+        mP.FadeOutV = true; // 音楽の音量を徐々に下げ始める
         TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
         traUI.ReturnToStageSelect(2.0f, 2.1f);
     }
@@ -248,7 +253,6 @@ public class StageUI : MonoBehaviour
 
         // 遷移した後の処理
         fade_Next.cutoutRange = 1;
-        titUI.StageSelectBool = true;
         titUI.ReturnFromStages = true;
 
         // イベントから削除

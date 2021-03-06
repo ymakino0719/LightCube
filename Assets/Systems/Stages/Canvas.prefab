@@ -2937,6 +2937,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b55e8053bb2f6794996ee3300ee3fa37, type: 3}
   - {fileID: 8300000, guid: 0c5a43f24d9ade84d850e372ce4f74e9, type: 3}
   - {fileID: 8300000, guid: a252198f6dda8f34ba27f50bbf6334db, type: 3}
+  - {fileID: 8300000, guid: 0853ffa583916194d9d5b37f86227a9f, type: 3}
 --- !u!82 &1508930324179964013
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3130,7 +3131,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 0.0066666664
+  m_progress: 0.5125496
   usePosition: 1
   useRotation: 0
   useScale: 0
@@ -3625,7 +3626,7 @@ MonoBehaviour:
   delay: 0
   style: 0
   playOnAwake: 1
-  m_progress: 0.0066666664
+  m_progress: 0.5125496
   usePosition: 1
   useRotation: 0
   useScale: 0

@@ -276,7 +276,7 @@ public class CameraController : MonoBehaviour
             cam.fieldOfView = initialFieldOfView;
 
             // 回転の効果音を鳴らす
-            sfx_UI.PlaySFX(9);
+            sfx_UI.PlaySFX(10);
 
             // 回転処理に移行する
             rolling = true;

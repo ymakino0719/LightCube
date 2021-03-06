@@ -32,7 +32,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Landing_AfterAerialJumping_14
+  m_Name: Landing_AfterAerialJumping
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -968,7 +968,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Landing_14
+  m_Name: Landing
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:

@@ -6,8 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class TitleUI : MonoBehaviour
 {
-    GameObject stageSelectPanel;
     GameObject titlePanel;
+    GameObject stageSelectPanel;
+    GameObject hideUIPanel;
 
     GameObject fadeCanvas;
     Fade fade;
@@ -23,70 +24,94 @@ public class TitleUI : MonoBehaviour
     // フェードを始めてからシーンが遷移するまでの時間（fadeTimeと同じかそれ以上の長さにする）
     float transitionTime = 1.6f;
 
-    bool stageSelectBool = false;
-
     bool returnFromStages = false;
+
+    // 効果音
+    SFXPlayer sfx;
     void Awake()
     {
         titlePanel = GameObject.Find("TitlePanel");
         stageSelectPanel = GameObject.Find("StageSelectPanel");
+        hideUIPanel = GameObject.Find("HideUIPanel");
 
         fadeCanvas = GameObject.Find("FadeCanvas");
         fade = fadeCanvas.GetComponent<Fade>();
         fI = fadeCanvas.GetComponent<FadeImage>();
+
+        sfx = GameObject.Find("SFX").GetComponent<SFXPlayer>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
         stageSelectPanel.SetActive(false);
-
         fadeCanvas.SetActive(false);
 
-        if (returnFromStages) { StartCoroutine("FadeOutCoroutine"); }
-    }
-    void Update()
-    {
-        if(stageSelectBool)
+        if (!returnFromStages) 
         {
+            hideUIPanel.SetActive(false);
+        }
+        else
+        {
+            StartCoroutine("FadeOutCoroutine");
             ChangeToStageSelectPanel();
-            stageSelectBool = false;
+            returnFromStages = false;
         }
     }
-
     public void ChangeToStageSelectPanel()
     {
         titlePanel.SetActive(false);
         stageSelectPanel.SetActive(true);
+
+        if(!returnFromStages) sfx.PlaySFX(0); // 効果音を鳴らす
     }
     public void ChangeToTitlePanel()
     {
         stageSelectPanel.SetActive(false);
         titlePanel.SetActive(true);
+
+        // 効果音を鳴らす
+        sfx.PlaySFX(1);
     }
     public void Stage01_1()
     {
         StartCoroutine(FadeInCoroutine("Stage01-1"));
+        SelectStageSFX();
     }
     public void Stage01_2()
     {
         StartCoroutine(FadeInCoroutine("Stage01-2"));
+        SelectStageSFX();
     }
     public void Stage01_3()
     {
         StartCoroutine(FadeInCoroutine("Stage01-3"));
+        SelectStageSFX();
     }
     public void Stage01_4()
     {
         StartCoroutine(FadeInCoroutine("Stage01-4"));
+        SelectStageSFX();
     }
     public void Stage01_5()
     {
         StartCoroutine(FadeInCoroutine("Stage01-5"));
+        SelectStageSFX();
     }
     public void Stage01_6()
     {
         StartCoroutine(FadeInCoroutine("Stage01-6"));
+        SelectStageSFX();
+    }
+    public void CursorOnTheButton()
+    {
+        // 効果音を鳴らす
+        sfx.PlaySFX(2);
+    }
+    void SelectStageSFX()
+    {
+        // 効果音を鳴らす
+        sfx.PlaySFX(3);
     }
 
     IEnumerator FadeInCoroutine(string stageName)
@@ -112,6 +137,7 @@ public class TitleUI : MonoBehaviour
         // フェード時間中の時間を止める
         yield return new WaitForSeconds(transitionTime);
 
+        hideUIPanel.SetActive(false);
         fadeCanvas.SetActive(false);
     }
     private void SceneLoaded_StageSelect(Scene next, LoadSceneMode mode)
@@ -124,12 +150,6 @@ public class TitleUI : MonoBehaviour
 
         // イベントから削除
         SceneManager.sceneLoaded -= SceneLoaded_StageSelect;
-    }
-
-    public bool StageSelectBool
-    {
-        set { stageSelectBool = value; }
-        get { return stageSelectBool; }
     }
     public bool ReturnFromStages
     {
