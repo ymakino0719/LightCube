@@ -724,6 +724,41 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7204564097588671422, guid: ad182e383552760468efcf027444489e,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7204564097588671422, guid: ad182e383552760468efcf027444489e,
+        type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7204564097588671422, guid: ad182e383552760468efcf027444489e,
+        type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7204564097588671422, guid: ad182e383552760468efcf027444489e,
+        type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7204564097588671422, guid: ad182e383552760468efcf027444489e,
+        type: 3}
+      propertyPath: m_SkinnedMotionVectors
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7204564097588671422, guid: ad182e383552760468efcf027444489e,
+        type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7204564097588671422, guid: ad182e383552760468efcf027444489e,
+        type: 3}
+      propertyPath: m_ReflectionProbeUsage
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -7176169326012789260, guid: ad182e383552760468efcf027444489e,
         type: 3}
       propertyPath: m_Layer

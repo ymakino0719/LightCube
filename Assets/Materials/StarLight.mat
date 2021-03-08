@@ -8,13 +8,14 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: StarLight
-  m_Shader: {fileID: 4800000, guid: dba0f1a849fc15c4a97b9bf664bf81f4, type: 3}
-  m_ShaderKeywords: _ALPHAPREMULTIPLY_ON
-  m_LightmapFlags: 4
+  m_Shader: {fileID: 4800000, guid: 1a97144e4ad27a04aafd70f7b915cedb, type: 3}
+  m_ShaderKeywords: _EMISSION
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
-  stringTagMap: {}
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -67,7 +68,27 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _OutlineWidthTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ReceiveShadowTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadeTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadingGradeTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SphereAdd:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -78,40 +99,51 @@ Material:
     - _BevelOffset: 0
     - _BevelRoundness: 0
     - _BevelWidth: 0
+    - _BlendMode: 0
     - _BumpFace: 0
     - _BumpOutline: 0
     - _BumpScale: 1
     - _ColorMask: 15
     - _Cull: 1
+    - _CullMode: 1
     - _Cutoff: 0.5
+    - _DebugMode: 0
     - _DetailNormalMapScale: 1
     - _Diffuse: 0.5
     - _DitherAmount: 0.28
-    - _DstBlend: 10
+    - _DstBlend: 0
     - _FaceDilate: 0
     - _FaceUVSpeedX: 0
     - _FaceUVSpeedY: 0
     - _GlossMapScale: 1
-    - _Glossiness: 1
+    - _Glossiness: 0
     - _GlossyReflections: 1
     - _GlowInner: 0.05
     - _GlowOffset: 0
     - _GlowOuter: 0.05
     - _GlowPower: 0.75
     - _GradientScale: 5
+    - _IndirectLightIntensity: 0.1
     - _LightAngle: 3.1416
+    - _LightColorAttenuation: 0
     - _MaskSoftnessX: 0
     - _MaskSoftnessY: 0
     - _Metallic: 0
-    - _Mode: 3
+    - _Mode: 0
     - _OcclusionStrength: 1
+    - _OutlineColorMode: 0
+    - _OutlineCullMode: 2
+    - _OutlineLightingMix: 1
     - _OutlineMode: 0
+    - _OutlineScaledMaxDistance: 1
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
     - _OutlineWidth: 0
+    - _OutlineWidthMode: 0
     - _Parallax: 0.02
     - _PerspectiveFilter: 0.875
+    - _ReceiveShadowRate: 1
     - _Reflectivity: 10
     - _Saturation: 0
     - _ScaleRatioA: 1
@@ -119,7 +151,10 @@ Material:
     - _ScaleRatioC: 1
     - _ScaleX: 1
     - _ScaleY: 1
+    - _ShadeShift: 0
+    - _ShadeToony: 0.9
     - _ShaderFlags: 0
+    - _ShadingGradeRate: 1
     - _Shadow: 0.4
     - _Sharpness: 0
     - _SmoothnessTextureChannel: 0
@@ -144,13 +179,13 @@ Material:
     - _VertexOffsetY: 0
     - _WeightBold: 0.5
     - _WeightNormal: 0
-    - _ZWrite: 0
+    - _ZWrite: 1
     - _outline_tint: 0.5
     - _outline_width: 0.2
     m_Colors:
     - _ClipRect: {r: -32767, g: -32767, b: 32767, a: 32767}
-    - _Color: {r: 0, g: 0, b: 0, a: 0.5019608}
-    - _EmissionColor: {r: 0.5394797, g: 0.5394797, b: 0.5394797, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0.6037736, g: 0.6037736, b: 0.6037736, a: 1}
     - _EnvMatrixRotation: {r: 0, g: 0, b: 0, a: 0}
     - _FaceColor: {r: 1, g: 1, b: 1, a: 1}
     - _GlowColor: {r: 0, g: 1, b: 0, a: 0.5}
@@ -158,6 +193,7 @@ Material:
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectFaceColor: {r: 0, g: 0, b: 0, a: 1}
     - _ReflectOutlineColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ShadeColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecularColor: {r: 1, g: 1, b: 1, a: 1}
     - _UnderlayColor: {r: 0, g: 0, b: 0, a: 0.5}
     - _outline_color: {r: 0.5, g: 0.5, b: 0.5, a: 1}

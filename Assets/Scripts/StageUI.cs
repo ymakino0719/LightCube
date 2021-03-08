@@ -78,7 +78,7 @@ public class StageUI : MonoBehaviour
         helpButton.SetActive(false);
 
         // 開幕の効果音を鳴らす
-        sfx_UI.PlaySFX(12);
+        //sfx_UI.PlaySFX(12);
     }
 
     void Update()
