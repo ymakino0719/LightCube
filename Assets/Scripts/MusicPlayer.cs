@@ -32,6 +32,9 @@ public class MusicPlayer : MonoBehaviour
     // 最低音量（※Paused画面中など）
     float minVol;
 
+    // ゲームオーバー時
+    bool gameOver = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -77,6 +80,10 @@ public class MusicPlayer : MonoBehaviour
         // 更に次の曲を流すまでの間隔を設ける
         yield return new WaitForSeconds(interval);
 
+        if(!gameOver) SetAndPlayNextMusic();
+    }
+    void SetAndPlayNextMusic()
+    {
         // 次の曲をセットする
         musicNum = (musicNum < totalNum - 1) ? musicNum + 1 : 0;
         audioSource.clip = musicList[musicNum];
@@ -114,5 +121,10 @@ public class MusicPlayer : MonoBehaviour
     {
         set { fadeOutV = value; }
         get { return fadeOutV; }
+    }
+    public bool GameOver
+    {
+        set { gameOver = value; }
+        get { return gameOver; }
     }
 }

@@ -127,8 +127,11 @@ public class ClearJudgement : MonoBehaviour
             // StarLightが輝く効果音を鳴らす
             audio_CL.Play();
 
+            MusicPlayer mP = GameObject.FindWithTag("Music").GetComponent<MusicPlayer>();
             // Musicにフェードアウトをかける
-            GameObject.FindWithTag("Music").GetComponent<MusicPlayer>().FadeOutV = true;
+            mP.FadeOutV = true;
+            // Musicの通常曲の再生を止める
+            mP.GameOver = true;
 
             beginning01 = false;
         }

@@ -10,22 +10,30 @@ public class BrightnessRegulator : MonoBehaviour
     // Emissionの最小値
     private float minEmission = 1.0f;
     // Emissionの強度
-    private float magEmission = 25.0f;
+    private float magEmission = 10.0f;
     // 角度
-    private int degree = 0;
-    //発光速度
-    private int speed = 2;
-    // ターゲットのデフォルトの色
-    [ColorUsage(false, true)] public Color defaultColor;
+    private float degree = -1;
+    // 発光速度
+    private float speed = 0.3f;
+    // 面の色
+    Color[] faceColor = new Color[3];
+    // 乱数値（発光色を決める）
+    int rand;
 
     // Use this for initialization
     void Start()
     {
-        //オブジェクトにアタッチしているMaterialを取得
+        // オブジェクトにアタッチしているMaterialを取得
         myMaterial = GetComponent<Renderer>().material;
 
-        //オブジェクトの最初の色を設定
-        myMaterial.SetColor("_EmissionColor", defaultColor * minEmission);
+        // オブジェクトの最初の色を設定
+        rand = Random.Range(0, 3);
+        myMaterial.SetColor("_EmissionColor", faceColor[rand] * minEmission);
+
+        //
+        faceColor[0] = new Color32(1, 1, 5, 1);
+        faceColor[1] = new Color32(3, 1, 8, 1);
+        faceColor[2] = new Color32(1, 3, 8, 1);
     }
 
     // Update is called once per frame
@@ -34,7 +42,7 @@ public class BrightnessRegulator : MonoBehaviour
         if (degree >= 0)
         {
             // 光らせる強度を計算する
-            Color emissionColor = defaultColor * (minEmission + Mathf.Sin(degree * Mathf.Deg2Rad) * magEmission);
+            Color emissionColor = faceColor[rand] * (minEmission + Mathf.Sin(degree * Mathf.Deg2Rad) * magEmission);
 
             // エミッションに色を設定する
             myMaterial.SetColor("_EmissionColor", emissionColor);
@@ -49,8 +57,12 @@ public class BrightnessRegulator : MonoBehaviour
     {
         if(other.gameObject.CompareTag("Star"))
         {
-            //角度を180に設定
-            degree = 180;
+            
+            if (degree < 0)
+            {
+                degree = 180; //角度を180に設定
+                rand = Random.Range(0, 3);
+            } 
         }
     }
 }
