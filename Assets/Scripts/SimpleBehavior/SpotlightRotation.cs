@@ -11,18 +11,25 @@ public class SpotlightRotation : MonoBehaviour
     float initialZ02;
 
     // 回転域
-    float range01 = 60.0f;
-    float range02 = 20.0f;
+    public float range01 = 60.0f;
+    public float range02 = 20.0f;
 
     // 回転速度
     float rotSpeed01 = 0.1f;
-    float rotSpeed02 = 0.2f;
+    float rotSpeed02 = 0.175f;
+
+    // 乱数値（開始タイミングをずらす）
+    float rand;
 
     void Awake()
     {
         rotParts02 = transform.GetChild(0).gameObject;
-        initialY01 = transform.eulerAngles.y;
-        initialZ02 = transform.eulerAngles.z;
+        initialY01 = transform.localEulerAngles.y;
+        initialZ02 = rotParts02.transform.localEulerAngles.z;
+    }
+    void Start()
+    {
+        rand = Random.Range(0.0f, 10.0f);
     }
     void FixedUpdate()
     {
@@ -31,10 +38,10 @@ public class SpotlightRotation : MonoBehaviour
     }
     void RotateParts01()
     {
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, initialY01 + Mathf.Sin(Time.time * rotSpeed01 * Mathf.PI) * range01, transform.eulerAngles.z);
+        transform.localEulerAngles = new Vector3(transform.localEulerAngles.x, initialY01 + Mathf.Sin((rand + Time.time) * rotSpeed01 * Mathf.PI) * range01, transform.localEulerAngles.z);
     }
     void RotateParts02()
     {
-        rotParts02.transform.eulerAngles = new Vector3(rotParts02.transform.eulerAngles.x, rotParts02.transform.eulerAngles.y, initialZ02 + Mathf.Sin(Time.time * rotSpeed02 * Mathf.PI) * range02);
+        rotParts02.transform.localEulerAngles = new Vector3(rotParts02.transform.localEulerAngles.x, rotParts02.transform.localEulerAngles.y, initialZ02 + Mathf.Sin((rand + Time.time) * rotSpeed02 * Mathf.PI) * range02);
     }
 }

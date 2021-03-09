@@ -10,14 +10,17 @@ public class SimplePlanet : MonoBehaviour
     float angle = 0.05f;
     // 回転速度（乱数）
     float speedY;
+    // 円の半径
+    public float radius = 10.0f;
     void Awake()
     {
+        transform.position = Random.onUnitSphere * radius;
         child = transform.GetChild(0).gameObject;
     }
     void Start()
     {
         transform.rotation = Quaternion.LookRotation(Vector3.zero - transform.position, transform.up);
-        child.transform.eulerAngles = new Vector3(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+        child.transform.rotation = Random.rotation;
         speedY = Random.Range(0.5f, 1.0f);
     }
     void FixedUpdate()

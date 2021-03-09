@@ -12,9 +12,9 @@ public class SimpleStar : MonoBehaviour
     float moveRandMax = 20.0f;
 
     // 回転乱数の下限値
-    float rotRandMin = -2.0f;
+    float rotRandMin = -1.0f;
     // 回転乱数の上限値
-    float rotRandMax = 2.0f;
+    float rotRandMax = 1.0f;
 
     // Start is called before the first frame update
     void Start()
