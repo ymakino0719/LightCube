@@ -5,7 +5,7 @@ using UnityEngine;
 public class Rotatator : MonoBehaviour {
 	[SerializeField] Vector3 rotation;
 	[SerializeField] Transform meshObject = null;
-	[SerializeField] float rotationSpeed = 0;
+	float rotationSpeed;
 	[SerializeField] bool randomize;
 	
 	public bool Randomize 
@@ -15,9 +15,9 @@ public class Rotatator : MonoBehaviour {
 			return randomize;
 		}
 	}
-	
-	[SerializeField] float maxSpeed;
-	[SerializeField] float minSpeed;
+
+	public float maxSpeed = 1.0f;
+	public float minSpeed = 0.5f;
 
 	// Use this for initialization
 	void Start () 

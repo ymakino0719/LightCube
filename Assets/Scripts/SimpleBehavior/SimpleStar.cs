@@ -7,9 +7,9 @@ public class SimpleStar : MonoBehaviour
     Rigidbody rBody;
 
     // 移動乱数の下限値
-    float moveRandMin = -20.0f;
+    float moveRandMin = -15.0f;
     // 移動乱数の上限値
-    float moveRandMax = 20.0f;
+    float moveRandMax = 15.0f;
 
     // 回転乱数の下限値
     float rotRandMin = -1.0f;
