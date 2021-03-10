@@ -87,6 +87,10 @@ public class SwitchBehavior : MonoBehaviour
 
         if (angle <= 45)
         {
+            // スイッチを踏んだ時の音を鳴らす
+            player.GetComponent<SFXPlayer>().PlaySFX(0);
+            
+            // 他全てのスイッチを一度オフにし、踏んだ色のスイッチをオンにする
             aSM.OtherCororSwitchesOFF(switchNum);
             SwitchONOFF();
             aSM.LastSwitchNum = switchNum;
