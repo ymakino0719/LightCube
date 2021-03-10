@@ -455,27 +455,42 @@ public class PlayerController : MonoBehaviour
 		{
 			if (colList[i].gameObject.CompareTag(tag)) // 指定のタグが付いたオブジェクトのみを対象とする
 			{
-				if(target == null) // 近くのオブジェクトが１つのみだった場合ここの処理で終わる
-                {
-					// targetには衝突したオブジェクトの１つ上の親オブジェクトを代入する（子オブジェクトに回転情報を持たせる都合によるもの）
-					target = colList[i].transform.parent.gameObject;
-				}
-				else // 近くのオブジェクトが複数ある場合、一番距離が近いitemを特定、nItemを更新する
-				{
-					float disA = (footPosTra.position - colList[i].transform.parent.gameObject.transform.position).sqrMagnitude;
-					float disB = (footPosTra.position - target.transform.position).sqrMagnitude;
-
-					if(disA < disB)
-                    {
-						target = colList[i].transform.parent.gameObject;
-					}
-				}
+				// 上方向の向きが一致するかを確認する
+				GameObject objectA = colList[i].transform.parent.gameObject;
+				// 上方向の向きが一致する場合、最も距離が近いアイテムかどうか確認し、更新する
+				if (CheckPlayerAndItemsDirection(objectA)) UpdateToNearestItem(objectA, ref target);
 			}
 		}
 
 		return target;
 	}
+	bool CheckPlayerAndItemsDirection(GameObject objA)
+	{
+		// Playerの上方向の向きとアイテムの上方向の向きの角度を確認する
+		float angle = Vector3.Angle(transform.up, objA.transform.up);
+		//Debug.Log("angle: " + angle);
 
+		// 差が45度以下の場合、正しい方角と判断する
+		bool check = (angle <= 45) ? true : false;
+
+		return check;
+	}
+	void UpdateToNearestItem(GameObject objA, ref GameObject tgt)
+    {
+		if (tgt == null) // ※近くのオブジェクトが１つのみだった場合、ここの処理で終わる
+		{
+			// targetには衝突したオブジェクトの１つ上の親オブジェクトを代入する（子オブジェクトに回転情報を持たせる都合によるもの）
+			tgt = objA;
+		}
+		else // 近くのオブジェクトが複数ある場合、一番距離が近いitemを特定、nItemを更新する
+		{
+			float disA = (footPosTra.position - objA.transform.position).sqrMagnitude;
+			float disB = (footPosTra.position - tgt.transform.position).sqrMagnitude;
+
+			// 条件を満たす時、targetを更新する
+			if (disA < disB) tgt = objA;
+		}
+	}
 	void TurnTowardTheTarget(GameObject target)
     {
 		// プレイヤーとitemの座標差を調べる
