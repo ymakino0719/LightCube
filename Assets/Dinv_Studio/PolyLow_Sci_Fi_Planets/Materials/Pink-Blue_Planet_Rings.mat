@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Ocean_Tundra
+  m_Name: Pink-Blue_Planet_Rings
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: _EMISSION
   m_LightmapFlags: 2
@@ -61,7 +61,7 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0.2
+    - _Glossiness: 0
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
@@ -73,5 +73,5 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.47058824, g: 0.92156863, b: 0.90588236, a: 1}
-    - _EmissionColor: {r: 0.1284265, g: 0.6981132, b: 0.60872775, a: 1}
+    - _Color: {r: 0.19165392, g: 0.025587406, b: 0.23584908, a: 1}
+    - _EmissionColor: {r: 0.4592698, g: 0.26312745, b: 0.764151, a: 1}
