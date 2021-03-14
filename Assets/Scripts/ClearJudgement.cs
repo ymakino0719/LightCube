@@ -22,11 +22,11 @@ public class ClearJudgement : MonoBehaviour
     // ゲームクリアに必要な鍵の数
     public int clearNum;
     // Rangeの下限
-    float lower = 6.0f;
+    public float lower = 6.0f;
     // Rangeの増幅率
     float ampAmount = 0.2f;
     // Rangeの拡大率
-    float magnification = 1.5f;
+    public float magnification = 1.5f;
     // Rangeを動かすスピード
     float speed = 0.8f;
     // 光りはじめ（trueのとき、Range = 0 からlowerまで拡大する）
