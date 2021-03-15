@@ -28,6 +28,10 @@ TagManager:
   - OutsideBox
   - Armature
   - Music
+  - Effects
+  - Slider_BGM
+  - Slider_SFX
+  - UIDirector
   layers:
   - Default
   - TransparentFX

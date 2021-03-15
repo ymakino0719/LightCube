@@ -6,7 +6,7 @@ public class ClearJudgement : MonoBehaviour
 {
     GameObject clearLight;
     Light lighting;
-
+    
     // ゲームクリア判定
     bool gameOver = false;
     // ゲームクリア判定: 遷移01
@@ -224,8 +224,10 @@ public class ClearJudgement : MonoBehaviour
         {
             startAcceptingInput_AnyKey = false;
             fadeOutSounds = true;
+            GameObject uiD = GameObject.Find("UIDirector");
+            uiD.GetComponent<StageUI>().UpdateSoundVol();
 
-            TransitionUI traUI = GameObject.Find("UIDirector").GetComponent<TransitionUI>();
+            TransitionUI traUI = uiD.GetComponent<TransitionUI>();
             traUI.ReturnToStageSelect(3.0f, 3.1f);
         }
     }

@@ -28,6 +28,11 @@ public class TitleUI : MonoBehaviour
 
     // 効果音
     SFXPlayer sfx;
+
+    // BGMの音量
+    float bgmVol = 1.0f;
+    // SFXの音量
+    float sfxVol = 1.0f;
     void Awake()
     {
         titlePanel = GameObject.Find("TitlePanel");
@@ -144,9 +149,16 @@ public class TitleUI : MonoBehaviour
     {
         // シーン切り替え後のスクリプトを取得
         var fade_Next = GameObject.Find("FadeCanvas").GetComponent<Fade>();
+        var stageUI = GameObject.Find("UIDirector").GetComponent<StageUI>();
+        var slider_BGM_Next = GameObject.FindWithTag("Slider_BGM").GetComponent<Slider>();
+        var slider_SFX_Next = GameObject.FindWithTag("Slider_SFX").GetComponent<Slider>();
 
         // 遷移した後の処理
         fade_Next.cutoutRange = 1;
+        stageUI.BgmVol = bgmVol;
+        stageUI.SfxVol = sfxVol;
+        slider_BGM_Next.value = bgmVol;
+        slider_SFX_Next.value = sfxVol;
 
         // イベントから削除
         SceneManager.sceneLoaded -= SceneLoaded_StageSelect;
@@ -155,5 +167,15 @@ public class TitleUI : MonoBehaviour
     {
         set { returnFromStages = value; }
         get { return returnFromStages; }
+    }
+    public float BgmVol
+    {
+        set { bgmVol = value; }
+        get { return bgmVol; }
+    }
+    public float SfxVol
+    {
+        set { sfxVol = value; }
+        get { return sfxVol; }
     }
 }

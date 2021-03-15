@@ -101,10 +101,12 @@ public class MusicPlayer : MonoBehaviour
             fadeOutV = false;
         }
     }
+    /*
     public void TurnDownMusicVolume()
     {
         audioSource.volume = minVol;
     }
+    */
     public void RestoreMusicVolume()
     {
         audioSource.volume = initialVol;
