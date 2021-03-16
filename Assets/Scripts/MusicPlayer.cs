@@ -26,7 +26,7 @@ public class MusicPlayer : MonoBehaviour
     // 初期の音量
     float initialVol;
     // 音量の低減率
-    float reduction = 0.015f;
+    float reduction = 0.03f;
     // 音量を徐々に小さくする（※0まで）
     bool fadeOutV;
     // 最低音量（※Paused画面中など）

@@ -49,13 +49,13 @@ public class ClearJudgement : MonoBehaviour
     // ClearLightのAudioSource
     AudioSource audio_CL;
     // 音量の加算率
-    float addVol = 0.02f;
+    float addVol = 0.04f;
     // 音量の減算率
-    float subVol = 0.01f;
+    float subVol = 0.02f;
     // 最大音量
-    float maxVol = 0.1f;
+    float maxVol = 0.2f;
     // 最終的な設定音量
-    float endVol = 0.02f;
+    float endVol = 0.04f;
     // ゲームオーバー後の遷移時の音量のフェードアウト
     bool fadeOutSounds = false;
 
@@ -186,9 +186,13 @@ public class ClearJudgement : MonoBehaviour
             ////////////////////
             /////// SFX ////////
             ////////////////////
+            ///
+            MusicPlayer mP = GameObject.FindWithTag("Music").GetComponent<MusicPlayer>();
+            // Musicのフェードアウトを強制終了する（終了していなかった場合に備え）
+            mP.FadeOutV = false;
 
             // ゲームオーバーのジングルをかける
-            GameObject.FindWithTag("Music").GetComponent<MusicPlayer>().PlayJingle(0);
+            mP.PlayJingle(0);
 
             // StarLightが輝く効果音の大きさを変更する
             audio_CL.volume = endVol;
